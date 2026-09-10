@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1580" viewBox="0 0 1480 1580" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3a3f4b"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#b3541e"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1480" height="1580" fill="#f7f8fa"/>
+
+  <!-- ============ TITRE ============ -->
+  <text x="40" y="44" font-size="25" font-weight="700" fill="#1c2230">Carte du cours — Quatre modules, un fil rouge</text>
+  <text x="40" y="70" font-size="13.5" fill="#5b6170">Segmentation de lésions mammaires CBIS-DDSM · ce qu'il faut comprendre avant d'écrire la moindre ligne de code · fichiers dans cours/</text>
+  <text x="40" y="91" font-size="11" fill="#8a90a0">Colonne de gauche : les quatre leçons. Colonne de droite : l'idée unique qui les traverse toutes. En bas : les pièges qui n'appartiennent à aucun module.</text>
+
+  <!-- ============ FOND DU FIL ROUGE ============ -->
+  <rect x="1145" y="135" width="295" height="1080" rx="12" fill="#fdf4ec" stroke="#e3c9b3"/>
+
+  <!-- ============ MODULE 1 ============ -->
+  <rect x="40" y="135" width="1080" height="230" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="135" width="210" height="230" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="167" font-size="15" font-weight="700" fill="#1c2230">MODULE 1</text>
+  <text x="58" y="186" font-size="12" fill="#5b6170">La maladie et sa détection</text>
+  <text x="58" y="200" font-size="12" fill="#5b6170">en mammographie</text>
+  <rect x="58" y="214" width="128" height="19" rx="5" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="66" y="227" font-size="10" fill="#2e7d57">répondu &amp; corrigé</text>
+  <text x="58" y="256" font-size="10" fill="#8a90a0">01_maladie_et_</text>
+  <text x="58" y="269" font-size="10" fill="#8a90a0">mammographie.md</text>
+  <text x="58" y="293" font-size="10" fill="#8a90a0">Sans ce module, les</text>
+  <text x="58" y="306" font-size="10" fill="#8a90a0">métriques du module 3 ne</text>
+  <text x="58" y="319" font-size="10" fill="#8a90a0">sont que des formules.</text>
+
+  <g filter="url(#soft)">
+    <rect x="270" y="153" width="263" height="194" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="284" y="175" font-size="12.5" font-weight="700" fill="#1c2230">Physique &amp; projection</text>
+    <text x="284" y="195" font-size="10" fill="#5b6170">Atténuation de Beer-Lambert, 25–35 kVp</text>
+    <text x="284" y="209" font-size="10" fill="#5b6170">— la basse énergie achète du contraste</text>
+    <text x="284" y="223" font-size="10" fill="#5b6170">entre tissus mous, et coûte de la dose.</text>
+    <text x="284" y="243" font-size="10" fill="#5b6170">Compression : moins de dose, moins de</text>
+    <text x="284" y="257" font-size="10" fill="#5b6170">diffusé, moins de superpositions.</text>
+    <text x="284" y="277" font-size="10" fill="#5b6170">CC + MLO corroborent une anomalie.</text>
+    <text x="284" y="291" font-size="10" fill="#5b6170">Elles ne s'additionnent PAS.</text>
+    <text x="284" y="313" font-size="10" font-weight="700" fill="#b3541e">Une mammographie est une projection,</text>
+    <text x="284" y="327" font-size="10" font-weight="700" fill="#b3541e">jamais une coupe. Aucun 3D ici.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="553" y="153" width="263" height="194" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="567" y="175" font-size="12.5" font-weight="700" fill="#1c2230">Deux signes, deux tâches</text>
+    <text x="567" y="195" font-size="10" fill="#5b6170">MASSE ≈ 2 cm</text>
+    <text x="567" y="209" font-size="10" fill="#5b6170">décrite par forme + MARGE</text>
+    <text x="567" y="223" font-size="10" fill="#5b6170">contours circonscrits → bénin</text>
+    <text x="567" y="237" font-size="10" fill="#5b6170">spiculés → infiltration → malin</text>
+    <text x="567" y="259" font-size="10" fill="#5b6170">CALCIFICATION ≈ 0,5 mm</text>
+    <text x="567" y="273" font-size="10" fill="#5b6170">décrite par type + distribution</text>
+    <text x="567" y="287" font-size="10" fill="#5b6170">pléomorphes fines + segmentaires = CCIS,</text>
+    <text x="567" y="301" font-size="10" fill="#5b6170">souvent le seul signe visible</text>
+    <text x="567" y="323" font-size="10" font-weight="700" fill="#b3541e">Facteur 40 en taille — un modèle à</text>
+    <text x="567" y="337" font-size="10" font-weight="700" fill="#b3541e">une seule échelle ne peut pas les deux.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="836" y="153" width="263" height="194" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="850" y="175" font-size="12.5" font-weight="700" fill="#1c2230">Vocabulaire, et où est la vérité</text>
+    <text x="850" y="195" font-size="10" fill="#5b6170">Deux choses différentes dites BI-RADS :</text>
+    <text x="850" y="209" font-size="10" fill="#5b6170">densité 1–4 (le sein entier)</text>
+    <text x="850" y="223" font-size="10" fill="#5b6170">évaluation 0–5 (niveau de suspicion)</text>
+    <text x="850" y="245" font-size="10" fill="#5b6170">évaluation = une OPINION, et ici révisée</text>
+    <text x="850" y="259" font-size="10" fill="#5b6170">après le bilan complémentaire</text>
+    <text x="850" y="279" font-size="10" fill="#5b6170">pathologie = la VÉRITÉ, par biopsie</text>
+    <text x="850" y="301" font-size="10" font-weight="700" fill="#b3541e">forme, marges, évaluation, subtilité,</text>
+    <text x="850" y="315" font-size="10" font-weight="700" fill="#b3541e">densité sont des stratificateurs —</text>
+    <text x="850" y="329" font-size="10" font-weight="700" fill="#b3541e">jamais des entrées du modèle.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="145" y1="365" x2="145" y2="401"/></g>
+
+  <!-- ============ MODULE 2 ============ -->
+  <rect x="40" y="405" width="1080" height="230" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="405" width="210" height="230" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="437" font-size="15" font-weight="700" fill="#1c2230">MODULE 2</text>
+  <text x="58" y="456" font-size="12" fill="#5b6170">La donnée : du film</text>
+  <text x="58" y="470" font-size="12" fill="#5b6170">scanné au tenseur</text>
+  <rect x="58" y="484" width="130" height="19" rx="5" fill="#fbece0" stroke="#b3541e" stroke-dasharray="4 3"/>
+  <text x="66" y="497" font-size="10" fill="#b3541e">contrôle en attente</text>
+  <text x="58" y="526" font-size="10" fill="#8a90a0">02_la_donnee.md</text>
+  <text x="58" y="550" font-size="10" fill="#8a90a0">Ici un pixel est une</text>
+  <text x="58" y="563" font-size="10" fill="#8a90a0">mesure physique, pas une</text>
+  <text x="58" y="576" font-size="10" fill="#8a90a0">couleur.</text>
+  <text x="58" y="600" font-size="10" fill="#8a90a0">Chaque conversion peut</text>
+  <text x="58" y="613" font-size="10" fill="#8a90a0">détruire le signe cherché.</text>
+
+  <g filter="url(#soft)">
+    <rect x="270" y="423" width="263" height="194" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="284" y="445" font-size="12.5" font-weight="700" fill="#1c2230">Du film au nombre</text>
+    <text x="284" y="465" font-size="10" fill="#5b6170">Densité optique OD = log10(I0 / It)</text>
+    <text x="284" y="479" font-size="10" fill="#5b6170">Le film noircit là où les rayons X</text>
+    <text x="284" y="493" font-size="10" fill="#5b6170">arrivent : tissu dense → OD basse →</text>
+    <text x="284" y="507" font-size="10" fill="#5b6170">affiché BLANC. Moitié des bugs vient de là.</text>
+    <text x="284" y="527" font-size="10" fill="#5b6170">4 scanners, 4 courbes de réponse</text>
+    <text x="284" y="541" font-size="10" fill="#5b6170">LJPEG → TIFF 16 bits → DICOM, sans perte</text>
+    <text x="284" y="563" font-size="10" font-weight="700" fill="#b3541e">Test de fumée, jour 1 : l'air hors du</text>
+    <text x="284" y="577" font-size="10" font-weight="700" fill="#b3541e">sein doit s'afficher NOIR. Vérifier sur</text>
+    <text x="284" y="591" font-size="10" font-weight="700" fill="#b3541e">le DICOM et sur le miroir JPEG.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="553" y="423" width="263" height="194" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="567" y="445" font-size="12.5" font-weight="700" fill="#1c2230">DICOM est un modèle d'objet</text>
+    <text x="567" y="465" font-size="10" fill="#5b6170">pas un format d'image. En-tête + pixels.</text>
+    <text x="567" y="479" font-size="10" fill="#5b6170">Patient → Study → Series → Instance</text>
+    <text x="567" y="501" font-size="10" fill="#5b6170">PhotometricInterpretation</text>
+    <text x="567" y="515" font-size="10" fill="#5b6170">MONOCHROME1 vs 2 → inversion silencieuse</text>
+    <text x="567" y="535" font-size="10" fill="#5b6170">BitsStored 12 ≠ BitsAllocated 16</text>
+    <text x="567" y="549" font-size="10" fill="#5b6170">PixelSpacing → le mm de ton HD95</text>
+    <text x="567" y="563" font-size="10" fill="#5b6170">SeriesDescription → ta clé de jointure</text>
+    <text x="567" y="585" font-size="10" font-weight="700" fill="#b3541e">Le miroir JPEG ne porte aucun de ces</text>
+    <text x="567" y="599" font-size="10" font-weight="700" fill="#b3541e">tags. Convention figée dans les pixels.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="836" y="423" width="263" height="194" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="850" y="445" font-size="12.5" font-weight="700" fill="#1c2230">La jointure, et la fuite</text>
+    <text x="850" y="465" font-size="10" fill="#5b6170">Les colonnes de chemin des CSV pointent</text>
+    <text x="850" y="479" font-size="10" fill="#5b6170">vers l'arbre TCIA, pas vers les dossiers</text>
+    <text x="850" y="493" font-size="10" fill="#5b6170">du miroir. Pont : 4 CSV de cas →</text>
+    <text x="850" y="507" font-size="10" fill="#5b6170">dicom_info.csv → jpeg/</text>
+    <text x="850" y="527" font-size="10" fill="#5b6170">Un masque est une image binaire pleine</text>
+    <text x="850" y="541" font-size="10" fill="#5b6170">taille, pas un polygone. Mêmes dimensions.</text>
+    <text x="850" y="563" font-size="10" font-weight="700" fill="#b3541e">1 566 femmes — mais 6 671 PatientID.</text>
+    <text x="850" y="577" font-size="10" font-weight="700" fill="#b3541e">Grouper sur le PatientID DICOM ne suffit</text>
+    <text x="850" y="591" font-size="10" font-weight="700" fill="#b3541e">pas. Utiliser patient_id des CSV.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="145" y1="635" x2="145" y2="671"/></g>
+
+  <!-- ============ MODULE 3 ============ -->
+  <rect x="40" y="675" width="1080" height="250" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="675" width="210" height="250" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="707" font-size="15" font-weight="700" fill="#1c2230">MODULE 3</text>
+  <text x="58" y="726" font-size="12" fill="#5b6170">Métriques : segmentation</text>
+  <text x="58" y="740" font-size="12" fill="#5b6170">et radiologie</text>
+  <rect x="58" y="754" width="130" height="19" rx="5" fill="#fbece0" stroke="#b3541e" stroke-dasharray="4 3"/>
+  <text x="66" y="767" font-size="10" fill="#b3541e">contrôle en attente</text>
+  <text x="58" y="796" font-size="10" fill="#8a90a0">03_les_metriques.md</text>
+  <text x="58" y="820" font-size="10" fill="#8a90a0">Une métrique n'est pas un</text>
+  <text x="58" y="833" font-size="10" fill="#8a90a0">score calculé à la fin.</text>
+  <text x="58" y="846" font-size="10" fill="#8a90a0">C'est la définition de ce</text>
+  <text x="58" y="859" font-size="10" fill="#8a90a0">que « réussir » veut dire —</text>
+  <text x="58" y="872" font-size="10" fill="#8a90a0">donc de ce que le modèle</text>
+  <text x="58" y="885" font-size="10" fill="#8a90a0">apprendra à faire.</text>
+
+  <g filter="url(#soft)">
+    <rect x="270" y="693" width="263" height="214" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="284" y="715" font-size="12.5" font-weight="700" fill="#1c2230">L'unité d'agrégation décide</text>
+    <text x="284" y="735" font-size="10" fill="#5b6170">Même prédiction, quatre scores :</text>
+    <text x="284" y="749" font-size="10" fill="#5b6170">pixel · lésion · image · patiente</text>
+    <text x="284" y="771" font-size="10" fill="#5b6170">La lésion couvre moins de 1 % des pixels :</text>
+    <text x="284" y="785" font-size="10" fill="#5b6170">une prédiction vide donne &gt; 99 %</text>
+    <text x="284" y="799" font-size="10" fill="#5b6170">d'exactitude, dominée par les TN.</text>
+    <text x="284" y="821" font-size="10" fill="#5b6170">Dice = F1 sur les pixels — il ignore les</text>
+    <text x="284" y="835" font-size="10" fill="#5b6170">TN, et c'est pour ça qu'il survit ici.</text>
+    <text x="284" y="857" font-size="10" fill="#5b6170">Dice = 2·IoU / (1 + IoU)</text>
+    <text x="284" y="871" font-size="10" fill="#5b6170">Même classement, chiffres différents :</text>
+    <text x="284" y="885" font-size="10" font-weight="700" fill="#b3541e">Dice 0,80 = IoU 0,67. Ne compare jamais</text>
+    <text x="284" y="899" font-size="10" font-weight="700" fill="#b3541e">ton Dice au IoU d'un autre.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="553" y="693" width="263" height="214" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="567" y="715" font-size="12.5" font-weight="700" fill="#1c2230">Recouvrement contre frontière</text>
+    <text x="567" y="735" font-size="10" fill="#5b6170">Dice, IoU mesurent des AIRES.</text>
+    <text x="567" y="755" font-size="10" fill="#5b6170">HD95, ASSD mesurent des DISTANCES entre</text>
+    <text x="567" y="769" font-size="10" fill="#5b6170">contours — en mm, donc PixelSpacing est</text>
+    <text x="567" y="783" font-size="10" fill="#5b6170">requis (module 2).</text>
+    <text x="567" y="803" font-size="10" fill="#5b6170">Le Hausdorff brut prend un max : un seul</text>
+    <text x="567" y="817" font-size="10" fill="#5b6170">pixel aberrant l'explose. → 95e centile.</text>
+    <text x="567" y="839" font-size="10" fill="#5b6170">Dice moyen ≠ Dice global. Moyenner par</text>
+    <text x="567" y="853" font-size="10" fill="#5b6170">image pèse chaque image pareil ; cumuler</text>
+    <text x="567" y="867" font-size="10" fill="#5b6170">TP/FP/FN laisse gagner les grosses lésions.</text>
+    <text x="567" y="889" font-size="10" font-weight="700" fill="#b3541e">Peu d'articles disent lequel.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="836" y="693" width="263" height="214" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="850" y="715" font-size="12.5" font-weight="700" fill="#1c2230">Le langage du radiologue</text>
+    <text x="850" y="735" font-size="10" fill="#5b6170">Sensibilité, spécificité — conditionnées</text>
+    <text x="850" y="749" font-size="10" fill="#5b6170">par la vraie classe, donc indépendantes</text>
+    <text x="850" y="763" font-size="10" fill="#5b6170">de la prévalence. Elles se transportent.</text>
+    <text x="850" y="783" font-size="10" fill="#5b6170">VPP, VPN dépendent de la prévalence.</text>
+    <text x="850" y="797" font-size="10" fill="#5b6170">Elles NE se transportent PAS.</text>
+    <text x="850" y="817" font-size="10" fill="#5b6170">AUC ROC (notée Az dans les vieux articles</text>
+    <text x="850" y="831" font-size="10" fill="#5b6170">CAO) est indépendante du seuil.</text>
+    <text x="850" y="853" font-size="10" font-weight="700" fill="#b3541e">La détection n'a pas de TN — un « vrai</text>
+    <text x="850" y="867" font-size="10" font-weight="700" fill="#b3541e">négatif » n'y est pas défini. La ROC</text>
+    <text x="850" y="881" font-size="10" font-weight="700" fill="#b3541e">s'effondre. → FROC : sensibilité vs FPPI</text>
+    <text x="850" y="895" font-size="10" font-weight="700" fill="#b3541e">et CPM. Déclare ton critère de touche.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="145" y1="925" x2="145" y2="961"/></g>
+
+  <!-- ============ MODULE 4 ============ -->
+  <rect x="40" y="965" width="1080" height="250" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="965" width="210" height="250" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="997" font-size="15" font-weight="700" fill="#1c2230">MODULE 4</text>
+  <text x="58" y="1016" font-size="12" fill="#5b6170">Le paysage des modèles</text>
+  <rect x="58" y="1030" width="130" height="19" rx="5" fill="#fbece0" stroke="#b3541e" stroke-dasharray="4 3"/>
+  <text x="66" y="1043" font-size="10" fill="#b3541e">contrôle en attente</text>
+  <text x="58" y="1072" font-size="10" fill="#8a90a0">04_les_modeles.md</text>
+  <text x="58" y="1096" font-size="10" fill="#8a90a0">Choisir une architecture,</text>
+  <text x="58" y="1109" font-size="10" fill="#8a90a0">c'est choisir quelle info</text>
+  <text x="58" y="1122" font-size="10" fill="#8a90a0">spatiale survit au passage</text>
+  <text x="58" y="1135" font-size="10" fill="#8a90a0">dans le réseau.</text>
+  <text x="58" y="1159" font-size="10" fill="#8a90a0">Tout ici est un candidat.</text>
+  <text x="58" y="1172" font-size="10" fill="#8a90a0">Rien n'est choisi, rien</text>
+  <text x="58" y="1185" font-size="10" fill="#8a90a0">n'est construit.</text>
+
+  <g filter="url(#soft)">
+    <rect x="270" y="983" width="263" height="214" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="284" y="1005" font-size="12.5" font-weight="700" fill="#1c2230">Le vrai problème : la résolution</text>
+    <text x="284" y="1025" font-size="10" fill="#5b6170">15 M pixels par image ; la lésion en fait</text>
+    <text x="284" y="1039" font-size="10" fill="#5b6170">moins de 1 % ; un spicule fait quelques</text>
+    <text x="284" y="1053" font-size="10" fill="#5b6170">pixels. Il FAUT jeter du signal — toute</text>
+    <text x="284" y="1067" font-size="10" fill="#5b6170">la conception est de choisir lequel.</text>
+    <text x="284" y="1089" font-size="10" fill="#5b6170">resize → perd la haute fréquence</text>
+    <text x="284" y="1103" font-size="10" fill="#5b6170">tuiles → perd le contexte global</text>
+    <text x="284" y="1117" font-size="10" fill="#5b6170">deux étages → garde tout, coûte des erreurs</text>
+    <text x="284" y="1139" font-size="10" fill="#5b6170">Le champ réceptif doit dépasser l'objet.</text>
+    <text x="284" y="1153" font-size="10" fill="#5b6170">Plus profond (lent) · pooling (perd le</text>
+    <text x="284" y="1167" font-size="10" fill="#5b6170">détail) · conv dilatée (ni l'un ni l'autre)</text>
+    <text x="284" y="1189" font-size="10" font-weight="700" fill="#b3541e">Un radiologue fait du deux étages.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="553" y="983" width="263" height="214" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="567" y="1005" font-size="12.5" font-weight="700" fill="#1c2230">La zoologie, triée par l'essentiel</text>
+    <text x="567" y="1025" font-size="10" fill="#5b6170">U-Net — les skips réinjectent la haute</text>
+    <text x="567" y="1039" font-size="10" fill="#5b6170">fréquence détruite par l'encodeur.</text>
+    <text x="567" y="1053" font-size="10" fill="#5b6170">C'est le mécanisme qui sauve les marges.</text>
+    <text x="567" y="1073" font-size="10" fill="#5b6170">Attention U-Net — pondère ces skips</text>
+    <text x="567" y="1087" font-size="10" fill="#5b6170">DeepLabv3+ — ASPP, mais stride 1/8 puis</text>
+    <text x="567" y="1101" font-size="10" fill="#5b6170">sur-échantillonnage : contours lissés</text>
+    <text x="567" y="1115" font-size="10" fill="#5b6170">Mask R-CNN — instances et FROC gratuit,</text>
+    <text x="567" y="1129" font-size="10" fill="#5b6170">mais tête de masque 28×28 étirée</text>
+    <text x="567" y="1143" font-size="10" fill="#5b6170">TransUNet — attention globale, skips gardés</text>
+    <text x="567" y="1165" font-size="10" font-weight="700" fill="#b3541e">nnU-Net est ton PLANCHER, pas la cible à</text>
+    <text x="567" y="1179" font-size="10" font-weight="700" fill="#b3541e">battre. Passe le semestre sur l'analyse,</text>
+    <text x="567" y="1193" font-size="10" font-weight="700" fill="#b3541e">pas à lui courir après.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="836" y="983" width="263" height="214" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="850" y="1005" font-size="12.5" font-weight="700" fill="#1c2230">Loss, transfert, et le piège SAM</text>
+    <text x="850" y="1025" font-size="10" fill="#5b6170">La loss est ta métrique, rendue</text>
+    <text x="850" y="1039" font-size="10" fill="#5b6170">dérivable. Une loss volumique récompense</text>
+    <text x="850" y="1053" font-size="10" fill="#5b6170">le lissage du contour.</text>
+    <text x="850" y="1073" font-size="10" fill="#5b6170">Dice+BCE (défaut) · Tversky β&gt;α monte</text>
+    <text x="850" y="1087" font-size="10" fill="#5b6170">sensibilité ET FPPI ensemble · focale</text>
+    <text x="850" y="1101" font-size="10" fill="#5b6170">surpondère les pixels ambigus = les bords</text>
+    <text x="850" y="1121" font-size="10" fill="#5b6170">Recette Shen : classifieur d'imagettes</text>
+    <text x="850" y="1135" font-size="10" fill="#5b6170">d'abord, puis conversion image entière.</text>
+    <text x="850" y="1149" font-size="10" fill="#5b6170">~600 anomalies d'entraînement → encodeur</text>
+    <text x="850" y="1163" font-size="10" fill="#5b6170">pré-entraîné non optionnel.</text>
+    <text x="850" y="1179" font-size="10" font-weight="700" fill="#c23a22">SAM prompté avec la boîte de la vérité</text>
+    <text x="850" y="1193" font-size="10" font-weight="700" fill="#c23a22">terrain a reçu la réponse.</text>
+  </g>
+
+  <!-- ============ LE FIL ROUGE ============ -->
+  <text x="1165" y="165" font-size="14" font-weight="700" fill="#b3541e">LE FIL ROUGE</text>
+  <text x="1165" y="186" font-size="10.5" font-weight="700" fill="#1c2230">La marge de la lésion est une propriété</text>
+  <text x="1165" y="200" font-size="10.5" font-weight="700" fill="#1c2230">de forme locale — et c'est elle qui</text>
+  <text x="1165" y="214" font-size="10.5" font-weight="700" fill="#1c2230">porte le diagnostic.</text>
+
+  <g filter="url(#soft)">
+    <rect x="1165" y="232" width="255" height="150" rx="8" fill="#fbece0" stroke="#b3541e"/>
+    <text x="1179" y="254" font-size="12" font-weight="700" fill="#1c2230">M1 · Pourquoi — cliniquement</text>
+    <text x="1179" y="275" font-size="10" fill="#5b6170">Une marge spiculée signifie que la</text>
+    <text x="1179" y="289" font-size="10" fill="#5b6170">lésion infiltre le stroma environnant,</text>
+    <text x="1179" y="303" font-size="10" fill="#5b6170">au lieu de le repousser.</text>
+    <text x="1179" y="325" font-size="10" fill="#5b6170">C'est le signe de malignité le plus</text>
+    <text x="1179" y="339" font-size="10" fill="#5b6170">fort disponible sur l'image.</text>
+    <text x="1179" y="361" font-size="10" fill="#8a90a0">Conséquence : la frontière de ton masque</text>
+    <text x="1179" y="375" font-size="10" fill="#8a90a0">est diagnostique, pas décorative.</text>
+  </g>
+
+  <g stroke="#b3541e" stroke-width="3" marker-end="url(#arrowAmber)"><line x1="1292" y1="382" x2="1292" y2="438"/></g>
+
+  <g filter="url(#soft)">
+    <rect x="1165" y="442" width="255" height="150" rx="8" fill="#fbece0" stroke="#b3541e"/>
+    <text x="1179" y="464" font-size="12" font-weight="700" fill="#1c2230">M2 · Ce qui la détruit — donnée</text>
+    <text x="1179" y="485" font-size="10" fill="#5b6170">Un spicule est une haute fréquence</text>
+    <text x="1179" y="499" font-size="10" fill="#5b6170">spatiale. Chacun de ces gestes l'efface :</text>
+    <text x="1179" y="521" font-size="10" fill="#5b6170">· resize 3000×5000 → 512×512</text>
+    <text x="1179" y="535" font-size="10" fill="#5b6170">· JPEG — la DCT par blocs lisse le haut</text>
+    <text x="1179" y="549" font-size="10" fill="#5b6170">· interpolation bilinéaire du masque</text>
+    <text x="1179" y="571" font-size="10" fill="#8a90a0">Masques : rééchantillonner au plus proche</text>
+    <text x="1179" y="585" font-size="10" fill="#8a90a0">voisin — aucun modèle ne récupère ça.</text>
+  </g>
+
+  <g stroke="#b3541e" stroke-width="3" marker-end="url(#arrowAmber)"><line x1="1292" y1="592" x2="1292" y2="678"/></g>
+
+  <g filter="url(#soft)">
+    <rect x="1165" y="682" width="255" height="170" rx="8" fill="#fbece0" stroke="#b3541e"/>
+    <text x="1179" y="704" font-size="12" font-weight="700" fill="#1c2230">M3 · Invisible à la métrique</text>
+    <text x="1179" y="725" font-size="10" fill="#5b6170">Le Dice compte des aires. Un spicule est</text>
+    <text x="1179" y="739" font-size="10" fill="#5b6170">fin : le rater ne coûte presque rien.</text>
+    <text x="1179" y="761" font-size="10" fill="#5b6170">Deux masques de Dice identique peuvent</text>
+    <text x="1179" y="775" font-size="10" fill="#5b6170">porter des diagnostics opposés.</text>
+    <text x="1179" y="797" font-size="10" fill="#5b6170">→ HD95, ASSD, boundary F-score</text>
+    <text x="1179" y="819" font-size="10" fill="#8a90a0">Et la loss suit : une loss volumique</text>
+    <text x="1179" y="833" font-size="10" fill="#8a90a0">récompense activement l'arrondi du</text>
+    <text x="1179" y="845" font-size="10" fill="#8a90a0">contour.</text>
+  </g>
+
+  <g stroke="#b3541e" stroke-width="3" marker-end="url(#arrowAmber)"><line x1="1292" y1="852" x2="1292" y2="978"/></g>
+
+  <g filter="url(#soft)">
+    <rect x="1165" y="982" width="255" height="200" rx="8" fill="#fbece0" stroke="#b3541e"/>
+    <text x="1179" y="1004" font-size="12" font-weight="700" fill="#1c2230">M4 · Ce qui la préserve — modèle</text>
+    <text x="1179" y="1025" font-size="10" fill="#5b6170">La résolution de sortie tranche :</text>
+    <text x="1179" y="1047" font-size="10" fill="#5b6170">U-Net, TransUNet, nnU-Net — pleine</text>
+    <text x="1179" y="1061" font-size="10" fill="#5b6170">résolution, skips                BON</text>
+    <text x="1179" y="1081" font-size="10" fill="#5b6170">DeepLabv3+ — stride 1/8, ré-étiré</text>
+    <text x="1179" y="1095" font-size="10" fill="#5b6170">                               MOYEN</text>
+    <text x="1179" y="1115" font-size="10" fill="#5b6170">Mask R-CNN — tête 28×28 ; ViT — la</text>
+    <text x="1179" y="1129" font-size="10" fill="#5b6170">taille de patch est un plancher  MAUVAIS</text>
+    <text x="1179" y="1151" font-size="10" fill="#8a90a0">Déduit des résolutions de sortie, pas</text>
+    <text x="1179" y="1165" font-size="10" fill="#8a90a0">mesuré sur CBIS-DDSM. À vérifier.</text>
+  </g>
+
+  <!-- ============ PIÈGES TRANSVERSES ============ -->
+  <rect x="40" y="1255" width="1400" height="175" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1255" width="210" height="175" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="1287" font-size="15" font-weight="700" fill="#1c2230">TRANSVERSE</text>
+  <text x="58" y="1306" font-size="12" fill="#5b6170">d'aucun module en propre</text>
+  <text x="58" y="1332" font-size="10" fill="#8a90a0">Chacun gonfle ou invalide</text>
+  <text x="58" y="1345" font-size="10" fill="#8a90a0">silencieusement un résultat.</text>
+  <text x="58" y="1358" font-size="10" fill="#8a90a0">Les nommer dans l'exposé</text>
+  <text x="58" y="1371" font-size="10" fill="#8a90a0">vaut plus qu'un Dice plus</text>
+  <text x="58" y="1384" font-size="10" fill="#8a90a0">élevé.</text>
+
+  <g filter="url(#soft)">
+    <rect x="270" y="1273" width="277" height="139" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="284" y="1295" font-size="12" font-weight="700" fill="#1c2230">Fuite d'information</text>
+    <text x="284" y="1316" font-size="10" fill="#5b6170">assessment comme feature d'entrée</text>
+    <text x="284" y="1330" font-size="10" fill="#5b6170">SAM prompté par la boîte de vérité terrain</text>
+    <text x="284" y="1344" font-size="10" fill="#5b6170">split aléatoire — CC et MLO d'un même sein</text>
+    <text x="284" y="1358" font-size="10" fill="#5b6170">des deux côtés de la frontière</text>
+    <text x="284" y="1379" font-size="10" fill="#8a90a0">Les trois produisent un chiffre flatteur</text>
+    <text x="284" y="1393" font-size="10" fill="#8a90a0">qui ne veut rien dire.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="562" y="1273" width="277" height="139" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="576" y="1295" font-size="12" font-weight="700" fill="#1c2230">Labels « argent », pas « or »</text>
+    <text x="576" y="1316" font-size="10" fill="#5b6170">Les masques de masses viennent d'un level</text>
+    <text x="576" y="1330" font-size="10" fill="#5b6170">set automatique : Dice 0,792 ± 0,108 face</text>
+    <text x="576" y="1344" font-size="10" fill="#5b6170">à un expert, sur 118 images.</text>
+    <text x="576" y="1358" font-size="10" fill="#5b6170">Les calcifications n'ont jamais été refaites.</text>
+    <text x="576" y="1379" font-size="10" fill="#8a90a0">≈ 0,79 est le plafond réaliste.</text>
+    <text x="576" y="1393" font-size="10" fill="#8a90a0">Nettement au-dessus = suspect.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="854" y="1273" width="277" height="139" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="868" y="1295" font-size="12" font-weight="700" fill="#1c2230">Un jeu de test enrichi</text>
+    <text x="868" y="1316" font-size="10" fill="#5b6170">Test masses : 41,5 % de malins.</text>
+    <text x="868" y="1330" font-size="10" fill="#5b6170">Dépistage réel : environ 0,5 %.</text>
+    <text x="868" y="1351" font-size="10" fill="#5b6170">Le même modèle (sens 90 %, spéc 95 %)</text>
+    <text x="868" y="1365" font-size="10" fill="#5b6170">rapporte une VPP de 93 % ici et de 8 %</text>
+    <text x="868" y="1379" font-size="10" fill="#5b6170">en dépistage. Facteur 11.</text>
+    <text x="868" y="1400" font-size="10" fill="#8a90a0">Sens/spéc se transportent. VPP/VPN non.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1146" y="1273" width="277" height="139" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="1160" y="1295" font-size="12" font-weight="700" fill="#1c2230">Petits effectifs</text>
+    <text x="1160" y="1316" font-size="10" fill="#5b6170">Le test masses tient 83 cas malins.</text>
+    <text x="1160" y="1337" font-size="10" fill="#5b6170">Une sensibilité de 86 % porte un</text>
+    <text x="1160" y="1351" font-size="10" fill="#5b6170">intervalle à 95 % d'environ ±7,5 points.</text>
+    <text x="1160" y="1372" font-size="10" fill="#8a90a0">Donc 3 points d'écart entre deux de tes</text>
+    <text x="1160" y="1386" font-size="10" fill="#8a90a0">modèles n'est pas une différence.</text>
+    <text x="1160" y="1400" font-size="10" fill="#8a90a0">Bootstrap sur les cas, pas les pixels.</text>
+  </g>
+
+  <!-- ============ LÉGENDE ============ -->
+  <text x="40" y="1477" font-size="12" font-weight="700" fill="#1c2230">LÉGENDE</text>
+
+  <rect x="120" y="1465" width="22" height="16" rx="4" fill="#e7eefc" stroke="#3f6fd1"/>
+  <text x="150" y="1478" font-size="11.5" fill="#5b6170">contenu de cours — établi, sourcé</text>
+
+  <rect x="370" y="1465" width="22" height="16" rx="4" fill="#fbece0" stroke="#b3541e"/>
+  <text x="400" y="1478" font-size="11.5" fill="#5b6170">le fil rouge — la marge, module par module</text>
+
+  <rect x="672" y="1465" width="22" height="16" rx="4" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="702" y="1478" font-size="11.5" fill="#5b6170">module répondu &amp; corrigé</text>
+
+  <rect x="880" y="1465" width="22" height="16" rx="4" fill="#fbece0" stroke="#b3541e" stroke-dasharray="4 3"/>
+  <text x="910" y="1478" font-size="11.5" fill="#5b6170">rédigé, questions de contrôle en attente</text>
+
+  <rect x="1200" y="1465" width="22" height="16" rx="4" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+  <text x="1230" y="1478" font-size="11.5" fill="#5b6170">piège éliminatoire</text>
+
+  <text x="40" y="1518" font-size="10" fill="#8a90a0">Sources — Lee R.S. et al., « A curated mammography data set for use in computer-aided detection and diagnosis research », Scientific Data 4:170177 (2017), DOI 10.1038/sdata.2017.177 · fiche de collection TCIA</text>
+  <text x="40" y="1534" font-size="10" fill="#8a90a0">CBIS-DDSM · Shen L. et al., Scientific Reports 9:12495 (2019), DOI 10.1038/s41598-019-48995-4. Effectifs et valeurs de Dice : Table 3 et section Technical Validation de Lee et al. Les lignes ambre en gras dans les</text>
+  <text x="40" y="1550" font-size="10" fill="#8a90a0">boîtes bleues sont les points sur lesquels on se trompe le plus. Fichiers : cours/01…04.md · schéma compagnon : schemas/cbis_ddsm_project_map_fr.svg. État au 2026-09-09 : module 1 répondu, modules 2–4 en attente.</text>
+</svg>

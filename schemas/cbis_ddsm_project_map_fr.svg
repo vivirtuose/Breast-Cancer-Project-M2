@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="2170" viewBox="0 0 1480 2170" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3a3f4b"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1480" height="2170" fill="#f7f8fa"/>
+
+  <!-- ============ TITRE ============ -->
+  <text x="40" y="48" font-size="26" font-weight="700" fill="#1c2230">CBIS-DDSM — Segmentation des lésions mammaires : carte du projet</text>
+  <text x="40" y="74" font-size="14" fill="#5b6170">Segmenter les tissus cancéreux en mammographie de dépistage · composition du jeu de données, métriques radiologiques, modèles existants, pipeline prévu · MLB 2026–2027</text>
+  <text x="40" y="96" font-size="11.5" fill="#8a90a0">Fondé sur Lee et al., Scientific Data 4:170177 (2017) · la fiche de collection TCIA · Shen et al., Scientific Reports 9:12495 (2019). Rien n'est encore construit.</text>
+
+  <!-- ============ BANDE 1 : SOURCE ============ -->
+  <rect x="40" y="130" width="1400" height="160" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="130" width="230" height="160" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="164" font-size="15" font-weight="700" fill="#1c2230">SOURCE</text>
+  <text x="60" y="184" font-size="12.5" fill="#5b6170">provenance &amp; accès</text>
+  <text x="60" y="206" font-size="10.5" fill="#8a90a0">ce que sont réellement</text>
+  <text x="60" y="220" font-size="10.5" fill="#8a90a0">les données brutes, et sous</text>
+  <text x="60" y="234" font-size="10.5" fill="#8a90a0">quel format on les obtient</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="146" width="370" height="126" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="170" font-size="13" font-weight="700" fill="#1c2230">DDSM (original, 1997)</text>
+    <text x="304" y="190" font-size="10.5" fill="#5b6170">2 620 études de mammographie sur film numérisé</text>
+    <text x="304" y="205" font-size="10.5" fill="#5b6170">4 centres US : Mass. General, Wake Forest,</text>
+    <text x="304" y="220" font-size="10.5" fill="#5b6170">Sacred Heart, Washington U. St Louis</text>
+    <text x="304" y="235" font-size="10.5" fill="#5b6170">Fichiers LJPEG obsolètes (codec PVRG, 1993)</text>
+    <text x="304" y="250" font-size="10.5" fill="#5b6170">Les ROI indiquent la position, pas la frontière</text>
+    <text x="304" y="265" font-size="10.5" fill="#8a90a0">normal / bénin / malin, pathologie vérifiée</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="146" width="370" height="126" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="170" font-size="13" font-weight="700" fill="#1c2230">Curation CBIS-DDSM (Lee et al. 2017)</text>
+    <text x="694" y="190" font-size="10.5" fill="#5b6170">LJPEG → TIFF 16 bits → DICOM, sans perte</text>
+    <text x="694" y="205" font-size="10.5" fill="#5b6170">Densité optique standardisée, seuillée 0,05–3,0</text>
+    <text x="694" y="220" font-size="10.5" fill="#5b6170">339 images sans masse visible ont été retirées</text>
+    <text x="694" y="235" font-size="10.5" fill="#5b6170">ROI des masses re-tracées : level set Chan–Vese</text>
+    <text x="694" y="250" font-size="10.5" fill="#5b6170">local, initialisé sur le contour DDSM grossier</text>
+    <text x="694" y="265" font-size="10.5" fill="#8a90a0">outils : github.com/fjeg/ddsm_tools (Python 2.7)</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="146" width="370" height="58" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="166" font-size="13" font-weight="700" fill="#1c2230">TCIA original — DICOM, 163,5 Go</text>
+    <text x="1084" y="183" font-size="10.5" fill="#5b6170">1 566 participants · 2 620 études · 6 775 séries</text>
+    <text x="1084" y="197" font-size="10.5" fill="#5b6170">10 239 images · modalité MG · licence CC BY 3.0</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="214" width="370" height="58" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="1084" y="234" font-size="13" font-weight="700" fill="#1c2230">Miroir Kaggle (awsaf49) — JPEG</text>
+    <text x="1084" y="251" font-size="10.5" fill="#5b6170">jpeg/ + csv/ (4 CSV de cas, dicom_info, meta)</text>
+    <text x="1084" y="265" font-size="10.5" fill="#5b6170">8 bits avec perte : la dynamique 16 bits est perdue</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="290" x2="155" y2="326"/></g>
+
+  <!-- ============ BANDE 2 : COMPOSITION ============ -->
+  <rect x="40" y="330" width="1400" height="240" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="330" width="230" height="240" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="364" font-size="15" font-weight="700" fill="#1c2230">COMPOSITION</text>
+  <text x="60" y="384" font-size="12.5" fill="#5b6170">753 calcif. + 891 masses</text>
+  <text x="60" y="408" font-size="10.5" fill="#8a90a0">Un « cas » = une anomalie,</text>
+  <text x="60" y="422" font-size="10.5" fill="#8a90a0">vue en incidence CC et/ou</text>
+  <text x="60" y="436" font-size="10.5" fill="#8a90a0">MLO. Le nombre de cas diffère</text>
+  <text x="60" y="450" font-size="10.5" fill="#8a90a0">du nombre d'anomalies : des</text>
+  <text x="60" y="464" font-size="10.5" fill="#8a90a0">cas en portent plusieurs.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="346" width="370" height="130" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="370" font-size="13" font-weight="700" fill="#1c2230">CALCIFICATIONS — 753 cas</text>
+    <text x="304" y="391" font-size="10.5" fill="#5b6170">TRAIN  bénin       329 cas  /  552 anomalies</text>
+    <text x="304" y="406" font-size="10.5" fill="#5b6170">TRAIN  malin       273 cas  /  304 anomalies</text>
+    <text x="304" y="421" font-size="10.5" fill="#5b6170">TEST   bénin        85 cas  /  112 anomalies</text>
+    <text x="304" y="436" font-size="10.5" fill="#5b6170">TEST   malin        66 cas  /   77 anomalies</text>
+    <text x="304" y="457" font-size="10.5" fill="#8a90a0">Masques = ROI DDSM d'origine, jamais re-segmentées</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="346" width="370" height="130" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="370" font-size="13" font-weight="700" fill="#1c2230">MASSES — 891 cas</text>
+    <text x="694" y="391" font-size="10.5" fill="#5b6170">TRAIN  bénin       355 cas  /  387 anomalies</text>
+    <text x="694" y="406" font-size="10.5" fill="#5b6170">TRAIN  malin       336 cas  /  361 anomalies</text>
+    <text x="694" y="421" font-size="10.5" fill="#5b6170">TEST   bénin       117 cas  /  135 anomalies</text>
+    <text x="694" y="436" font-size="10.5" fill="#5b6170">TEST   malin        83 cas  /   87 anomalies</text>
+    <text x="694" y="457" font-size="10.5" fill="#8a90a0">Masques = re-segmentation level set → les vraies cibles</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="346" width="370" height="74" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="368" font-size="13" font-weight="700" fill="#1c2230">Découpage train / test officiel</text>
+    <text x="1084" y="386" font-size="10.5" fill="#5b6170">20 % des cas en test, stratifié sur le BI-RADS</text>
+    <text x="1084" y="400" font-size="10.5" fill="#5b6170">masses et calcifications découpées séparément</text>
+    <text x="1084" y="414" font-size="10.5" fill="#5b6170">des cas portent les deux types → recouvrement</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="430" width="370" height="46" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="452" font-size="13" font-weight="700" fill="#1c2230">Trois artefacts image par anomalie</text>
+    <text x="1084" y="469" font-size="10.5" fill="#5b6170">mammographie complète (CC + MLO) · masque ROI binaire · imagette</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="490" width="1150" height="64" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="512" font-size="13" font-weight="700" fill="#1c2230">Métadonnées CSV, une ligne par anomalie — c'est toute la supervision disponible au-delà des pixels</text>
+    <text x="304" y="530" font-size="10.5" fill="#5b6170">identifiant patient · densité mammaire 1–4 · gauche / droite · incidence CC | MLO · index d'anomalie · forme de la masse · contour de la masse · type de calcification</text>
+    <text x="304" y="545" font-size="10.5" fill="#5b6170">distribution des calcifications · évaluation BI-RADS 0–5 · pathologie { BENIGN, BENIGN_WITHOUT_CALLBACK, MALIGNANT } · subtilité 1–5 · chemins image, masque, imagette</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="570" x2="155" y2="606"/></g>
+
+  <!-- ============ BANDE 3 : QUALITÉ DES LABELS ============ -->
+  <rect x="40" y="610" width="1400" height="160" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="610" width="230" height="160" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="644" font-size="15" font-weight="700" fill="#1c2230">QUALITÉ DES LABELS</text>
+  <text x="60" y="664" font-size="12.5" fill="#5b6170">que vaut la vérité terrain ?</text>
+  <text x="60" y="688" font-size="10.5" fill="#8a90a0">Les masques d'entraînement</text>
+  <text x="60" y="702" font-size="10.5" fill="#8a90a0">ont été produits par un</text>
+  <text x="60" y="716" font-size="10.5" fill="#8a90a0">algorithme, pas par un</text>
+  <text x="60" y="730" font-size="10.5" fill="#8a90a0">radiologue. Cela plafonne</text>
+  <text x="60" y="744" font-size="10.5" fill="#8a90a0">votre Dice.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="626" width="370" height="126" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="304" y="650" font-size="13" font-weight="700" fill="#1c2230">Validation des masques de masses</text>
+    <text x="304" y="670" font-size="10.5" fill="#5b6170">118 images re-tracées par un radiologue expert</text>
+    <text x="304" y="685" font-size="10.5" fill="#5b6170">Dice (auto vs tracé manuel) = 0,792 ± 0,108</text>
+    <text x="304" y="700" font-size="10.5" fill="#5b6170">Dice (ancien DDSM vs manuel) = 0,398 ± 0,195</text>
+    <text x="304" y="715" font-size="10.5" fill="#5b6170">gain moyen = 0,395 ± 0,257</text>
+    <text x="304" y="730" font-size="10.5" fill="#5b6170">test de Wilcoxon apparié p = 5,5e-19</text>
+    <text x="304" y="745" font-size="10.5" fill="#8a90a0">une vraie amélioration — mais pas au niveau expert</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="626" width="370" height="126" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="694" y="650" font-size="13" font-weight="700" fill="#1c2230">La qualité chute avec la densité mammaire</text>
+    <text x="694" y="670" font-size="10.5" fill="#5b6170">densité 1 — presque entièrement graisseux   0,904</text>
+    <text x="694" y="685" font-size="10.5" fill="#5b6170">densité 2 — fibroglandulaire éparse         0,886</text>
+    <text x="694" y="700" font-size="10.5" fill="#5b6170">densité 3 — dense hétérogène                0,749</text>
+    <text x="694" y="715" font-size="10.5" fill="#5b6170">densité 4 — extrêmement dense               0,808</text>
+    <text x="694" y="736" font-size="10.5" fill="#8a90a0">les seins denses sont aussi ceux où la détection</text>
+    <text x="694" y="748" font-size="10.5" fill="#8a90a0">clinique est la plus difficile</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="626" width="370" height="126" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="1084" y="650" font-size="13" font-weight="700" fill="#1c2230">Ce que cela implique pour le projet</text>
+    <text x="1084" y="670" font-size="10.5" fill="#5b6170">Labels « argent », pas « or » — 0,79 est le</text>
+    <text x="1084" y="685" font-size="10.5" fill="#5b6170">plafond réaliste de Dice, pas 0,95</text>
+    <text x="1084" y="700" font-size="10.5" fill="#5b6170">Supervision des calcifications grossière →</text>
+    <text x="1084" y="715" font-size="10.5" fill="#5b6170">segmenter les masses d'abord, calcif. en bonus</text>
+    <text x="1084" y="736" font-size="10.5" fill="#5b6170">Toujours reporter le Dice par densité et subtilité :</text>
+    <text x="1084" y="748" font-size="10.5" fill="#5b6170">une moyenne cache où le modèle échoue vraiment</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="770" x2="155" y2="806"/></g>
+
+  <!-- ============ BANDE 4 : TÂCHE ============ -->
+  <rect x="40" y="810" width="1400" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="810" width="230" height="140" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="844" font-size="15" font-weight="700" fill="#1c2230">TÂCHE</text>
+  <text x="60" y="864" font-size="12.5" fill="#5b6170">ce que l'on prédit exactement</text>
+  <text x="60" y="888" font-size="10.5" fill="#8a90a0">La segmentation est l'objectif</text>
+  <text x="60" y="902" font-size="10.5" fill="#8a90a0">affiché ; détection et diagnostic</text>
+  <text x="60" y="916" font-size="10.5" fill="#8a90a0">en découlent et donnent des</text>
+  <text x="60" y="930" font-size="10.5" fill="#8a90a0">chiffres comparables.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="826" width="370" height="106" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="850" font-size="13" font-weight="700" fill="#1c2230">Principale — segmentation sémantique</text>
+    <text x="304" y="870" font-size="10.5" fill="#5b6170">binaire, au pixel : lésion vs fond</text>
+    <text x="304" y="885" font-size="10.5" fill="#5b6170">entrée = mammographie complète ou imagette ROI</text>
+    <text x="304" y="900" font-size="10.5" fill="#5b6170">sortie = masque, comparable à la ROI fournie</text>
+    <text x="304" y="921" font-size="10.5" fill="#8a90a0">variante 3 classes possible : fond / bénin / malin</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="826" width="370" height="106" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="850" font-size="13" font-weight="700" fill="#1c2230">Dérivées — les deux cadrages cliniques</text>
+    <text x="694" y="870" font-size="10.5" fill="#5b6170">CADe (détection) : où est l'anomalie ?</text>
+    <text x="694" y="885" font-size="10.5" fill="#5b6170">CADx (diagnostic) : bénigne ou maligne ?</text>
+    <text x="694" y="900" font-size="10.5" fill="#5b6170">les deux s'obtiennent en agrégeant la carte de pixels</text>
+    <text x="694" y="921" font-size="10.5" fill="#8a90a0">CADe limité par les faux positifs ; CADx pas encore validé en clinique</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="826" width="370" height="106" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1084" y="850" font-size="13" font-weight="700" fill="#1c2230">Décisions encore ouvertes</text>
+    <text x="1084" y="870" font-size="10.5" fill="#5b6170">image entière (~3000 × 5000 px) vs imagettes vs multi-échelle</text>
+    <text x="1084" y="885" font-size="10.5" fill="#5b6170">masses seules vs masses + calcifications</text>
+    <text x="1084" y="900" font-size="10.5" fill="#5b6170">vue unique vs fusion CC + MLO par sein</text>
+    <text x="1084" y="921" font-size="10.5" fill="#5b6170">DICOM TCIA (16 bits) vs JPEG Kaggle (8 bits)</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="950" x2="155" y2="986"/></g>
+
+  <!-- ============ BANDE 5 : MÉTRIQUES ============ -->
+  <rect x="40" y="990" width="1400" height="210" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="990" width="230" height="210" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1024" font-size="15" font-weight="700" fill="#1c2230">MÉTRIQUES</text>
+  <text x="60" y="1044" font-size="12.5" fill="#5b6170">segmentation + radiologie</text>
+  <text x="60" y="1068" font-size="10.5" fill="#8a90a0">Deux vocabulaires se croisent :</text>
+  <text x="60" y="1082" font-size="10.5" fill="#8a90a0">les métriques de recouvrement</text>
+  <text x="60" y="1096" font-size="10.5" fill="#8a90a0">de la segmentation d'images,</text>
+  <text x="60" y="1110" font-size="10.5" fill="#8a90a0">et le langage sensibilité /</text>
+  <text x="60" y="1124" font-size="10.5" fill="#8a90a0">FPPI du radiologue.</text>
+  <text x="60" y="1148" font-size="10.5" fill="#8a90a0">Reporter les deux, sinon vos</text>
+  <text x="60" y="1162" font-size="10.5" fill="#8a90a0">résultats ne sont pas</text>
+  <text x="60" y="1176" font-size="10.5" fill="#8a90a0">comparables à la littérature.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1006" width="370" height="134" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="1030" font-size="13" font-weight="700" fill="#1c2230">A · Recouvrement de segmentation</text>
+    <text x="304" y="1050" font-size="10.5" fill="#5b6170">Dice / F1 — la mesure principale (Lee 2017)</text>
+    <text x="304" y="1065" font-size="10.5" fill="#5b6170">IoU / Jaccard — plus sévère, même information</text>
+    <text x="304" y="1080" font-size="10.5" fill="#5b6170">Hausdorff-95, ASSD — erreur de frontière en mm</text>
+    <text x="304" y="1095" font-size="10.5" fill="#5b6170">Boundary F-score — fidélité du contour</text>
+    <text x="304" y="1116" font-size="10.5" fill="#8a90a0">Le contour et la forme de la masse sont eux-mêmes</text>
+    <text x="304" y="1130" font-size="10.5" fill="#8a90a0">diagnostiques : la frontière n'est pas cosmétique.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="1006" width="370" height="134" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="1030" font-size="13" font-weight="700" fill="#1c2230">B · Détection &amp; diagnostic (standard radio)</text>
+    <text x="694" y="1050" font-size="10.5" fill="#5b6170">Sensibilité (rappel) · Spécificité — le duo phare</text>
+    <text x="694" y="1065" font-size="10.5" fill="#5b6170">VPP · VPN — dépendent de la prévalence, l'indiquer</text>
+    <text x="694" y="1080" font-size="10.5" fill="#5b6170">AUC ROC, notée Az dans les anciens articles CAO</text>
+    <text x="694" y="1095" font-size="10.5" fill="#5b6170">Courbe FROC &amp; FPPI — faux positifs par image</text>
+    <text x="694" y="1110" font-size="10.5" fill="#5b6170">CPM — sensibilité moyenne à 1/8 … 8 FPPI</text>
+    <text x="694" y="1131" font-size="10.5" fill="#8a90a0">Repères : CADe 81–98 % sens. à 0,2–3,2 FPPI ; CADx Az 0,77–0,94</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="1006" width="370" height="134" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="1030" font-size="13" font-weight="700" fill="#1c2230">C · Stratificateurs cliniques (dans les CSV)</text>
+    <text x="1084" y="1050" font-size="10.5" fill="#5b6170">Évaluation BI-RADS 0–5 — niveau de suspicion</text>
+    <text x="1084" y="1065" font-size="10.5" fill="#5b6170">Densité mammaire 1–4 — graisseux → très dense</text>
+    <text x="1084" y="1080" font-size="10.5" fill="#5b6170">Subtilité 1–5 — difficulté cotée par le radiologue</text>
+    <text x="1084" y="1095" font-size="10.5" fill="#5b6170">Pathologie — bénin / bénin sans rappel / malin</text>
+    <text x="1084" y="1116" font-size="10.5" fill="#8a90a0">Axes gratuits pour les slides de résultats :</text>
+    <text x="1084" y="1130" font-size="10.5" fill="#8a90a0">performance vs difficulté convainc plus qu'une moyenne.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1150" width="1150" height="44" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="304" y="1170" font-size="12.5" font-weight="700" fill="#1c2230">Piège métrique — l'exactitude au pixel n'a aucun sens ici.</text>
+    <text x="304" y="1187" font-size="10.5" fill="#5b6170">Une lésion couvre moins de 1 % d'une mammographie : prédire « tout fond » donne &gt; 99 %. Utiliser Dice et AUC-PR, et associer chaque point de fonctionnement à son FPPI — un CADe se juge au nombre de fausses marques par image.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="1200" x2="155" y2="1236"/></g>
+
+  <!-- ============ BANDE 6 : MODÈLES ============ -->
+  <rect x="40" y="1240" width="1400" height="300" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1240" width="230" height="300" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1274" font-size="15" font-weight="700" fill="#1c2230">MODÈLES</text>
+  <text x="60" y="1294" font-size="12.5" fill="#5b6170">ce qui existe déjà</text>
+  <text x="60" y="1318" font-size="10.5" fill="#8a90a0">Le travail séminal sur ce jeu</text>
+  <text x="60" y="1332" font-size="10.5" fill="#8a90a0">de données est un classifieur,</text>
+  <text x="60" y="1346" font-size="10.5" fill="#8a90a0">pas un segmenteur — sa valeur</text>
+  <text x="60" y="1360" font-size="10.5" fill="#8a90a0">est la recette de transfert</text>
+  <text x="60" y="1374" font-size="10.5" fill="#8a90a0">imagette → image entière, qui</text>
+  <text x="60" y="1388" font-size="10.5" fill="#8a90a0">s'applique à la segmentation.</text>
+  <text x="60" y="1412" font-size="10.5" fill="#8a90a0">Tout ce qui suit est un</text>
+  <text x="60" y="1426" font-size="10.5" fill="#8a90a0">candidat, aucun n'est encore</text>
+  <text x="60" y="1440" font-size="10.5" fill="#8a90a0">retenu.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1256" width="1150" height="76" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="1278" font-size="13" font-weight="700" fill="#1c2230">Référence — Shen et al., Scientific Reports 9:12495 (2019), « Deep Learning to Improve Breast Cancer Detection on Screening Mammography »</text>
+    <text x="304" y="1298" font-size="10.5" fill="#5b6170">Recette : entraîner un classifieur d'imagettes sur les crops ROI (ResNet50 / VGG16 pré-entraînés ImageNet), puis le convertir en classifieur d'image entière, sans annotation de lésion en 2e étape.</text>
+    <text x="304" y="1313" font-size="10.5" fill="#5b6170">AUC par image sur CBIS-DDSM = 0,88 (modèle unique), 0,91 en moyennant 4 modèles (sensibilité 86,1 %, spécificité 80,1 %). Sur INbreast (FFDM) : AUC 0,95 → 0,98 (sens. 86,7 %, spéc. 96,1 %).</text>
+    <text x="304" y="1328" font-size="10.5" fill="#8a90a0">C'est une référence de classification. Il n'existe pas de benchmark de segmentation aussi canonique sur CBIS-DDSM — c'est exactement la brèche où se place ce projet.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1342" width="276" height="150" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="1366" font-size="13" font-weight="700" fill="#1c2230">CNN encodeur–décodeur</text>
+    <text x="304" y="1386" font-size="10.5" fill="#5b6170">U-Net — la référence de base</text>
+    <text x="304" y="1401" font-size="10.5" fill="#5b6170">U-Net++ · ResUNet</text>
+    <text x="304" y="1416" font-size="10.5" fill="#5b6170">Attention U-Net</text>
+    <text x="304" y="1431" font-size="10.5" fill="#5b6170">DeepLabv3+ (ASPP, multi-échelle)</text>
+    <text x="304" y="1455" font-size="10.5" fill="#8a90a0">Peu coûteux, bien compris,</text>
+    <text x="304" y="1469" font-size="10.5" fill="#8a90a0">fonctionne sur imagettes ROI</text>
+    <text x="304" y="1483" font-size="10.5" fill="#8a90a0">avec quelques centaines de masques.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="581" y="1342" width="276" height="150" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="595" y="1366" font-size="13" font-weight="700" fill="#1c2230">Détection d'abord / instances</text>
+    <text x="595" y="1386" font-size="10.5" fill="#5b6170">Mask R-CNN</text>
+    <text x="595" y="1401" font-size="10.5" fill="#5b6170">YOLO-seg</text>
+    <text x="595" y="1416" font-size="10.5" fill="#5b6170">RetinaNet + tête de masque</text>
+    <text x="595" y="1440" font-size="10.5" fill="#8a90a0">Donne directement FROC et FPPI</text>
+    <text x="595" y="1454" font-size="10.5" fill="#8a90a0">par lésion — les chiffres que</text>
+    <text x="595" y="1468" font-size="10.5" fill="#8a90a0">les radiologues comparent.</text>
+    <text x="595" y="1483" font-size="10.5" fill="#8a90a0">Gère plusieurs lésions par image.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="872" y="1342" width="276" height="150" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="886" y="1366" font-size="13" font-weight="700" fill="#1c2230">Auto-configurant &amp; transformeurs</text>
+    <text x="886" y="1386" font-size="10.5" fill="#5b6170">nnU-Net — meilleure référence</text>
+    <text x="886" y="1401" font-size="10.5" fill="#5b6170">sans réglage en imagerie médicale</text>
+    <text x="886" y="1416" font-size="10.5" fill="#5b6170">TransUNet · Swin-UNet</text>
+    <text x="886" y="1431" font-size="10.5" fill="#5b6170">SegFormer · hybride CNN+attention</text>
+    <text x="886" y="1455" font-size="10.5" fill="#8a90a0">Les transformeurs veulent plus</text>
+    <text x="886" y="1469" font-size="10.5" fill="#8a90a0">que 891 cas de masses — il faudra</text>
+    <text x="886" y="1483" font-size="10.5" fill="#8a90a0">s'appuyer sur le pré-entraînement.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1163" y="1342" width="276" height="150" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1177" y="1366" font-size="13" font-weight="700" fill="#1c2230">Modèles de fondation</text>
+    <text x="1177" y="1386" font-size="10.5" fill="#5b6170">SAM / SAM-2, prompts boîte ou point</text>
+    <text x="1177" y="1401" font-size="10.5" fill="#5b6170">MedSAM (fine-tune médical)</text>
+    <text x="1177" y="1416" font-size="10.5" fill="#5b6170">prompt = boîte englobante du CSV</text>
+    <text x="1177" y="1440" font-size="10.5" fill="#8a90a0">Séduisant car les labels sont</text>
+    <text x="1177" y="1454" font-size="10.5" fill="#8a90a0">rares ; non éprouvé sur film</text>
+    <text x="1177" y="1468" font-size="10.5" fill="#8a90a0">numérisé. À traiter comme une</text>
+    <text x="1177" y="1483" font-size="10.5" fill="#8a90a0">expérience, pas la piste principale.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1502" width="1150" height="30" rx="8" fill="#eef0f4" stroke="#c7ccd6"/>
+    <text x="304" y="1521" font-size="10.5" fill="#5b6170">Leviers communs, quelle que soit l'architecture : transfert ImageNet · pré-entraînement par imagettes (recette Shen) · augmentation agressive (miroir, élastique, intensité) · perte Dice+BCE, Tversky ou focale contre le déséquilibre 1:100+.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="1540" x2="155" y2="1576"/></g>
+
+  <!-- ============ BANDE 7 : PIPELINE ============ -->
+  <rect x="40" y="1580" width="1400" height="250" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1580" width="230" height="250" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1614" font-size="15" font-weight="700" fill="#1c2230">PIPELINE</text>
+  <text x="60" y="1634" font-size="12.5" fill="#5b6170">prévu — rien n'est construit</text>
+  <text x="60" y="1658" font-size="10.5" fill="#8a90a0">Sept étapes, dans l'ordre.</text>
+  <text x="60" y="1672" font-size="10.5" fill="#8a90a0">Chaque boîte ci-dessous est en</text>
+  <text x="60" y="1686" font-size="10.5" fill="#8a90a0">violet pointillé car rien de</text>
+  <text x="60" y="1700" font-size="10.5" fill="#8a90a0">tout cela n'existe encore dans</text>
+  <text x="60" y="1714" font-size="10.5" fill="#8a90a0">le dossier — seuls les 2 PDF.</text>
+  <text x="60" y="1738" font-size="10.5" fill="#8a90a0">Les étapes 1–4 font une semaine</text>
+  <text x="60" y="1752" font-size="10.5" fill="#8a90a0">de travail et suffisent déjà à</text>
+  <text x="60" y="1766" font-size="10.5" fill="#8a90a0">un exposé défendable.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="304" y="1620" font-size="13" font-weight="700" fill="#1c2230">1 · Ingestion &amp; index</text>
+    <text x="304" y="1640" font-size="10.5" fill="#5b6170">parser les 4 CSV de description de cas</text>
+    <text x="304" y="1655" font-size="10.5" fill="#5b6170">joindre aux chemins jpeg via dicom_info.csv</text>
+    <text x="304" y="1670" font-size="10.5" fill="#5b6170">vérifier chaque appariement image ↔ masque</text>
+    <text x="304" y="1687" font-size="10.5" fill="#8a90a0">les colonnes de chemins sont réputées sales</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="581" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="595" y="1620" font-size="13" font-weight="700" fill="#1c2230">2 · Prétraitement</text>
+    <text x="595" y="1640" font-size="10.5" fill="#5b6170">recadrer sur la région mammaire, ôter le fond</text>
+    <text x="595" y="1655" font-size="10.5" fill="#5b6170">retirer le muscle pectoral sur les vues MLO</text>
+    <text x="595" y="1670" font-size="10.5" fill="#5b6170">CLAHE, normalisation, redimensionnement</text>
+    <text x="595" y="1687" font-size="10.5" fill="#8a90a0">artefacts scanner et étiquettes sont dans les marges</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="872" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="886" y="1620" font-size="13" font-weight="700" fill="#1c2230">3 · Découpage</text>
+    <text x="886" y="1640" font-size="10.5" fill="#5b6170">conserver le train/test officiel CBIS-DDSM</text>
+    <text x="886" y="1655" font-size="10.5" fill="#5b6170">extraire la validation depuis le train seul</text>
+    <text x="886" y="1670" font-size="10.5" fill="#5b6170">grouper par identifiant patient, jamais par image</text>
+    <text x="886" y="1687" font-size="10.5" fill="#8a90a0">sinon CC et MLO d'un sein finissent des deux côtés</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1163" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1177" y="1620" font-size="13" font-weight="700" fill="#1c2230">4 · Référence de base</text>
+    <text x="1177" y="1640" font-size="10.5" fill="#5b6170">U-Net sur imagettes ROI de masses</text>
+    <text x="1177" y="1655" font-size="10.5" fill="#5b6170">perte Dice + BCE, encodeur ImageNet</text>
+    <text x="1177" y="1670" font-size="10.5" fill="#5b6170">objectif Dice ≈ 0,75 – 0,80</text>
+    <text x="1177" y="1687" font-size="10.5" fill="#8a90a0">c.-à-d. au niveau de la qualité des labels</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1706" width="370" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="304" y="1730" font-size="13" font-weight="700" fill="#1c2230">5 · Montée en charge</text>
+    <text x="304" y="1750" font-size="10.5" fill="#5b6170">nnU-Net ou Attention U-Net sur images entières</text>
+    <text x="304" y="1765" font-size="10.5" fill="#5b6170">entrée multi-échelle, ensemble de modèles</text>
+    <text x="304" y="1780" font-size="10.5" fill="#5b6170">ajouter les calcifications une fois les masses solides</text>
+    <text x="304" y="1797" font-size="10.5" fill="#8a90a0">c'est sur image entière que le FPPI devient le vrai problème</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="1706" width="370" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="694" y="1730" font-size="13" font-weight="700" fill="#1c2230">6 · Évaluation</text>
+    <text x="694" y="1750" font-size="10.5" fill="#5b6170">Dice / IoU / HD95 sur le test officiel réservé</text>
+    <text x="694" y="1765" font-size="10.5" fill="#5b6170">FROC et sensibilité à FPPI fixé</text>
+    <text x="694" y="1780" font-size="10.5" fill="#5b6170">stratifier par densité, subtilité, pathologie, BI-RADS</text>
+    <text x="694" y="1797" font-size="10.5" fill="#8a90a0">citer Shen 2019 (AUC 0,88 – 0,91) comme référence de positionnement</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="1706" width="370" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1084" y="1730" font-size="13" font-weight="700" fill="#1c2230">7 · Restitution — l'oral MLB</text>
+    <text x="1084" y="1750" font-size="10.5" fill="#5b6170">noté sur : plan, introduction, diversité des méthodes,</text>
+    <text x="1084" y="1765" font-size="10.5" fill="#5b6170">pratique &amp; validation, résultats, conclusion / perspectives,</text>
+    <text x="1084" y="1780" font-size="10.5" fill="#5b6170">qualité des transparents et graphiques, gestion du temps</text>
+    <text x="1084" y="1797" font-size="10.5" fill="#8a90a0">source : Evaluation.pdf dans ce dossier — bâtir l'exposé sur cette grille</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="1830" x2="155" y2="1866"/></g>
+
+  <!-- ============ BANDE 8 : RISQUES ============ -->
+  <rect x="40" y="1870" width="1400" height="170" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1870" width="230" height="170" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1904" font-size="15" font-weight="700" fill="#1c2230">RISQUES</text>
+  <text x="60" y="1924" font-size="12.5" fill="#5b6170">ce qui va vous mordre</text>
+  <text x="60" y="1948" font-size="10.5" fill="#8a90a0">Chacun gonfle ou invalide</text>
+  <text x="60" y="1962" font-size="10.5" fill="#8a90a0">silencieusement un résultat.</text>
+  <text x="60" y="1976" font-size="10.5" fill="#8a90a0">Les nommer dans l'exposé vaut</text>
+  <text x="60" y="1990" font-size="10.5" fill="#8a90a0">plus qu'un Dice plus élevé.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1886" width="276" height="136" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="304" y="1910" font-size="13" font-weight="700" fill="#1c2230">Écart de domaine</text>
+    <text x="304" y="1930" font-size="10.5" fill="#5b6170">film numérisé, pas de la FFDM moderne</text>
+    <text x="304" y="1945" font-size="10.5" fill="#5b6170">plusieurs scanners, plusieurs centres</text>
+    <text x="304" y="1960" font-size="10.5" fill="#5b6170">le miroir Kaggle est 8 bits avec perte</text>
+    <text x="304" y="1981" font-size="10.5" fill="#8a90a0">Shen 2019 voit l'AUC passer de 0,88</text>
+    <text x="304" y="1995" font-size="10.5" fill="#8a90a0">à 0,95 en passant à la FFDM —</text>
+    <text x="304" y="2009" font-size="10.5" fill="#8a90a0">l'écart est mesurable et important.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="581" y="1886" width="276" height="136" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="595" y="1910" font-size="13" font-weight="700" fill="#1c2230">Fuite de données</text>
+    <text x="595" y="1930" font-size="10.5" fill="#5b6170">un patient → plusieurs vues et cas</text>
+    <text x="595" y="1945" font-size="10.5" fill="#5b6170">les jeux calcif. et masses se recouvrent</text>
+    <text x="595" y="1960" font-size="10.5" fill="#5b6170">les imagettes viennent de la même image</text>
+    <text x="595" y="1981" font-size="10.5" fill="#8a90a0">Un découpage aléatoire naïf gonfle</text>
+    <text x="595" y="1995" font-size="10.5" fill="#8a90a0">toutes les métriques. Grouper par</text>
+    <text x="595" y="2009" font-size="10.5" fill="#8a90a0">patient, garder le test officiel intact.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="872" y="1886" width="276" height="136" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="886" y="1910" font-size="13" font-weight="700" fill="#1c2230">Labels faibles / algorithmiques</text>
+    <text x="886" y="1930" font-size="10.5" fill="#5b6170">masses : sortie level set, Dice 0,79 face</text>
+    <text x="886" y="1945" font-size="10.5" fill="#5b6170">à un expert — pas des masques experts</text>
+    <text x="886" y="1960" font-size="10.5" fill="#5b6170">calcifications : ROI DDSM grossières</text>
+    <text x="886" y="1981" font-size="10.5" fill="#8a90a0">Vous apprenez en partie à imiter un</text>
+    <text x="886" y="1995" font-size="10.5" fill="#8a90a0">algorithme de segmentation des années</text>
+    <text x="886" y="2009" font-size="10.5" fill="#8a90a0">1990. Le dire, et limiter vos claims.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1163" y="1886" width="276" height="136" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="1177" y="1910" font-size="13" font-weight="700" fill="#1c2230">Test réduit &amp; déséquilibré</text>
+    <text x="1177" y="1930" font-size="10.5" fill="#5b6170">test masses : 83 cas malins</text>
+    <text x="1177" y="1945" font-size="10.5" fill="#5b6170">test calcifications : 66 cas malins</text>
+    <text x="1177" y="1960" font-size="10.5" fill="#5b6170">pixels de lésion : bien moins de 1 %</text>
+    <text x="1177" y="1981" font-size="10.5" fill="#8a90a0">Les intervalles de confiance seront</text>
+    <text x="1177" y="1995" font-size="10.5" fill="#8a90a0">larges — les estimer par bootstrap</text>
+    <text x="1177" y="2009" font-size="10.5" fill="#8a90a0">plutôt qu'une valeur ponctuelle nue.</text>
+  </g>
+
+  <!-- ============ LÉGENDE ============ -->
+  <text x="40" y="2072" font-size="12" font-weight="700" fill="#1c2230">LÉGENDE</text>
+
+  <rect x="120" y="2060" width="22" height="16" rx="4" fill="#e7eefc" stroke="#3f6fd1"/>
+  <text x="150" y="2073" font-size="12" fill="#5b6170">fait établi — publié, vérifiable</text>
+
+  <rect x="400" y="2060" width="22" height="16" rx="4" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+  <text x="430" y="2073" font-size="12" fill="#5b6170">réserve mesurée — limite réelle des données</text>
+
+  <rect x="760" y="2060" width="22" height="16" rx="4" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+  <text x="790" y="2073" font-size="12" fill="#5b6170">prévu — pas encore construit</text>
+
+  <rect x="1020" y="2060" width="22" height="16" rx="4" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+  <text x="1050" y="2073" font-size="12" fill="#5b6170">risque — invalide les résultats s'il est ignoré</text>
+
+  <text x="40" y="2112" font-size="10.5" fill="#8a90a0">Sources — Lee R.S., Gimenez F., Hoogi A., Miyake K.K., Gorovoy M., Rubin D.L., « A curated mammography data set for use in computer-aided detection and diagnosis research », Scientific Data 4:170177 (2017), DOI 10.1038/sdata.2017.177 (local : sdata2017177.pdf).</text>
+  <text x="40" y="2128" font-size="10.5" fill="#8a90a0">Fiche de collection TCIA pour CBIS-DDSM (1 566 participants · 2 620 études · 6 775 séries · 10 239 images · 163,51 Go · CC BY 3.0). Shen L. et al., Scientific Reports 9:12495 (2019), DOI 10.1038/s41598-019-48995-4. Miroir Kaggle : awsaf49/cbis-ddsm-breast-cancer-image-dataset.</text>
+  <text x="40" y="2144" font-size="10.5" fill="#8a90a0">Les critères de notation de l'étape 7 du PIPELINE proviennent de Evaluation.pdf (grille d'évaluation MLB) dans ce dossier. État du projet au 2026-09-08 : jeu de données non téléchargé, aucun code écrit.</text>
+</svg>

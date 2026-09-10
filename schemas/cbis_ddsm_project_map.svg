@@ -1,0 +1,489 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="2170" viewBox="0 0 1480 2170" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3a3f4b"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1480" height="2170" fill="#f7f8fa"/>
+
+  <!-- ============ TITLE ============ -->
+  <text x="40" y="48" font-size="26" font-weight="700" fill="#1c2230">CBIS-DDSM — Breast Lesion Segmentation: Project Map</text>
+  <text x="40" y="74" font-size="14" fill="#5b6170">Segmenting cancerous tissue on screening mammography · dataset composition, radiology metrics, model landscape, planned pipeline · MLB 2026–2027</text>
+  <text x="40" y="96" font-size="11.5" fill="#8a90a0">Grounded in Lee et al., Scientific Data 4:170177 (2017) · the TCIA CBIS-DDSM collection record · Shen et al., Scientific Reports 9:12495 (2019). Nothing here is built yet.</text>
+
+  <!-- ============ ROW 1 : SOURCE DATA ============ -->
+  <rect x="40" y="130" width="1400" height="160" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="130" width="230" height="160" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="164" font-size="15" font-weight="700" fill="#1c2230">SOURCE</text>
+  <text x="60" y="184" font-size="12.5" fill="#5b6170">provenance &amp; access</text>
+  <text x="60" y="206" font-size="10.5" fill="#8a90a0">what the raw data</text>
+  <text x="60" y="220" font-size="10.5" fill="#8a90a0">actually is, and in</text>
+  <text x="60" y="234" font-size="10.5" fill="#8a90a0">which format you get it</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="146" width="370" height="126" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="170" font-size="13" font-weight="700" fill="#1c2230">DDSM (original, 1997)</text>
+    <text x="304" y="190" font-size="10.5" fill="#5b6170">2,620 scanned film mammography studies</text>
+    <text x="304" y="205" font-size="10.5" fill="#5b6170">4 US centres: Mass. General, Wake Forest,</text>
+    <text x="304" y="220" font-size="10.5" fill="#5b6170">Sacred Heart, Washington U. St Louis</text>
+    <text x="304" y="235" font-size="10.5" fill="#5b6170">Obsolete LJPEG files (PVRG codec, 1993)</text>
+    <text x="304" y="250" font-size="10.5" fill="#5b6170">ROI outlines mark position, not boundary</text>
+    <text x="304" y="265" font-size="10.5" fill="#8a90a0">normal / benign / malignant, pathology-verified</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="146" width="370" height="126" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="170" font-size="13" font-weight="700" fill="#1c2230">CBIS-DDSM curation (Lee et al. 2017)</text>
+    <text x="694" y="190" font-size="10.5" fill="#5b6170">LJPEG → 16-bit TIFF → DICOM, fully lossless</text>
+    <text x="694" y="205" font-size="10.5" fill="#5b6170">Optical density standardised, clipped 0.05–3.0</text>
+    <text x="694" y="220" font-size="10.5" fill="#5b6170">339 images with no clearly visible mass removed</text>
+    <text x="694" y="235" font-size="10.5" fill="#5b6170">Mass ROIs re-cut: local Chan–Vese level set,</text>
+    <text x="694" y="250" font-size="10.5" fill="#5b6170">initialised on the coarse DDSM contour</text>
+    <text x="694" y="265" font-size="10.5" fill="#8a90a0">tooling: github.com/fjeg/ddsm_tools (Python 2.7)</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="146" width="370" height="58" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="166" font-size="13" font-weight="700" fill="#1c2230">TCIA original — DICOM, 163.5 GB</text>
+    <text x="1084" y="183" font-size="10.5" fill="#5b6170">1,566 participants · 2,620 studies · 6,775 series</text>
+    <text x="1084" y="197" font-size="10.5" fill="#5b6170">10,239 images · modality MG · licence CC BY 3.0</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="214" width="370" height="58" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="1084" y="234" font-size="13" font-weight="700" fill="#1c2230">Kaggle mirror (awsaf49) — JPEG</text>
+    <text x="1084" y="251" font-size="10.5" fill="#5b6170">jpeg/ images + csv/ (4 case CSVs, dicom_info, meta)</text>
+    <text x="1084" y="265" font-size="10.5" fill="#5b6170">8-bit lossy: the 16-bit dynamic range is gone</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="290" x2="155" y2="326"/></g>
+
+  <!-- ============ ROW 2 : COMPOSITION ============ -->
+  <rect x="40" y="330" width="1400" height="240" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="330" width="230" height="240" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="364" font-size="15" font-weight="700" fill="#1c2230">COMPOSITION</text>
+  <text x="60" y="384" font-size="12.5" fill="#5b6170">753 calc + 891 mass cases</text>
+  <text x="60" y="408" font-size="10.5" fill="#8a90a0">A "case" = one abnormality</text>
+  <text x="60" y="422" font-size="10.5" fill="#8a90a0">seen on CC and/or MLO view.</text>
+  <text x="60" y="436" font-size="10.5" fill="#8a90a0">Case counts and abnormality</text>
+  <text x="60" y="450" font-size="10.5" fill="#8a90a0">counts differ: some cases</text>
+  <text x="60" y="464" font-size="10.5" fill="#8a90a0">carry several abnormalities.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="346" width="370" height="130" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="370" font-size="13" font-weight="700" fill="#1c2230">CALCIFICATION — 753 cases</text>
+    <text x="304" y="391" font-size="10.5" fill="#5b6170">TRAIN  benign      329 cases  /  552 abnormalities</text>
+    <text x="304" y="406" font-size="10.5" fill="#5b6170">TRAIN  malignant   273 cases  /  304 abnormalities</text>
+    <text x="304" y="421" font-size="10.5" fill="#5b6170">TEST   benign        85 cases  /  112 abnormalities</text>
+    <text x="304" y="436" font-size="10.5" fill="#5b6170">TEST   malignant     66 cases  /   77 abnormalities</text>
+    <text x="304" y="457" font-size="10.5" fill="#8a90a0">Masks = original coarse DDSM ROIs, never re-segmented</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="346" width="370" height="130" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="370" font-size="13" font-weight="700" fill="#1c2230">MASS — 891 cases</text>
+    <text x="694" y="391" font-size="10.5" fill="#5b6170">TRAIN  benign      355 cases  /  387 abnormalities</text>
+    <text x="694" y="406" font-size="10.5" fill="#5b6170">TRAIN  malignant   336 cases  /  361 abnormalities</text>
+    <text x="694" y="421" font-size="10.5" fill="#5b6170">TEST   benign      117 cases  /  135 abnormalities</text>
+    <text x="694" y="436" font-size="10.5" fill="#5b6170">TEST   malignant     83 cases  /   87 abnormalities</text>
+    <text x="694" y="457" font-size="10.5" fill="#8a90a0">Masks = level-set re-segmentation → the usable targets</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="346" width="370" height="74" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="368" font-size="13" font-weight="700" fill="#1c2230">Official train / test split</text>
+    <text x="1084" y="386" font-size="10.5" fill="#5b6170">20% of cases held out, stratified on BI-RADS</text>
+    <text x="1084" y="400" font-size="10.5" fill="#5b6170">mass and calcification split independently</text>
+    <text x="1084" y="414" font-size="10.5" fill="#5b6170">some cases carry both types → the two sets overlap</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="430" width="370" height="46" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="452" font-size="13" font-weight="700" fill="#1c2230">Three image artefacts per abnormality</text>
+    <text x="1084" y="469" font-size="10.5" fill="#5b6170">full mammogram (CC + MLO) · binary ROI mask · cropped patch</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="490" width="1150" height="64" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="512" font-size="13" font-weight="700" fill="#1c2230">CSV metadata, one row per abnormality — this is the whole supervision signal beyond the pixels</text>
+    <text x="304" y="530" font-size="10.5" fill="#5b6170">patient ID · breast density 1–4 · left / right · view CC | MLO · abnormality index · mass shape · mass margin · calcification type · calcification distribution</text>
+    <text x="304" y="545" font-size="10.5" fill="#5b6170">BI-RADS assessment 0–5 · pathology { BENIGN, BENIGN_WITHOUT_CALLBACK, MALIGNANT } · subtlety rating 1–5 · file paths to image, mask and crop</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="570" x2="155" y2="606"/></g>
+
+  <!-- ============ ROW 3 : GROUND-TRUTH QUALITY ============ -->
+  <rect x="40" y="610" width="1400" height="160" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="610" width="230" height="160" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="644" font-size="15" font-weight="700" fill="#1c2230">LABEL QUALITY</text>
+  <text x="60" y="664" font-size="12.5" fill="#5b6170">how good is the ground truth?</text>
+  <text x="60" y="688" font-size="10.5" fill="#8a90a0">The masks you will train</text>
+  <text x="60" y="702" font-size="10.5" fill="#8a90a0">on were produced by an</text>
+  <text x="60" y="716" font-size="10.5" fill="#8a90a0">algorithm, not by a</text>
+  <text x="60" y="730" font-size="10.5" fill="#8a90a0">radiologist. This sets the</text>
+  <text x="60" y="744" font-size="10.5" fill="#8a90a0">ceiling on your Dice.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="626" width="370" height="126" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="304" y="650" font-size="13" font-weight="700" fill="#1c2230">Validation of the mass masks</text>
+    <text x="304" y="670" font-size="10.5" fill="#5b6170">118 images re-outlined by an expert radiologist</text>
+    <text x="304" y="685" font-size="10.5" fill="#5b6170">Dice (auto vs hand-drawn) = 0.792 ± 0.108</text>
+    <text x="304" y="700" font-size="10.5" fill="#5b6170">Dice (old DDSM vs hand-drawn) = 0.398 ± 0.195</text>
+    <text x="304" y="715" font-size="10.5" fill="#5b6170">mean gain = 0.395 ± 0.257</text>
+    <text x="304" y="730" font-size="10.5" fill="#5b6170">Wilcoxon signed-rank p = 5.5e-19</text>
+    <text x="304" y="745" font-size="10.5" fill="#8a90a0">a real improvement — but still not expert-grade</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="626" width="370" height="126" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="694" y="650" font-size="13" font-weight="700" fill="#1c2230">Quality degrades with breast density</text>
+    <text x="694" y="670" font-size="10.5" fill="#5b6170">density 1 — almost entirely fat        Dice 0.904</text>
+    <text x="694" y="685" font-size="10.5" fill="#5b6170">density 2 — scattered fibroglandular    Dice 0.886</text>
+    <text x="694" y="700" font-size="10.5" fill="#5b6170">density 3 — heterogeneously dense       Dice 0.749</text>
+    <text x="694" y="715" font-size="10.5" fill="#5b6170">density 4 — extremely dense             Dice 0.808</text>
+    <text x="694" y="736" font-size="10.5" fill="#8a90a0">example ROIs from the paper; dense breasts are exactly</text>
+    <text x="694" y="748" font-size="10.5" fill="#8a90a0">where clinical detection is hardest too</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="626" width="370" height="126" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="1084" y="650" font-size="13" font-weight="700" fill="#1c2230">What this means for the project</text>
+    <text x="1084" y="670" font-size="10.5" fill="#5b6170">Labels are silver, not gold — treat 0.79 as the</text>
+    <text x="1084" y="685" font-size="10.5" fill="#5b6170">realistic Dice ceiling, not 0.95</text>
+    <text x="1084" y="700" font-size="10.5" fill="#5b6170">Calcification supervision is coarse → segment</text>
+    <text x="1084" y="715" font-size="10.5" fill="#5b6170">masses first, add calcifications as a stretch goal</text>
+    <text x="1084" y="736" font-size="10.5" fill="#5b6170">Always report Dice split by density and subtlety —</text>
+    <text x="1084" y="748" font-size="10.5" fill="#5b6170">a single mean hides where the model actually fails</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="770" x2="155" y2="806"/></g>
+
+  <!-- ============ ROW 4 : TASK ============ -->
+  <rect x="40" y="810" width="1400" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="810" width="230" height="140" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="844" font-size="15" font-weight="700" fill="#1c2230">TASK</text>
+  <text x="60" y="864" font-size="12.5" fill="#5b6170">what exactly we predict</text>
+  <text x="60" y="888" font-size="10.5" fill="#8a90a0">Segmentation is the stated</text>
+  <text x="60" y="902" font-size="10.5" fill="#8a90a0">goal; detection and diagnosis</text>
+  <text x="60" y="916" font-size="10.5" fill="#8a90a0">fall out of it and give you</text>
+  <text x="60" y="930" font-size="10.5" fill="#8a90a0">comparable literature numbers.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="826" width="370" height="106" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="850" font-size="13" font-weight="700" fill="#1c2230">Primary — semantic segmentation</text>
+    <text x="304" y="870" font-size="10.5" fill="#5b6170">binary, pixel-wise: lesion vs background</text>
+    <text x="304" y="885" font-size="10.5" fill="#5b6170">input = full mammogram or ROI-cropped patch</text>
+    <text x="304" y="900" font-size="10.5" fill="#5b6170">output = mask, comparable to the provided ROI</text>
+    <text x="304" y="921" font-size="10.5" fill="#8a90a0">optional 3-class variant: background / benign / malignant</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="826" width="370" height="106" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="850" font-size="13" font-weight="700" fill="#1c2230">Derived — the two clinical framings</text>
+    <text x="694" y="870" font-size="10.5" fill="#5b6170">CADe (detection): where is the abnormality?</text>
+    <text x="694" y="885" font-size="10.5" fill="#5b6170">CADx (diagnosis): is it benign or malignant?</text>
+    <text x="694" y="900" font-size="10.5" fill="#5b6170">both obtained by aggregating the pixel map</text>
+    <text x="694" y="921" font-size="10.5" fill="#8a90a0">CADe is limited by false positives; CADx is not yet clinically approved</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="826" width="370" height="106" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1084" y="850" font-size="13" font-weight="700" fill="#1c2230">Design decisions still open</text>
+    <text x="1084" y="870" font-size="10.5" fill="#5b6170">full image (~3000 × 5000 px) vs patches vs multi-scale</text>
+    <text x="1084" y="885" font-size="10.5" fill="#5b6170">mass-only vs mass + calcification</text>
+    <text x="1084" y="900" font-size="10.5" fill="#5b6170">single view vs CC + MLO fusion per breast</text>
+    <text x="1084" y="921" font-size="10.5" fill="#5b6170">TCIA DICOM (16-bit) vs Kaggle JPEG (8-bit)</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="950" x2="155" y2="986"/></g>
+
+  <!-- ============ ROW 5 : METRICS ============ -->
+  <rect x="40" y="990" width="1400" height="210" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="990" width="230" height="210" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1024" font-size="15" font-weight="700" fill="#1c2230">METRICS</text>
+  <text x="60" y="1044" font-size="12.5" fill="#5b6170">segmentation + radiology</text>
+  <text x="60" y="1068" font-size="10.5" fill="#8a90a0">Two vocabularies meet here:</text>
+  <text x="60" y="1082" font-size="10.5" fill="#8a90a0">the overlap metrics of image</text>
+  <text x="60" y="1096" font-size="10.5" fill="#8a90a0">segmentation, and the</text>
+  <text x="60" y="1110" font-size="10.5" fill="#8a90a0">sensitivity / FPPI language a</text>
+  <text x="60" y="1124" font-size="10.5" fill="#8a90a0">radiologist actually uses.</text>
+  <text x="60" y="1148" font-size="10.5" fill="#8a90a0">Report both, or your results</text>
+  <text x="60" y="1162" font-size="10.5" fill="#8a90a0">cannot be compared to the</text>
+  <text x="60" y="1176" font-size="10.5" fill="#8a90a0">CAD literature.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1006" width="370" height="134" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="1030" font-size="13" font-weight="700" fill="#1c2230">A · Segmentation overlap</text>
+    <text x="304" y="1050" font-size="10.5" fill="#5b6170">Dice / F1 — the primary number (used by Lee 2017)</text>
+    <text x="304" y="1065" font-size="10.5" fill="#5b6170">IoU / Jaccard — stricter, same information</text>
+    <text x="304" y="1080" font-size="10.5" fill="#5b6170">Hausdorff-95, ASSD — boundary error in mm</text>
+    <text x="304" y="1095" font-size="10.5" fill="#5b6170">Boundary F-score — margin fidelity</text>
+    <text x="304" y="1116" font-size="10.5" fill="#8a90a0">Mass margin and shape are themselves diagnostic:</text>
+    <text x="304" y="1130" font-size="10.5" fill="#8a90a0">a boundary metric is not cosmetic here.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="1006" width="370" height="134" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="694" y="1030" font-size="13" font-weight="700" fill="#1c2230">B · Detection &amp; diagnosis (radiology standard)</text>
+    <text x="694" y="1050" font-size="10.5" fill="#5b6170">Sensitivity (recall) · Specificity — the headline pair</text>
+    <text x="694" y="1065" font-size="10.5" fill="#5b6170">PPV · NPV — depend on prevalence, state it</text>
+    <text x="694" y="1080" font-size="10.5" fill="#5b6170">ROC-AUC, written Az in the older CAD papers</text>
+    <text x="694" y="1095" font-size="10.5" fill="#5b6170">FROC curve &amp; FPPI — false positives per image</text>
+    <text x="694" y="1110" font-size="10.5" fill="#5b6170">CPM — mean sensitivity at 1/8 … 8 FPPI</text>
+    <text x="694" y="1131" font-size="10.5" fill="#8a90a0">Anchors: CADe 81–98% sens. at 0.2–3.2 FPPI; CADx Az 0.77–0.94</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="1006" width="370" height="134" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="1084" y="1030" font-size="13" font-weight="700" fill="#1c2230">C · Clinical stratifiers (from the CSVs)</text>
+    <text x="1084" y="1050" font-size="10.5" fill="#5b6170">BI-RADS assessment 0–5 — suspicion level</text>
+    <text x="1084" y="1065" font-size="10.5" fill="#5b6170">Breast density 1–4 — fatty → extremely dense</text>
+    <text x="1084" y="1080" font-size="10.5" fill="#5b6170">Subtlety 1–5 — radiologist-rated difficulty</text>
+    <text x="1084" y="1095" font-size="10.5" fill="#5b6170">Pathology — benign / no-callback / malignant</text>
+    <text x="1084" y="1116" font-size="10.5" fill="#8a90a0">These are free axes for the results slides: performance</text>
+    <text x="1084" y="1130" font-size="10.5" fill="#8a90a0">vs difficulty is far more convincing than one mean.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1150" width="1150" height="44" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="304" y="1170" font-size="12.5" font-weight="700" fill="#1c2230">Metric trap — pixel accuracy is meaningless on this data.</text>
+    <text x="304" y="1187" font-size="10.5" fill="#5b6170">A lesion covers under 1% of a mammogram, so predicting all-background scores &gt; 99%. Use Dice and AUC-PR, and pair every operating point with its FPPI: a CADe system is judged on how many false marks must be dismissed per image.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="1200" x2="155" y2="1236"/></g>
+
+  <!-- ============ ROW 6 : MODELS ============ -->
+  <rect x="40" y="1240" width="1400" height="300" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1240" width="230" height="300" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1274" font-size="15" font-weight="700" fill="#1c2230">MODELS</text>
+  <text x="60" y="1294" font-size="12.5" fill="#5b6170">what already exists</text>
+  <text x="60" y="1318" font-size="10.5" fill="#8a90a0">The seminal work on this</text>
+  <text x="60" y="1332" font-size="10.5" fill="#8a90a0">dataset is a classifier, not</text>
+  <text x="60" y="1346" font-size="10.5" fill="#8a90a0">a segmenter — its value is</text>
+  <text x="60" y="1360" font-size="10.5" fill="#8a90a0">the patch-to-image transfer</text>
+  <text x="60" y="1374" font-size="10.5" fill="#8a90a0">recipe, which applies</text>
+  <text x="60" y="1388" font-size="10.5" fill="#8a90a0">directly to segmentation.</text>
+  <text x="60" y="1412" font-size="10.5" fill="#8a90a0">Everything below is a</text>
+  <text x="60" y="1426" font-size="10.5" fill="#8a90a0">candidate, none is chosen</text>
+  <text x="60" y="1440" font-size="10.5" fill="#8a90a0">yet.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1256" width="1150" height="76" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="1278" font-size="13" font-weight="700" fill="#1c2230">Reference baseline — Shen et al., Scientific Reports 9:12495 (2019), "Deep Learning to Improve Breast Cancer Detection on Screening Mammography"</text>
+    <text x="304" y="1298" font-size="10.5" fill="#5b6170">Recipe: train a patch classifier on ROI crops (ResNet50 / VGG16, ImageNet-pretrained), then convert it into a whole-image classifier — end-to-end, no lesion annotation needed at the second stage.</text>
+    <text x="304" y="1313" font-size="10.5" fill="#5b6170">CBIS-DDSM per-image AUC = 0.88 single model, 0.91 with 4-model averaging (sensitivity 86.1%, specificity 80.1%). On INbreast FFDM: AUC 0.95 → 0.98 (sensitivity 86.7%, specificity 96.1%).</text>
+    <text x="304" y="1328" font-size="10.5" fill="#8a90a0">This is a classification benchmark. There is no equally canonical segmentation benchmark on CBIS-DDSM — which is exactly the gap this project sits in.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1342" width="276" height="150" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="304" y="1366" font-size="13" font-weight="700" fill="#1c2230">Encoder–decoder CNN</text>
+    <text x="304" y="1386" font-size="10.5" fill="#5b6170">U-Net — the default baseline</text>
+    <text x="304" y="1401" font-size="10.5" fill="#5b6170">U-Net++ · ResUNet</text>
+    <text x="304" y="1416" font-size="10.5" fill="#5b6170">Attention U-Net</text>
+    <text x="304" y="1431" font-size="10.5" fill="#5b6170">DeepLabv3+ (ASPP, multi-scale)</text>
+    <text x="304" y="1455" font-size="10.5" fill="#8a90a0">Cheap, well understood,</text>
+    <text x="304" y="1469" font-size="10.5" fill="#8a90a0">works on ROI crops with a</text>
+    <text x="304" y="1483" font-size="10.5" fill="#8a90a0">few hundred training masks.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="581" y="1342" width="276" height="150" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="595" y="1366" font-size="13" font-weight="700" fill="#1c2230">Detection-first / instance</text>
+    <text x="595" y="1386" font-size="10.5" fill="#5b6170">Mask R-CNN</text>
+    <text x="595" y="1401" font-size="10.5" fill="#5b6170">YOLO-seg</text>
+    <text x="595" y="1416" font-size="10.5" fill="#5b6170">RetinaNet + mask head</text>
+    <text x="595" y="1440" font-size="10.5" fill="#8a90a0">Gives per-lesion FROC and</text>
+    <text x="595" y="1454" font-size="10.5" fill="#8a90a0">FPPI directly — the numbers</text>
+    <text x="595" y="1468" font-size="10.5" fill="#8a90a0">radiologists compare against.</text>
+    <text x="595" y="1483" font-size="10.5" fill="#8a90a0">Handles multiple lesions/image.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="872" y="1342" width="276" height="150" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <text x="886" y="1366" font-size="13" font-weight="700" fill="#1c2230">Self-configuring &amp; transformer</text>
+    <text x="886" y="1386" font-size="10.5" fill="#5b6170">nnU-Net — strongest no-tuning</text>
+    <text x="886" y="1401" font-size="10.5" fill="#5b6170">baseline in medical imaging</text>
+    <text x="886" y="1416" font-size="10.5" fill="#5b6170">TransUNet · Swin-UNet</text>
+    <text x="886" y="1431" font-size="10.5" fill="#5b6170">SegFormer · hybrid CNN+attention</text>
+    <text x="886" y="1455" font-size="10.5" fill="#8a90a0">Transformers want more data</text>
+    <text x="886" y="1469" font-size="10.5" fill="#8a90a0">than 891 mass cases — expect</text>
+    <text x="886" y="1483" font-size="10.5" fill="#8a90a0">to lean hard on pretraining.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1163" y="1342" width="276" height="150" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1177" y="1366" font-size="13" font-weight="700" fill="#1c2230">Foundation models</text>
+    <text x="1177" y="1386" font-size="10.5" fill="#5b6170">SAM / SAM-2, box or point prompts</text>
+    <text x="1177" y="1401" font-size="10.5" fill="#5b6170">MedSAM (medical fine-tune)</text>
+    <text x="1177" y="1416" font-size="10.5" fill="#5b6170">prompt = bounding box from the CSV</text>
+    <text x="1177" y="1440" font-size="10.5" fill="#8a90a0">Attractive because labels are</text>
+    <text x="1177" y="1454" font-size="10.5" fill="#8a90a0">scarce; unproven on scanned</text>
+    <text x="1177" y="1468" font-size="10.5" fill="#8a90a0">film mammography. Treat as an</text>
+    <text x="1177" y="1483" font-size="10.5" fill="#8a90a0">experiment, not the main track.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1502" width="1150" height="30" rx="8" fill="#eef0f4" stroke="#c7ccd6"/>
+    <text x="304" y="1521" font-size="10.5" fill="#5b6170">Shared training levers, whichever architecture wins: ImageNet transfer · patch pre-training (the Shen recipe) · aggressive augmentation (flip, elastic, intensity) · Dice+BCE, Tversky or focal loss to survive the 1:100+ foreground imbalance.</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="1540" x2="155" y2="1576"/></g>
+
+  <!-- ============ ROW 7 : PIPELINE ============ -->
+  <rect x="40" y="1580" width="1400" height="250" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1580" width="230" height="250" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1614" font-size="15" font-weight="700" fill="#1c2230">PIPELINE</text>
+  <text x="60" y="1634" font-size="12.5" fill="#5b6170">planned — nothing built yet</text>
+  <text x="60" y="1658" font-size="10.5" fill="#8a90a0">Seven steps, in order.</text>
+  <text x="60" y="1672" font-size="10.5" fill="#8a90a0">Every box below is dashed</text>
+  <text x="60" y="1686" font-size="10.5" fill="#8a90a0">purple because none of it</text>
+  <text x="60" y="1700" font-size="10.5" fill="#8a90a0">exists in the folder yet —</text>
+  <text x="60" y="1714" font-size="10.5" fill="#8a90a0">only the two PDFs do.</text>
+  <text x="60" y="1738" font-size="10.5" fill="#8a90a0">Steps 1–4 are one week of</text>
+  <text x="60" y="1752" font-size="10.5" fill="#8a90a0">work and already give you a</text>
+  <text x="60" y="1766" font-size="10.5" fill="#8a90a0">defensible oral presentation.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="304" y="1620" font-size="13" font-weight="700" fill="#1c2230">1 · Ingest &amp; index</text>
+    <text x="304" y="1640" font-size="10.5" fill="#5b6170">parse the 4 case-description CSVs</text>
+    <text x="304" y="1655" font-size="10.5" fill="#5b6170">join to jpeg paths via dicom_info.csv</text>
+    <text x="304" y="1670" font-size="10.5" fill="#5b6170">verify every image ↔ mask pairing</text>
+    <text x="304" y="1687" font-size="10.5" fill="#8a90a0">the path columns are known to be messy</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="581" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="595" y="1620" font-size="13" font-weight="700" fill="#1c2230">2 · Preprocess</text>
+    <text x="595" y="1640" font-size="10.5" fill="#5b6170">crop to the breast region, drop background</text>
+    <text x="595" y="1655" font-size="10.5" fill="#5b6170">remove the pectoral muscle on MLO views</text>
+    <text x="595" y="1670" font-size="10.5" fill="#5b6170">CLAHE, normalise, resize</text>
+    <text x="595" y="1687" font-size="10.5" fill="#8a90a0">scanner artefacts and labels live in the margins</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="872" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="886" y="1620" font-size="13" font-weight="700" fill="#1c2230">3 · Split</text>
+    <text x="886" y="1640" font-size="10.5" fill="#5b6170">keep the official CBIS-DDSM train/test</text>
+    <text x="886" y="1655" font-size="10.5" fill="#5b6170">carve validation out of train only</text>
+    <text x="886" y="1670" font-size="10.5" fill="#5b6170">group by patient ID, never by image</text>
+    <text x="886" y="1687" font-size="10.5" fill="#8a90a0">otherwise CC and MLO of a breast straddle the split</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1163" y="1596" width="276" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1177" y="1620" font-size="13" font-weight="700" fill="#1c2230">4 · Baseline</text>
+    <text x="1177" y="1640" font-size="10.5" fill="#5b6170">U-Net on mass ROI crops</text>
+    <text x="1177" y="1655" font-size="10.5" fill="#5b6170">Dice + BCE loss, ImageNet encoder</text>
+    <text x="1177" y="1670" font-size="10.5" fill="#5b6170">target Dice ≈ 0.75 – 0.80</text>
+    <text x="1177" y="1687" font-size="10.5" fill="#8a90a0">i.e. matching the label quality itself</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1706" width="370" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="304" y="1730" font-size="13" font-weight="700" fill="#1c2230">5 · Scale up</text>
+    <text x="304" y="1750" font-size="10.5" fill="#5b6170">nnU-Net or Attention U-Net on full mammograms</text>
+    <text x="304" y="1765" font-size="10.5" fill="#5b6170">multi-scale input, model ensembling</text>
+    <text x="304" y="1780" font-size="10.5" fill="#5b6170">add calcifications once masses are solid</text>
+    <text x="304" y="1797" font-size="10.5" fill="#8a90a0">full-image training is where FPPI becomes the real problem</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="680" y="1706" width="370" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="694" y="1730" font-size="13" font-weight="700" fill="#1c2230">6 · Evaluate</text>
+    <text x="694" y="1750" font-size="10.5" fill="#5b6170">Dice / IoU / HD95 on the held-out official test set</text>
+    <text x="694" y="1765" font-size="10.5" fill="#5b6170">FROC and sensitivity at fixed FPPI</text>
+    <text x="694" y="1780" font-size="10.5" fill="#5b6170">stratify by density, subtlety, pathology, BI-RADS</text>
+    <text x="694" y="1797" font-size="10.5" fill="#8a90a0">quote Shen 2019 (AUC 0.88 – 0.91) as the positioning reference</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1070" y="1706" width="370" height="100" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <text x="1084" y="1730" font-size="13" font-weight="700" fill="#1c2230">7 · Report — the MLB oral</text>
+    <text x="1084" y="1750" font-size="10.5" fill="#5b6170">graded on: plan, introduction, breadth of methods,</text>
+    <text x="1084" y="1765" font-size="10.5" fill="#5b6170">practice &amp; validation, results, conclusion / perspectives,</text>
+    <text x="1084" y="1780" font-size="10.5" fill="#5b6170">slide and figure quality, time management</text>
+    <text x="1084" y="1797" font-size="10.5" fill="#8a90a0">source: Evaluation.pdf in this folder — build the talk against that grid</text>
+  </g>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="155" y1="1830" x2="155" y2="1866"/></g>
+
+  <!-- ============ ROW 8 : RISKS ============ -->
+  <rect x="40" y="1870" width="1400" height="170" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1870" width="230" height="170" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1904" font-size="15" font-weight="700" fill="#1c2230">RISKS</text>
+  <text x="60" y="1924" font-size="12.5" fill="#5b6170">what will bite you</text>
+  <text x="60" y="1948" font-size="10.5" fill="#8a90a0">Each of these silently</text>
+  <text x="60" y="1962" font-size="10.5" fill="#8a90a0">inflates or invalidates a</text>
+  <text x="60" y="1976" font-size="10.5" fill="#8a90a0">result. Naming them in the</text>
+  <text x="60" y="1990" font-size="10.5" fill="#8a90a0">talk is worth more than a</text>
+  <text x="60" y="2004" font-size="10.5" fill="#8a90a0">higher Dice.</text>
+
+  <g filter="url(#soft)">
+    <rect x="290" y="1886" width="276" height="136" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="304" y="1910" font-size="13" font-weight="700" fill="#1c2230">Domain gap</text>
+    <text x="304" y="1930" font-size="10.5" fill="#5b6170">scanned film, not modern FFDM</text>
+    <text x="304" y="1945" font-size="10.5" fill="#5b6170">multiple scanners, multiple centres</text>
+    <text x="304" y="1960" font-size="10.5" fill="#5b6170">Kaggle JPEG mirror is 8-bit lossy</text>
+    <text x="304" y="1981" font-size="10.5" fill="#8a90a0">Shen 2019 saw AUC jump 0.88 → 0.95</text>
+    <text x="304" y="1995" font-size="10.5" fill="#8a90a0">moving from CBIS-DDSM to FFDM —</text>
+    <text x="304" y="2009" font-size="10.5" fill="#8a90a0">the gap is measurable and large.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="581" y="1886" width="276" height="136" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <text x="595" y="1910" font-size="13" font-weight="700" fill="#1c2230">Data leakage</text>
+    <text x="595" y="1930" font-size="10.5" fill="#5b6170">one patient → several views and cases</text>
+    <text x="595" y="1945" font-size="10.5" fill="#5b6170">calc and mass sets overlap on cases</text>
+    <text x="595" y="1960" font-size="10.5" fill="#5b6170">crops come from the same full image</text>
+    <text x="595" y="1981" font-size="10.5" fill="#8a90a0">A naive random split inflates every</text>
+    <text x="595" y="1995" font-size="10.5" fill="#8a90a0">metric. Group by patient ID and use</text>
+    <text x="595" y="2009" font-size="10.5" fill="#8a90a0">the official test set untouched.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="872" y="1886" width="276" height="136" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="886" y="1910" font-size="13" font-weight="700" fill="#1c2230">Weak / algorithmic labels</text>
+    <text x="886" y="1930" font-size="10.5" fill="#5b6170">mass masks: level-set output, Dice 0.79</text>
+    <text x="886" y="1945" font-size="10.5" fill="#5b6170">against an expert, not expert masks</text>
+    <text x="886" y="1960" font-size="10.5" fill="#5b6170">calcification masks: coarse DDSM ROIs</text>
+    <text x="886" y="1981" font-size="10.5" fill="#8a90a0">You are partly learning to imitate a</text>
+    <text x="886" y="1995" font-size="10.5" fill="#8a90a0">1988 segmentation algorithm. Say so,</text>
+    <text x="886" y="2009" font-size="10.5" fill="#8a90a0">and cap your claims accordingly.</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="1163" y="1886" width="276" height="136" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+    <text x="1177" y="1910" font-size="13" font-weight="700" fill="#1c2230">Small &amp; imbalanced test set</text>
+    <text x="1177" y="1930" font-size="10.5" fill="#5b6170">mass test: 83 malignant cases</text>
+    <text x="1177" y="1945" font-size="10.5" fill="#5b6170">calc test: 66 malignant cases</text>
+    <text x="1177" y="1960" font-size="10.5" fill="#5b6170">lesion pixels: well under 1% of an image</text>
+    <text x="1177" y="1981" font-size="10.5" fill="#8a90a0">Confidence intervals will be wide —</text>
+    <text x="1177" y="1995" font-size="10.5" fill="#8a90a0">bootstrap them rather than reporting</text>
+    <text x="1177" y="2009" font-size="10.5" fill="#8a90a0">a bare point estimate.</text>
+  </g>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="2072" font-size="12" font-weight="700" fill="#1c2230">LEGEND</text>
+
+  <rect x="120" y="2060" width="22" height="16" rx="4" fill="#e7eefc" stroke="#3f6fd1"/>
+  <text x="150" y="2073" font-size="12" fill="#5b6170">established fact — published, verifiable</text>
+
+  <rect x="440" y="2060" width="22" height="16" rx="4" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+  <text x="470" y="2073" font-size="12" fill="#5b6170">measured caveat — real limitation of the data</text>
+
+  <rect x="800" y="2060" width="22" height="16" rx="4" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+  <text x="830" y="2073" font-size="12" fill="#5b6170">planned — not built yet</text>
+
+  <rect x="1030" y="2060" width="22" height="16" rx="4" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+  <text x="1060" y="2073" font-size="12" fill="#5b6170">risk — will invalidate results if ignored</text>
+
+  <text x="40" y="2112" font-size="10.5" fill="#8a90a0">Sources — Lee R.S., Gimenez F., Hoogi A., Miyake K.K., Gorovoy M., Rubin D.L., "A curated mammography data set for use in computer-aided detection and diagnosis research", Scientific Data 4:170177 (2017), DOI 10.1038/sdata.2017.177 (local: sdata2017177.pdf).</text>
+  <text x="40" y="2128" font-size="10.5" fill="#8a90a0">TCIA collection record for CBIS-DDSM (1,566 participants · 2,620 studies · 6,775 series · 10,239 images · 163.51 GB · CC BY 3.0). Shen L. et al., Scientific Reports 9:12495 (2019), DOI 10.1038/s41598-019-48995-4. Kaggle mirror: awsaf49/cbis-ddsm-breast-cancer-image-dataset.</text>
+  <text x="40" y="2144" font-size="10.5" fill="#8a90a0">Grading criteria in the PIPELINE step 7 box are taken from Evaluation.pdf (MLB assessment grid) in this project folder. Project status as of 2026-09-08: dataset not yet downloaded, no code written.</text>
+</svg>
