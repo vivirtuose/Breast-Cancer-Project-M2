@@ -1,0 +1,9 @@
+patch_root: data/processed/patches_v1
+epochs: 2
+batch_size: 4
+accumulation_steps: 2
+encoder: resnet34
+encoder_weights: imagenet
+amp: true
+num_workers: 2
+seed: 0
