@@ -21,7 +21,7 @@ CASE_FILES = (
 MANIFEST_FIELDS = (
     "patient_id", "laterality", "view", "abnormality_id", "lesion_type", "pathology",
     "density", "assessment", "split", "source_csv", "full_image_path", "crop_image_path",
-    "mask_image_path",
+    "mask_image_path", "subtlety", "shape_or_type", "margins_or_distribution",
 )
 ACQUISITION_EXCLUSION_FIELDS = (
     "source_csv", "source_row_index", "patient_id", "lesion_identity", "message",
@@ -54,6 +54,9 @@ class ManifestRow:
     full_image_path: Path
     crop_image_path: Path
     mask_image_path: Path
+    subtlety: str = ""
+    shape_or_type: str = ""
+    margins_or_distribution: str = ""
 
     @property
     def lesion_identity(self) -> tuple[str, str, str, str, str]:
@@ -257,6 +260,9 @@ def _resolve_row(case: CaseCsv, record: dict[str, str], index: DicomIndex) -> Ma
         abnormality_id=_value(record, "abnormality id"), lesion_type=case.lesion_type, pathology=_value(record, "pathology"),
         density=_value(record, "breast density"), assessment=_value(record, "assessment"), split=case.split, source_csv=case.path.name,
         full_image_path=full[0].image_path, crop_image_path=crop.image_path, mask_image_path=mask.image_path,
+        subtlety=_value(record, "subtlety"),
+        shape_or_type=_value(record, "mass shape") or _value(record, "calc type"),
+        margins_or_distribution=_value(record, "mass margins") or _value(record, "calc distribution"),
     )
 
 
@@ -331,4 +337,5 @@ def read_manifest_csv(path: Path | str, raw_dir: Path | str) -> tuple[ManifestRo
             lesion_type=record["lesion_type"], pathology=record["pathology"], density=record["density"], assessment=record["assessment"],
             split=record["split"], source_csv=record["source_csv"], full_image_path=raw / Path(record["full_image_path"]),
             crop_image_path=raw / Path(record["crop_image_path"]), mask_image_path=raw / Path(record["mask_image_path"]),
+            subtlety=record["subtlety"], shape_or_type=record["shape_or_type"], margins_or_distribution=record["margins_or_distribution"],
         ) for record in reader)

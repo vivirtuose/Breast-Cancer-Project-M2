@@ -29,6 +29,9 @@ def _write_case_csv(path: Path, rows: list[dict[str, str]]) -> None:
         "image file path",
         "cropped image file path",
         "ROI mask file path",
+        "subtlety",
+        "mass shape",
+        "mass margins",
     ]
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
@@ -59,6 +62,9 @@ def _case_row(**overrides: str) -> dict[str, str]:
         # Deliberately reversed, as in the known Kaggle-mirror defect.
         "cropped image file path": "roi/uid-mask.dcm",
         "ROI mask file path": "crop/uid-crop.dcm",
+        "subtlety": "4",
+        "mass shape": "IRREGULAR",
+        "mass margins": "SPICULATED",
     }
     row.update(overrides)
     return row
@@ -338,3 +344,10 @@ def test_manifest_csv_uses_raw_relative_posix_paths_and_rebases_on_read(tmp_path
     assert first_csv.read_bytes() == second_csv.read_bytes()
     restored = read_manifest_csv(first_csv, raw_dir=first_raw)
     assert restored[0].mask_image_path == first_raw / "mask.jpg"
+
+
+def test_manifest_keeps_subtlety_and_morphology_columns(tmp_path: Path) -> None:
+    raw = _synthetic_raw(tmp_path)
+    _write_case_csv(raw / "mass_case_description_train_set.csv", [_case_row()])
+    row = build_manifest(raw)[0]
+    assert (row.subtlety, row.shape_or_type, row.margins_or_distribution) == ("4", "IRREGULAR", "SPICULATED")
