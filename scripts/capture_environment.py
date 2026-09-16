@@ -24,6 +24,7 @@ from typing import Any, Callable
 REQUIRED_PYTHON = "3.12"
 REQUIRED_PACKAGES = (
     "torch",
+    "torchvision",
     "numpy",
     "pandas",
     "opencv-python-headless",
@@ -33,6 +34,8 @@ REQUIRED_PACKAGES = (
     "PyYAML",
     "pytest",
     "tqdm",
+    "segmentation-models-pytorch",
+    "scikit-learn",
 )
 CUDA_EXPRESSION = "torch.cuda.is_available() == True"
 DEFAULT_LOCK_PATH = Path("uv.lock")
@@ -391,9 +394,17 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="exit successfully even when the CUDA readiness gate is blocked",
     )
+    parser.add_argument(
+        "--record-only",
+        action="store_true",
+        help="record the runtime (e.g. Kaggle) without enforcing the lock or the CUDA gate",
+    )
     args = parser.parse_args(argv)
     snapshot = capture_snapshot()
+    snapshot["capture"]["mode"] = "record-only" if args.record_only else "gate"
     write_snapshot(snapshot, args.output)
+    if args.record_only:
+        return 0
     return 0 if snapshot["cuda_gate"]["passed"] or args.allow_blocked else 1
 
 

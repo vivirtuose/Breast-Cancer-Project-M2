@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -85,7 +86,7 @@ class CaptureEnvironmentTests(unittest.TestCase):
         self.assertTrue(snapshot["cuda_gate"]["passed"])
         self.assertEqual(snapshot["cuda_gate"]["blockers"], [])
         self.assertEqual(snapshot["lock"]["status"], "verified")
-        self.assertEqual(snapshot["lock"]["locked_package_count"], 10)
+        self.assertEqual(snapshot["lock"]["locked_package_count"], len(LOCK_NAMES))
         self.assertEqual(snapshot["lock"]["missing_direct_count"], 0)
         self.assertEqual(list(snapshot["packages"]), sorted(LOCK_NAMES))
 
@@ -227,6 +228,15 @@ class CaptureEnvironmentTests(unittest.TestCase):
         self.assertFalse(failed["detected"])
         self.assertIsNone(failed["vram_mib"])
         self.assertIn("nvidia-smi unavailable", failed["blockers"][0])
+
+
+def test_record_only_mode_exits_zero_and_marks_snapshot(tmp_path, monkeypatch):
+    blocked = {"cuda_gate": {"passed": False}, "capture": {"status": "blocked"}}
+    monkeypatch.setattr(capture_environment, "capture_snapshot", lambda **_: dict(blocked))
+    output = tmp_path / "env.yaml"
+    assert capture_environment.main(["--record-only", "--output", str(output)]) == 0
+    snapshot = json.loads(output.read_text(encoding="utf-8"))
+    assert snapshot["capture"]["mode"] == "record-only"
 
 
 if __name__ == "__main__":

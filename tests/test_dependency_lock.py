@@ -7,6 +7,7 @@ import tomllib
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_DIRECT_DISTRIBUTIONS = {
     "torch",
+    "torchvision",
     "numpy",
     "pandas",
     "opencv-python-headless",
@@ -16,6 +17,8 @@ CANONICAL_DIRECT_DISTRIBUTIONS = {
     "pyyaml",
     "pytest",
     "tqdm",
+    "segmentation-models-pytorch",
+    "scikit-learn",
 }
 
 
@@ -62,7 +65,9 @@ def test_project_is_installable_from_the_src_layout_for_kaggle() -> None:
 def test_torch_uses_the_explicit_official_cu121_index_only() -> None:
     project = read_toml("pyproject.toml")
 
-    assert project_direct_pins(project)["torch"] == "2.5.1+cu121"
+    direct_pins = project_direct_pins(project)
+    assert direct_pins["torch"] == "2.5.1+cu121"
+    assert direct_pins["torchvision"] == "0.20.1+cu121"
     assert project["tool"]["uv"]["index"] == [
         {
             "name": "pytorch-cu121",
@@ -71,7 +76,8 @@ def test_torch_uses_the_explicit_official_cu121_index_only() -> None:
         }
     ]
     assert project["tool"]["uv"]["sources"] == {
-        "torch": {"index": "pytorch-cu121"}
+        "torch": {"index": "pytorch-cu121"},
+        "torchvision": {"index": "pytorch-cu121"},
     }
 
 
