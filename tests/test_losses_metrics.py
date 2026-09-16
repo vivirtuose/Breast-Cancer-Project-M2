@@ -21,6 +21,15 @@ def test_empty_mask_rules():
     assert dice_score(full, empty) == 0.0 and dice_score(empty, full) == 0.0
 
 
+def test_metrics_shape_mismatch():
+    a = np.zeros((5, 5), bool)
+    b = np.zeros((4, 5), bool)
+    with pytest.raises(ValueError, match="Shape mismatch"):
+        dice_score(a, b)
+    with pytest.raises(ValueError, match="Shape mismatch"):
+        iou_score(a, b)
+
+
 def test_loss_is_lower_for_the_correct_prediction():
     target = torch.zeros(2, 1, 8, 8)
     target[:, :, 2:6, 2:6] = 1

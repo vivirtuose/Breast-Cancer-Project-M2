@@ -19,6 +19,45 @@ def threshold_probabilities(
     return prob >= threshold
 
 
+def _as_boolean_pair(
+    pred: np.ndarray, target: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """Convert and validate boolean pair with empty-mask rules.
+
+    Args:
+        pred: Predicted binary segmentation.
+        target: Target binary segmentation.
+
+    Returns:
+        Tuple of (pred, target) as boolean arrays.
+
+    Raises:
+        ValueError: If shapes differ.
+    """
+    pred = np.asarray(pred).astype(bool)
+    target = np.asarray(target).astype(bool)
+
+    if pred.shape != target.shape:
+        raise ValueError(
+            f"Shape mismatch: pred {pred.shape} vs target {target.shape}"
+        )
+
+    return pred, target
+
+
+def _apply_empty_mask_rule(pred_empty: bool, target_empty: bool) -> float | None:
+    """Apply empty-mask rules to metric computation.
+
+    Returns:
+        1.0 if both empty, 0.0 if exactly one empty, None if both non-empty.
+    """
+    if not pred_empty and not target_empty:
+        return None  # Both non-empty, proceed with computation
+    if pred_empty and target_empty:
+        return 1.0  # Both empty
+    return 0.0  # Exactly one empty
+
+
 def dice_score(pred: np.ndarray, target: np.ndarray) -> float:
     """Compute Dice score (F1) between binary arrays.
 
@@ -35,21 +74,11 @@ def dice_score(pred: np.ndarray, target: np.ndarray) -> float:
     Raises:
         ValueError: If shapes differ.
     """
-    pred = np.asarray(pred).astype(bool)
-    target = np.asarray(target).astype(bool)
+    pred, target = _as_boolean_pair(pred, target)
 
-    if pred.shape != target.shape:
-        raise ValueError(
-            f"Shape mismatch: pred {pred.shape} vs target {target.shape}"
-        )
-
-    # Both empty
-    if not pred.any() and not target.any():
-        return 1.0
-
-    # Exactly one empty
-    if not pred.any() or not target.any():
-        return 0.0
+    empty_result = _apply_empty_mask_rule(not pred.any(), not target.any())
+    if empty_result is not None:
+        return empty_result
 
     # Compute Dice
     intersection = (pred & target).sum()
@@ -73,21 +102,11 @@ def iou_score(pred: np.ndarray, target: np.ndarray) -> float:
     Raises:
         ValueError: If shapes differ.
     """
-    pred = np.asarray(pred).astype(bool)
-    target = np.asarray(target).astype(bool)
+    pred, target = _as_boolean_pair(pred, target)
 
-    if pred.shape != target.shape:
-        raise ValueError(
-            f"Shape mismatch: pred {pred.shape} vs target {target.shape}"
-        )
-
-    # Both empty
-    if not pred.any() and not target.any():
-        return 1.0
-
-    # Exactly one empty
-    if not pred.any() or not target.any():
-        return 0.0
+    empty_result = _apply_empty_mask_rule(not pred.any(), not target.any())
+    if empty_result is not None:
+        return empty_result
 
     # Compute IoU
     intersection = (pred & target).sum()

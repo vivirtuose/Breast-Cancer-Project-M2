@@ -7,7 +7,9 @@ from cbis_ddsm.models.factory import build_model
 def test_models_return_one_logit_map_of_input_size(arch):
     model = build_model(arch, encoder="resnet18", encoder_weights=None).eval()
     with torch.no_grad():
-        out = model(torch.rand(2, 1, 64, 64))
+        out = model(
+            torch.rand(2, 1, 64, 64, generator=torch.Generator().manual_seed(0))
+        )
     assert out.shape == (2, 1, 64, 64)
 
 
