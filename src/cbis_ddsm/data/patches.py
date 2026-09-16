@@ -160,6 +160,8 @@ def write_patch_index(records: Sequence[PatchRecord], path: Path | str) -> None:
 def read_patch_index(path: Path | str) -> tuple[PatchRecord, ...]:
     with Path(path).open(newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
+        if reader.fieldnames is None or tuple(reader.fieldnames) != PATCH_INDEX_FIELDS:
+            raise ValueError("patch index CSV headers do not match the patch index contract")
         records = []
         for record in reader:
             values = dict(record)

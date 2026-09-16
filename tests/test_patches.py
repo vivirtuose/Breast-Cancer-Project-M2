@@ -96,6 +96,20 @@ def test_patch_index_round_trip(tmp_path):
     assert list(csv.reader(path.open(encoding="utf-8")))[0] == list(PATCH_INDEX_FIELDS)
 
 
+def test_read_patch_index_rejects_mismatched_header(tmp_path):
+    import pytest
+
+    from cbis_ddsm.data.patches import PATCH_INDEX_FIELDS, read_patch_index
+
+    path = tmp_path / "index.csv"
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=[*PATCH_INDEX_FIELDS[1:], "extra_column"])
+        writer.writeheader()
+
+    with pytest.raises(ValueError):
+        read_patch_index(path)
+
+
 # --- CLI: synthetic raw dir with 4 train patients (2 malignant, 2 benign), one image and one
 # lesion each; n_folds=2 splits them 2/2 into train/val (context.md ruling R3 supersedes the
 # brief's "2 train patients / 4 rows" wording).
