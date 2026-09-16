@@ -2,6 +2,12 @@
 
 Flux prévu : `data/raw` → audit et manifeste → partitions par patiente → préparation → entraînement → inférence → évaluation → rapport.
 
+## Environnements d’exécution
+
+Le développement, les tests unitaires et l’audit initial des données peuvent être réalisés localement. Les entraînements et les inférences de référence sont exécutés sur Kaggle. Les scripts utilisent donc des chemins configurables et portables, sans chemin absolu propre à une machine ni hypothèse sur le GPU local.
+
+Chaque exécution Kaggle conserve sa configuration, ses versions, les caractéristiques de l’accélérateur et les chemins des artefacts. La capture d’environnement est relancée dans le runtime Kaggle afin que les résultats puissent être reliés à l’environnement réellement utilisé.
+
 ## Responsabilités
 
 | Emplacement | Responsabilité |

@@ -29,3 +29,9 @@ La première référence reçoit uniquement l’image. Les descripteurs et la pa
 Les métriques de frontière ne garantissent pas de mesurer chaque spicule ; HD95 peut ignorer des erreurs très localisées. Dice/BCE ne récompensent pas systématiquement le lissage : cela dépend des références et des prédictions. La qualité des détails se vérifie expérimentalement et visuellement, pas à partir du seul nom de l’architecture.
 
 Une classification future utilisera ses propres métriques et unités d’analyse. La valeur prédictive positive dépend de la prévalence : les performances d’un ensemble enrichi en lésions ne se transposent pas directement au dépistage.
+
+## Reproductibilité logicielle
+
+À chaque étape majeure, les décisions reproductibles — environnement, données, partitions, géométrie, entraînement, inférence et métriques — sont accompagnées de tests `pytest` ciblés. Avant de considérer un jalon terminé, un autre collaborateur doit pouvoir reconstruire un environnement propre à partir du verrou, exécuter les tests documentés et retrouver les mêmes invariants sans dépendre d’un état local implicite.
+
+Les versions réellement installées sont comparées au verrou. Tout écart, dépendance manquante ou contrôle matériel non vérifié maintient le jalon bloqué. Les tests portables sur données synthétiques sont toujours exécutés ; les contrôles nécessitant le GPU ou les données réelles sont marqués séparément et apportent une preuve complémentaire.

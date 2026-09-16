@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1376" height="1290" viewBox="0 0 1376 1290" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3a3f4b"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1376" height="1290" fill="#f7f8fa"/>
+
+  <text x="40" y="44" font-size="26" font-weight="700" fill="#1c2230">Breast cancer segmentation &#8212; execution plan</text>
+  <text x="40" y="68" font-size="14" fill="#5b6170">3 people &#183; 4 weeks &#183; one 15-minute defence &#183; functional end to end first, upgrades second</text>
+
+  <!-- ============ BANNER ============ -->
+  <rect x="40" y="98" width="1296" height="116" rx="10" fill="#eef0f4" stroke="#c7ccd6"/>
+  <line x1="690" y1="110" x2="690" y2="202" stroke="#c7ccd6" stroke-width="1"/>
+  <text x="60" y="122" font-size="12" font-weight="700" fill="#1c2230">THE REAL RISK &#8212; SERIALIZATION, NOT DIFFICULTY</text>
+  <text x="60" y="142" font-size="10.5" fill="#5b6170">S1 to S5 is a chain: nobody trains until the splits exist, and nobody</text>
+  <text x="60" y="158" font-size="10.5" fill="#5b6170">evaluates until training runs. Three people on a chain is one person</text>
+  <text x="60" y="174" font-size="10.5" fill="#5b6170">working and two waiting.</text>
+  <text x="60" y="190" font-size="10.5" fill="#1c2230">That is how a month quietly becomes a week.</text>
+  <text x="710" y="122" font-size="12" font-weight="700" fill="#1c2230">THE DAY-1 FIX &#8212; FREEZE TWO INTERFACES BEFORE ANY CODE</text>
+  <text x="710" y="142" font-size="10.5" fill="#5b6170">1. Manifest schema: patient_id, side, view, abnormality_id, pathology,</text>
+  <text x="710" y="158" font-size="10.5" fill="#5b6170">     density, subtlety, image_path, mask_path</text>
+  <text x="710" y="174" font-size="10.5" fill="#5b6170">2. Dataset contract: __getitem__ &#8594; (image f32[1,H,W], mask f32[1,H,W])</text>
+  <text x="710" y="190" font-size="10.5" fill="#1c2230">Then make_fake_dataset() emits 20 synthetic pairs: B and C build from hour one.</text>
+
+  <!-- ============ COLUMN HEADERS ============ -->
+  <g filter="url(#soft)">
+    <rect x="236" y="238" width="356" height="40" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <rect x="608" y="238" width="356" height="40" rx="8" fill="#f0eef9" stroke="#6a5acd"/>
+    <rect x="980" y="238" width="356" height="40" rx="8" fill="#e4f2f4" stroke="#2b7a86"/>
+  </g>
+  <text x="414" y="263" font-size="13" font-weight="700" fill="#1c2230" text-anchor="middle">PERSON A &#8212; DATA</text>
+  <text x="786" y="263" font-size="13" font-weight="700" fill="#1c2230" text-anchor="middle">PERSON B &#8212; MODELS</text>
+  <text x="1158" y="263" font-size="13" font-weight="700" fill="#1c2230" text-anchor="middle">PERSON C &#8212; EVALUATION &amp; TALK</text>
+
+  <!-- ============ WEEK 1 ============ -->
+  <rect x="40" y="290" width="180" height="140" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="320" font-size="15" font-weight="700" fill="#1c2230">WEEK 1</text>
+  <text x="58" y="342" font-size="9" fill="#8a90a0">GOAL</text>
+  <text x="58" y="358" font-size="12" font-weight="700" fill="#1c2230">it runs</text>
+  <text x="58" y="374" font-size="12" font-weight="700" fill="#1c2230">end to end</text>
+  <text x="58" y="400" font-size="10" fill="#8a90a0">Nothing here is</text>
+  <text x="58" y="414" font-size="10" fill="#8a90a0">optional.</text>
+  <g filter="url(#soft)">
+    <rect x="236" y="290" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="608" y="290" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="980" y="290" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  </g>
+  <text x="252" y="316" font-size="12.5" font-weight="700" fill="#1c2230">Acquisition &amp; manifest</text>
+  <text x="252" y="336" font-size="10.5" fill="#5b6170">Kaggle download &#8594; data/raw/ (~10 GB; check disk)</text>
+  <text x="252" y="351" font-size="10.5" fill="#5b6170">Parse the 4 CSVs into the frozen manifest schema</text>
+  <text x="252" y="366" font-size="10.5" fill="#5b6170">Audit: dim mismatch, swapped ROI/crop paths, empties</text>
+  <text x="252" y="381" font-size="10.5" fill="#5b6170">Patient-grouped splits + tests/test_splits.py</text>
+  <text x="252" y="396" font-size="10.5" fill="#5b6170">ROI patch extraction at native resolution</text>
+  <text x="624" y="316" font-size="12.5" font-weight="700" fill="#1c2230">Training loop: fakes, then real</text>
+  <text x="624" y="336" font-size="10.5" fill="#5b6170">Days 1-2: trainer + U-Net on make_fake_dataset()</text>
+  <text x="624" y="351" font-size="10.5" fill="#5b6170">smp.Unet, pretrained ResNet encoder, Dice + BCE</text>
+  <text x="624" y="366" font-size="10.5" fill="#5b6170">AMP + gradient accumulation for the 2 GB laptop</text>
+  <text x="624" y="381" font-size="10.5" fill="#5b6170">Swap fakes for real patches the day A ships them</text>
+  <text x="624" y="396" font-size="10.5" font-weight="700" fill="#c23a22">GATE: overfit 8 patches to Dice &gt; 0.95 first</text>
+  <text x="996" y="316" font-size="12.5" font-weight="700" fill="#1c2230">Metrics before predictions exist</text>
+  <text x="996" y="336" font-size="10.5" fill="#5b6170">Dice and IoU on analytically known shapes</text>
+  <text x="996" y="351" font-size="10.5" fill="#5b6170">tests/test_metrics.py green on synthetic cases</text>
+  <text x="996" y="366" font-size="10.5" fill="#5b6170">Overlay figure: image / ground truth / prediction</text>
+  <text x="996" y="381" font-size="10.5" fill="#5b6170">Start the slide skeleton from Evaluation.pdf</text>
+  <text x="996" y="396" font-size="10.5" fill="#5b6170">Read module 3 &#8212; own the validation vocabulary</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="130" y1="432" x2="130" y2="450"/></g>
+
+  <!-- ============ WEEK 2 ============ -->
+  <rect x="40" y="454" width="180" height="140" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="484" font-size="15" font-weight="700" fill="#1c2230">WEEK 2</text>
+  <text x="58" y="506" font-size="9" fill="#8a90a0">GOAL</text>
+  <text x="58" y="522" font-size="12" font-weight="700" fill="#1c2230">a baseline</text>
+  <text x="58" y="538" font-size="12" font-weight="700" fill="#1c2230">you trust</text>
+  <rect x="56" y="552" width="148" height="26" rx="13" fill="#fbece0" stroke="#b3541e"/>
+  <text x="130" y="569" font-size="9.5" font-weight="700" fill="#b3541e" text-anchor="middle">cut point: nnU-Net</text>
+  <g filter="url(#soft)">
+    <rect x="236" y="454" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="608" y="454" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="980" y="454" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  </g>
+  <text x="252" y="480" font-size="12.5" font-weight="700" fill="#1c2230">Augmentation &amp; folds</text>
+  <text x="252" y="500" font-size="10.5" fill="#5b6170">Synchronized image/mask augmentation, aggressive</text>
+  <text x="252" y="515" font-size="10.5" fill="#5b6170">tests/test_geometry.py: alignment survives it all</text>
+  <text x="252" y="530" font-size="10.5" fill="#5b6170">Build cross-validation folds, grouped by patient</text>
+  <text x="252" y="545" font-size="10.5" fill="#5b6170">Lesion vs empty tile ratio is a hyperparameter</text>
+  <text x="252" y="560" font-size="10.5" fill="#5b6170">Hand B a versioned, frozen dataset id</text>
+  <text x="624" y="480" font-size="12.5" font-weight="700" fill="#1c2230">A2 baseline + the nnU-Net floor</text>
+  <text x="624" y="500" font-size="10.5" fill="#5b6170">A2: U-Net + pretrained ResNet on ROI patches, CV</text>
+  <text x="624" y="515" font-size="10.5" fill="#5b6170">Target ~0.75-0.80 Dice: label quality, not a ceiling</text>
+  <text x="624" y="530" font-size="10.5" fill="#5b6170">In parallel: nnU-Net 2d, same patches, zero tuning</text>
+  <text x="624" y="545" font-size="10.5" font-weight="700" fill="#c23a22">nnU-Net time-boxed to this week &#8212; no number, cut it</text>
+  <text x="624" y="560" font-size="10.5" fill="#5b6170">Log commit, config, seed, split id on every run</text>
+  <text x="996" y="480" font-size="12.5" font-weight="700" fill="#1c2230">Metrics that separate models</text>
+  <text x="996" y="500" font-size="10.5" fill="#5b6170">HD95 and ASSD &#8212; the only ones that see the margin</text>
+  <text x="996" y="515" font-size="10.5" fill="#5b6170">Per-lesion sensitivity; false positives per image</text>
+  <text x="996" y="530" font-size="10.5" fill="#5b6170">Empty masks: true negative vs miss vs false alarm</text>
+  <text x="996" y="545" font-size="10.5" fill="#5b6170">Patient-level bootstrap for confidence intervals</text>
+  <text x="996" y="560" font-size="10.5" fill="#5b6170">Slides 1-5: problem, data, why the margin matters</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="130" y1="596" x2="130" y2="614"/></g>
+
+  <!-- ============ WEEK 3 ============ -->
+  <rect x="40" y="618" width="180" height="140" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="648" font-size="15" font-weight="700" fill="#1c2230">WEEK 3</text>
+  <text x="58" y="670" font-size="9" fill="#8a90a0">GOAL</text>
+  <text x="58" y="686" font-size="12" font-weight="700" fill="#1c2230">diversity</text>
+  <text x="58" y="702" font-size="12" font-weight="700" fill="#1c2230">+ analysis</text>
+  <rect x="56" y="716" width="148" height="26" rx="13" fill="#fbece0" stroke="#b3541e"/>
+  <text x="130" y="733" font-size="9.5" font-weight="700" fill="#b3541e" text-anchor="middle">cut point: Mask R-CNN</text>
+  <g filter="url(#soft)">
+    <rect x="236" y="618" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="608" y="618" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="980" y="618" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  </g>
+  <text x="252" y="644" font-size="12.5" font-weight="700" fill="#1c2230">Support + the data slides</text>
+  <text x="252" y="664" font-size="10.5" fill="#5b6170">A is mostly free now &#8212; reinforce whoever is behind</text>
+  <text x="252" y="679" font-size="10.5" fill="#5b6170">Dataset figures: counts, density, subtlety, size</text>
+  <text x="252" y="694" font-size="10.5" fill="#5b6170">Write up exclusions and the split audit for the talk</text>
+  <text x="252" y="709" font-size="10.5" font-weight="700" fill="#c23a22">Freeze data/ &#8212; no changes after this week</text>
+  <text x="624" y="644" font-size="12.5" font-weight="700" fill="#1c2230">A3 variation + A4 contrast</text>
+  <text x="624" y="664" font-size="10.5" fill="#5b6170">A3: Attention U-Net or a boundary term. One factor.</text>
+  <text x="624" y="679" font-size="10.5" fill="#5b6170">A4: smp.DeepLabV3Plus &#8212; a string change, same loop</text>
+  <text x="624" y="694" font-size="10.5" fill="#5b6170">A4: Mask R-CNN only if the week is calm (torchvision)</text>
+  <text x="624" y="709" font-size="10.5" fill="#5b6170">If not: a slide on why a 28x28 head loses the spicule</text>
+  <text x="624" y="724" font-size="10.5" fill="#5b6170">Repeat the key runs across folds, never one seed</text>
+  <text x="996" y="644" font-size="12.5" font-weight="700" fill="#1c2230">Stratified analysis &#8212; the marks</text>
+  <text x="996" y="664" font-size="10.5" fill="#5b6170">Break results down by density, subtlety, pathology</text>
+  <text x="996" y="679" font-size="10.5" fill="#5b6170">Always with n; small strata get intervals, not claims</text>
+  <text x="996" y="694" font-size="10.5" fill="#5b6170">A3 judged on HD95: +2 Dice is not significant here</text>
+  <text x="996" y="709" font-size="10.5" fill="#5b6170">Comparison table: model &#215; metric &#215; margin verdict</text>
+  <text x="996" y="724" font-size="10.5" fill="#5b6170">Slides 6-12: models, validation, results</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="130" y1="760" x2="130" y2="778"/></g>
+
+  <!-- ============ WEEK 4 ============ -->
+  <rect x="40" y="782" width="180" height="140" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="812" font-size="15" font-weight="700" fill="#1c2230">WEEK 4</text>
+  <text x="58" y="834" font-size="9" fill="#8a90a0">GOAL</text>
+  <text x="58" y="850" font-size="12" font-weight="700" fill="#1c2230">freeze</text>
+  <text x="58" y="866" font-size="12" font-weight="700" fill="#1c2230">and defend</text>
+  <rect x="56" y="880" width="148" height="26" rx="13" fill="#fbece0" stroke="#b3541e"/>
+  <text x="130" y="897" font-size="9.5" font-weight="700" fill="#b3541e" text-anchor="middle">A5 &#8594; perspectives</text>
+  <g filter="url(#soft)">
+    <rect x="236" y="782" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="608" y="782" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+    <rect x="980" y="782" width="356" height="140" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  </g>
+  <text x="252" y="808" font-size="12.5" font-weight="700" fill="#1c2230">Reproducibility pass</text>
+  <text x="252" y="828" font-size="10.5" fill="#5b6170">One command reproduces each reported number</text>
+  <text x="252" y="843" font-size="10.5" fill="#5b6170">README: versions, seeds, manifest and split ids</text>
+  <text x="252" y="858" font-size="10.5" fill="#5b6170">No absolute paths left in any config</text>
+  <text x="252" y="873" font-size="10.5" fill="#5b6170">Back up experiments/ off the laptop</text>
+  <text x="624" y="808" font-size="12.5" font-weight="700" fill="#1c2230">Freeze</text>
+  <text x="624" y="828" font-size="10.5" font-weight="700" fill="#c23a22">Model, threshold and post-processing frozen Monday</text>
+  <text x="624" y="843" font-size="10.5" font-weight="700" fill="#c23a22">No new architectures this week. None.</text>
+  <text x="624" y="858" font-size="10.5" fill="#5b6170">Support C on the result figures</text>
+  <text x="624" y="873" font-size="10.5" fill="#5b6170">Prepare answers: receptive field, skips, output stride</text>
+  <text x="996" y="808" font-size="12.5" font-weight="700" fill="#1c2230">One evaluation, then the talk</text>
+  <text x="996" y="828" font-size="10.5" font-weight="700" fill="#c23a22">Evaluate ONCE on the sealed test split, and report it</text>
+  <text x="996" y="843" font-size="10.5" fill="#5b6170">Final figures &#8212; slide quality is a graded line</text>
+  <text x="996" y="858" font-size="10.5" fill="#5b6170">Perspectives: A5 full image, calcifications, TTA</text>
+  <text x="996" y="873" font-size="10.5" fill="#5b6170">Rehearse to 15 min with a timer, at least twice</text>
+  <text x="996" y="888" font-size="10.5" fill="#5b6170">Keep 2 days of buffer. Something will break.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="130" y1="924" x2="130" y2="948"/></g>
+
+  <!-- ============ THE TALK ============ -->
+  <rect x="40" y="952" width="180" height="134" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="58" y="982" font-size="15" font-weight="700" fill="#1c2230">15 MIN</text>
+  <text x="58" y="1004" font-size="12" font-weight="700" fill="#1c2230">the graded</text>
+  <text x="58" y="1020" font-size="12" font-weight="700" fill="#1c2230">deliverable</text>
+  <text x="58" y="1046" font-size="10" fill="#8a90a0">The repo exists</text>
+  <text x="58" y="1060" font-size="10" fill="#8a90a0">to serve this.</text>
+  <g filter="url(#soft)">
+    <rect x="236" y="952" width="356" height="134" rx="10" fill="#e7eefc" stroke="#3f6fd1"/>
+    <rect x="608" y="952" width="356" height="134" rx="10" fill="#f0eef9" stroke="#6a5acd"/>
+    <rect x="980" y="952" width="356" height="134" rx="10" fill="#e4f2f4" stroke="#2b7a86"/>
+  </g>
+  <text x="252" y="978" font-size="12.5" font-weight="700" fill="#1c2230">A &#8212; 4 min: problem &amp; data</text>
+  <text x="252" y="1000" font-size="10.5" fill="#5b6170">Breast cancer, mammography, what a mass is</text>
+  <text x="252" y="1016" font-size="10.5" fill="#5b6170">The margin carries the diagnosis &#8212; the fil rouge</text>
+  <text x="252" y="1032" font-size="10.5" fill="#5b6170">CBIS-DDSM: n, label-quality caveat, patient splits</text>
+  <text x="252" y="1060" font-size="10" fill="#8a90a0">Grid line: Introduction</text>
+  <text x="624" y="978" font-size="12.5" font-weight="700" fill="#1c2230">B &#8212; 5 min: the model ladder</text>
+  <text x="624" y="1000" font-size="10.5" fill="#5b6170">Receptive field vs resolution: the trade-off</text>
+  <text x="624" y="1016" font-size="10.5" fill="#5b6170">Why skip connections are the margin mechanism</text>
+  <text x="624" y="1032" font-size="10.5" fill="#5b6170">A1-A4 compared &#8212; including what lost, and why</text>
+  <text x="624" y="1060" font-size="10" fill="#8a90a0">Grid line: theory + diversity of methods/algorithms</text>
+  <text x="996" y="978" font-size="12.5" font-weight="700" fill="#1c2230">C &#8212; 5 min: validation &amp; results</text>
+  <text x="996" y="1000" font-size="10.5" fill="#5b6170">CV, patient grouping, sealed test, intervals</text>
+  <text x="996" y="1016" font-size="10.5" fill="#5b6170">Results stratified by density, subtlety, pathology</text>
+  <text x="996" y="1032" font-size="10.5" fill="#5b6170">Limits, then perspectives. Shared final minute.</text>
+  <text x="996" y="1060" font-size="10" fill="#8a90a0">Grid lines: practice/validation, results, conclusion</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="1143" font-size="12" font-weight="700" fill="#1c2230">Owner</text>
+  <rect x="120" y="1130" width="22" height="16" rx="4" fill="#e7eefc" stroke="#3f6fd1"/>
+  <text x="150" y="1143" font-size="12" fill="#5b6170">Person A &#8212; data</text>
+  <rect x="290" y="1130" width="22" height="16" rx="4" fill="#f0eef9" stroke="#6a5acd"/>
+  <text x="320" y="1143" font-size="12" fill="#5b6170">Person B &#8212; models</text>
+  <rect x="470" y="1130" width="22" height="16" rx="4" fill="#e4f2f4" stroke="#2b7a86"/>
+  <text x="500" y="1143" font-size="12" fill="#5b6170">Person C &#8212; evaluation &amp; talk</text>
+
+  <text x="40" y="1179" font-size="12" font-weight="700" fill="#1c2230">Markers</text>
+  <text x="120" y="1179" font-size="12" font-weight="700" fill="#c23a22">red text</text>
+  <text x="186" y="1179" font-size="12" fill="#5b6170">&#8212; a hard rule, not a preference</text>
+  <rect x="420" y="1165" width="148" height="24" rx="12" fill="#fbece0" stroke="#b3541e"/>
+  <text x="494" y="1181" font-size="9.5" font-weight="700" fill="#b3541e" text-anchor="middle">cut point</text>
+  <text x="586" y="1179" font-size="12" fill="#5b6170">&#8212; what gets dropped first if that week slips</text>
+
+  <text x="40" y="1226" font-size="11" fill="#8a90a0">Four weeks from 2026-09-13. The architecture reasoning lives in model_plan.svg; the pipeline and its test gates in coding_plan.svg. This file only answers who does what, when.</text>
+  <text x="40" y="1244" font-size="11" fill="#8a90a0">Order of build is not order of importance: the walking skeleton comes first, but the stratified analysis in week 3 is what the grading grid actually rewards.</text>
+  <text x="40" y="1262" font-size="11" fill="#8a90a0">A5, full-image segmentation via the Shen recipe, is deliberately out of scope for one month and belongs on the perspectives slide &#8212; itself a graded line.</text>
+</svg>

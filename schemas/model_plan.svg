@@ -1,0 +1,269 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="1640" viewBox="0 0 1360 1640" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3a3f4b"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="1640" fill="#f7f8fa"/>
+
+  <text x="40" y="44" font-size="26" font-weight="700" fill="#1c2230">Breast cancer segmentation &#8212; model plan</text>
+  <text x="40" y="68" font-size="14" fill="#5b6170">CBIS-DDSM masses &#183; the architecture ladder and why each rung is in the talk &#183; grounded in cours/04_les_modeles.md</text>
+
+  <!-- ============ BANNER: the two things that decide everything ============ -->
+  <rect x="40" y="98" width="1280" height="104" rx="10" fill="#eef0f4" stroke="#c7ccd6"/>
+  <line x1="690" y1="112" x2="690" y2="188" stroke="#c7ccd6" stroke-width="1"/>
+  <text x="60" y="122" font-size="12" font-weight="700" fill="#1c2230">THE QUESTION THAT ORDERS EVERYTHING &#8212; fil rouge, modules 1 to 4</text>
+  <text x="60" y="142" font-size="10.5" fill="#5b6170">The lesion margin is a local shape property, and it is the margin that</text>
+  <text x="60" y="158" font-size="10.5" fill="#5b6170">carries the diagnosis: a spiculated contour signals infiltration.</text>
+  <text x="60" y="174" font-size="10.5" fill="#5b6170">So the only architectural question that matters here is</text>
+  <text x="60" y="190" font-size="10.5" fill="#1c2230">which networks preserve that margin, and which smooth it away (&#167;4.2).</text>
+  <text x="710" y="122" font-size="12" font-weight="700" fill="#1c2230">THE NUMBER THAT DECIDES EVERYTHING &#8212; &#167;4.1, Lee et al. Table 3</text>
+  <text x="710" y="142" font-size="10.5" fill="#5b6170">748 mass anomalies train / 222 test &#8594; at most ~1500 image-mask pairs</text>
+  <text x="710" y="158" font-size="10.5" fill="#5b6170">After a patient-grouped validation split: ~600 training anomalies.</text>
+  <text x="710" y="174" font-size="10.5" fill="#1c2230">Transformer from scratch: excluded. Pretrained encoder: mandatory.</text>
+  <text x="710" y="190" font-size="10.5" fill="#1c2230">Heavy augmentation: mandatory. Cross-validation over a single split.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="204" x2="140" y2="228"/></g>
+
+  <!-- ============ THE TRADE-OFF ============ -->
+  <rect x="40" y="232" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="232" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="266" font-size="15" font-weight="700" fill="#1c2230">CONSTRAINT</text>
+  <text x="60" y="288" font-size="12.5" fill="#5b6170">receptive field</text>
+  <text x="60" y="305" font-size="12.5" fill="#5b6170">vs resolution</text>
+  <text x="60" y="330" font-size="10" fill="#8a90a0">Image ~3000x5000 px.</text>
+  <text x="60" y="344" font-size="10" fill="#8a90a0">Spicule: a few px wide.</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="245" width="336" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <rect x="612" y="245" width="336" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+    <rect x="968" y="245" width="336" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="266" font-size="13" font-weight="700" fill="#1c2230">Resize the whole image</text>
+  <text x="272" y="284" font-size="10.5" fill="#5b6170">Keeps: global context, position in breast</text>
+  <text x="272" y="299" font-size="10.5" fill="#5b6170">Loses: high frequency &#8212; spicules,</text>
+  <text x="272" y="314" font-size="10.5" fill="#5b6170">microcalcifications. 3000&#8594;512 divides</text>
+  <text x="272" y="329" font-size="10.5" fill="#1c2230">resolution by ~7: the signal is gone (&#167;5.2).</text>
+  <text x="628" y="266" font-size="13" font-weight="700" fill="#1c2230">Tile into patches</text>
+  <text x="628" y="284" font-size="10.5" fill="#5b6170">Keeps: native resolution, so fine detail</text>
+  <text x="628" y="299" font-size="10.5" fill="#5b6170">Loses: context &#8212; where am I in the breast?</text>
+  <text x="628" y="314" font-size="10.5" fill="#5b6170">Sampling ratio of lesion vs empty tiles is</text>
+  <text x="628" y="329" font-size="10.5" fill="#1c2230">a hyperparameter, not a detail (&#167;5.3).</text>
+  <text x="984" y="266" font-size="13" font-weight="700" fill="#1c2230">Two stages: coarse then fine</text>
+  <text x="984" y="284" font-size="10.5" fill="#5b6170">Keeps: both context and resolution</text>
+  <text x="984" y="299" font-size="10.5" fill="#5b6170">Costs: complexity, and stage-1 misses are</text>
+  <text x="984" y="314" font-size="10.5" fill="#5b6170">final. What a radiologist does, and what</text>
+  <text x="984" y="329" font-size="10.5" fill="#1c2230">Shen 2019 does. This project takes it.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="358" x2="140" y2="382"/></g>
+
+  <!-- ============ A1 ============ -->
+  <rect x="40" y="386" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="386" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="420" font-size="15" font-weight="700" fill="#1c2230">A1</text>
+  <text x="60" y="442" font-size="12.5" fill="#5b6170">The floor</text>
+  <text x="60" y="459" font-size="12.5" fill="#5b6170">nnU-Net</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="399" width="520" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="792" y="399" width="400" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="420" font-size="13" font-weight="700" fill="#1c2230">nnU-Net &#8212; not an architecture, a configuration method</text>
+  <text x="272" y="438" font-size="10.5" fill="#5b6170">From a fingerprint of the dataset it derives preprocessing, patch size,</text>
+  <text x="272" y="453" font-size="10.5" fill="#5b6170">batch size, depth, augmentation and training schedule by fixed rules.</text>
+  <text x="272" y="468" font-size="10.5" fill="#5b6170">Run the 2D config on the ROI patches with zero tuning, 5-fold.</text>
+  <text x="272" y="483" font-size="10.5" fill="#5b6170">Hardest baseline to beat in medical segmentation &#8212; won the MSD.</text>
+  <text x="808" y="420" font-size="13" font-weight="700" fill="#1c2230">Role: the honest floor</text>
+  <text x="808" y="438" font-size="10.5" fill="#5b6170">This is what you get without thinking. Do not spend</text>
+  <text x="808" y="453" font-size="10.5" fill="#5b6170">the semester trying to beat it &#8212; &#167;5.5 calls that the</text>
+  <text x="808" y="468" font-size="10.5" fill="#5b6170">black hole of segmentation projects. If you do not</text>
+  <text x="808" y="483" font-size="10.5" fill="#1c2230">beat it, say so: a real and frequent result.</text>
+  <text x="1264" y="422" font-size="9" fill="#8a90a0" text-anchor="middle">MARGIN &#167;4.2</text>
+  <rect x="1208" y="430" width="112" height="30" rx="15" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="1264" y="450" font-size="11" font-weight="700" fill="#2e7d57" text-anchor="middle">preserved</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="512" x2="140" y2="536"/></g>
+
+  <!-- ============ A2 ============ -->
+  <rect x="40" y="540" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="540" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="574" font-size="15" font-weight="700" fill="#1c2230">A2</text>
+  <text x="60" y="596" font-size="12.5" fill="#5b6170">Your controlled</text>
+  <text x="60" y="613" font-size="12.5" fill="#5b6170">baseline</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="553" width="520" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="792" y="553" width="400" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="574" font-size="13" font-weight="700" fill="#1c2230">U-Net, ImageNet-pretrained ResNet encoder, Dice + BCE</text>
+  <text x="272" y="592" font-size="10.5" fill="#5b6170">Skip connections reinject high-frequency detail at each decoder level.</text>
+  <text x="272" y="607" font-size="10.5" fill="#1c2230">They are the mechanism that preserves the margin (&#167;3.2) &#8212; the whole</text>
+  <text x="272" y="622" font-size="10.5" fill="#1c2230">fil rouge has its architectural counterpart right there.</text>
+  <text x="272" y="637" font-size="10.5" fill="#5b6170">Trained on ROI patches at native resolution, never on resized wholes.</text>
+  <text x="808" y="574" font-size="13" font-weight="700" fill="#1c2230">Role: the model you actually control</text>
+  <text x="808" y="592" font-size="10.5" fill="#5b6170">Every rung below is measured against this one.</text>
+  <text x="808" y="607" font-size="10.5" fill="#5b6170">Target ~0.75-0.80 Dice &#8212; that is the quality of the</text>
+  <text x="808" y="622" font-size="10.5" fill="#5b6170">labels themselves (module 1), not a ceiling to push</text>
+  <text x="808" y="637" font-size="10.5" fill="#5b6170">past. First thing built once the pipeline gates pass.</text>
+  <text x="1264" y="576" font-size="9" fill="#8a90a0" text-anchor="middle">MARGIN &#167;4.2</text>
+  <rect x="1208" y="584" width="112" height="30" rx="15" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="1264" y="604" font-size="11" font-weight="700" fill="#2e7d57" text-anchor="middle">preserved</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="666" x2="140" y2="690"/></g>
+
+  <!-- ============ A3 ============ -->
+  <rect x="40" y="694" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="694" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="728" font-size="15" font-weight="700" fill="#1c2230">A3</text>
+  <text x="60" y="750" font-size="12.5" fill="#5b6170">One motivated</text>
+  <text x="60" y="767" font-size="12.5" fill="#5b6170">variation</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="707" width="520" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="792" y="707" width="400" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="728" font-size="13" font-weight="700" fill="#1c2230">Attention U-Net &#8212; or &#8212; a boundary / focal loss term</text>
+  <text x="272" y="746" font-size="10.5" fill="#5b6170">Attention gates weight what each skip reinjects. On a mammogram almost</text>
+  <text x="272" y="761" font-size="10.5" fill="#5b6170">all of the image is background, and plain skips reinject that background</text>
+  <text x="272" y="776" font-size="10.5" fill="#5b6170">as faithfully as the lesion. Focal upweights ambiguous pixels, which are</text>
+  <text x="272" y="791" font-size="10.5" fill="#5b6170">mostly boundary pixels (&#167;3.8). Pick one. One factor, one change.</text>
+  <text x="808" y="728" font-size="13" font-weight="700" fill="#1c2230">Role: show a mechanism, not a score</text>
+  <text x="808" y="746" font-size="10.5" fill="#1c2230">Judge it on HD95 and ASSD, not on Dice.</text>
+  <text x="808" y="761" font-size="10.5" fill="#5b6170">+2 Dice would not be significant at this n (module 3).</text>
+  <text x="808" y="776" font-size="10.5" fill="#5b6170">A boundary effect visible on HD95 and absent on Dice</text>
+  <text x="808" y="791" font-size="10.5" fill="#5b6170">is the interesting result &#8212; the fil rouge, demonstrated.</text>
+  <text x="1264" y="730" font-size="9" fill="#8a90a0" text-anchor="middle">MARGIN &#167;4.2</text>
+  <rect x="1208" y="738" width="112" height="30" rx="15" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="1264" y="758" font-size="11" font-weight="700" fill="#2e7d57" text-anchor="middle">preserved</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="820" x2="140" y2="844"/></g>
+
+  <!-- ============ A4 ============ -->
+  <rect x="40" y="848" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="848" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="882" font-size="15" font-weight="700" fill="#1c2230">A4</text>
+  <text x="60" y="904" font-size="12.5" fill="#5b6170">Diversity,</text>
+  <text x="60" y="921" font-size="12.5" fill="#5b6170">on purpose</text>
+  <text x="60" y="946" font-size="10" fill="#8a90a0">The rung I would</text>
+  <text x="60" y="960" font-size="10" fill="#8a90a0">have cut.</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="861" width="520" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="792" y="861" width="400" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="882" font-size="13" font-weight="700" fill="#1c2230">Mask R-CNN &#183; DeepLabv3+ &#8212; the contrast family</text>
+  <text x="272" y="900" font-size="10.5" fill="#5b6170">Mask R-CNN: an RPN proposes boxes, ROI-Align crops them, a mask head</text>
+  <text x="272" y="915" font-size="10.5" fill="#5b6170">emits 28x28 per box, stretched back up (&#167;3.5). Buys instance separation</text>
+  <text x="272" y="930" font-size="10.5" fill="#5b6170">and a per-lesion score, so FROC becomes directly computable.</text>
+  <text x="272" y="945" font-size="10.5" fill="#5b6170">DeepLabv3+: ASPP and dilated convs, output stride 1/8 then upsampling.</text>
+  <text x="808" y="882" font-size="13" font-weight="700" fill="#1c2230">Role: the diversity-of-methods grid line</text>
+  <text x="808" y="900" font-size="10.5" fill="#5b6170">Both are expected to lose on contour, and explaining</text>
+  <text x="808" y="915" font-size="10.5" fill="#1c2230">why structurally is worth more than winning.</text>
+  <text x="808" y="930" font-size="10.5" fill="#5b6170">28x28 stretched over a 400 px mass cannot hold a</text>
+  <text x="808" y="945" font-size="10.5" fill="#5b6170">spicule; DeepLab's final upsampling smooths the edge.</text>
+  <text x="1264" y="878" font-size="9" fill="#8a90a0" text-anchor="middle">MARGIN &#167;4.2</text>
+  <rect x="1208" y="886" width="112" height="28" rx="14" fill="#fbe6e2" stroke="#c23a22"/>
+  <text x="1264" y="905" font-size="10" font-weight="700" fill="#c23a22" text-anchor="middle">R-CNN: lost</text>
+  <rect x="1208" y="920" width="112" height="28" rx="14" fill="#fbece0" stroke="#b3541e"/>
+  <text x="1264" y="939" font-size="10" font-weight="700" fill="#b3541e" text-anchor="middle">DeepLab: blurred</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="974" x2="140" y2="998"/></g>
+
+  <!-- ============ A5 ============ -->
+  <rect x="40" y="1002" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1002" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1036" font-size="15" font-weight="700" fill="#1c2230">A5</text>
+  <text x="60" y="1058" font-size="12.5" fill="#5b6170">Scale-up</text>
+  <text x="60" y="1075" font-size="12.5" fill="#5b6170">Shen recipe</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="1015" width="520" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="792" y="1015" width="400" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="1036" font-size="13" font-weight="700" fill="#1c2230">ROI-patch encoder &#8594; full-image segmentation (&#167;3.9)</text>
+  <text x="272" y="1054" font-size="10.5" fill="#5b6170">Shen 2019: train a patch classifier on ROI crops, then convert it into a</text>
+  <text x="272" y="1069" font-size="10.5" fill="#5b6170">whole-image model by swapping the head and reusing the whole trunk.</text>
+  <text x="272" y="1084" font-size="10.5" fill="#5b6170">Transposed here: train A2 on ROI patches, then reuse its encoder for</text>
+  <text x="272" y="1099" font-size="10.5" fill="#5b6170">full-image inference. The encoder already knows what a lesion looks like.</text>
+  <text x="808" y="1036" font-size="13" font-weight="700" fill="#1c2230">Role: turns segmentation into detection</text>
+  <text x="808" y="1054" font-size="10.5" fill="#5b6170">Only here do FPPI and FROC mean anything, because only</text>
+  <text x="808" y="1069" font-size="10.5" fill="#5b6170">here does the model meet normal tissue it can hallucinate</text>
+  <text x="808" y="1084" font-size="10.5" fill="#1c2230">on. Expect a drop against patch-level Dice: that drop is</text>
+  <text x="808" y="1099" font-size="10.5" fill="#1c2230">itself a result. Never report patch Dice as detection.</text>
+  <text x="1264" y="1038" font-size="9" fill="#8a90a0" text-anchor="middle">MARGIN &#167;4.2</text>
+  <rect x="1208" y="1046" width="112" height="30" rx="15" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="1264" y="1066" font-size="11" font-weight="700" fill="#2e7d57" text-anchor="middle">preserved</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="1128" x2="140" y2="1152"/></g>
+
+  <!-- ============ SEPARATOR ============ -->
+  <rect x="40" y="1156" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1156" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1190" font-size="15" font-weight="700" fill="#1c2230">SEPARATOR</text>
+  <text x="60" y="1212" font-size="12.5" fill="#5b6170">what tells the</text>
+  <text x="60" y="1229" font-size="12.5" fill="#5b6170">rungs apart</text>
+  <text x="60" y="1254" font-size="10" fill="#8a90a0">module 3</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="1169" width="520" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="792" y="1169" width="528" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="272" y="1190" font-size="13" font-weight="700" fill="#1c2230">evaluation/metrics.py &#8212; metrics that can see a margin</text>
+  <text x="272" y="1208" font-size="10.5" fill="#5b6170">Dice / IoU: area overlap. Blind to the margin, and rewards smoothing.</text>
+  <text x="272" y="1223" font-size="10.5" fill="#1c2230">HD95 / ASSD: boundary error. This is where A3 has to show up.</text>
+  <text x="272" y="1238" font-size="10.5" fill="#5b6170">Per-lesion sensitivity + false positives per image; FROC where scores exist.</text>
+  <text x="272" y="1253" font-size="10.5" fill="#5b6170">Empty masks: separate true negatives, misses and false alarms explicitly.</text>
+  <text x="808" y="1190" font-size="13" font-weight="700" fill="#1c2230">The statistical discipline that makes a ranking real</text>
+  <text x="808" y="1208" font-size="10.5" fill="#5b6170">Cross-validation, not a single split: at ~600 anomalies a single split reorders</text>
+  <text x="808" y="1223" font-size="10.5" fill="#5b6170">the models when you change the random seed (&#167;5.7).</text>
+  <text x="808" y="1238" font-size="10.5" fill="#5b6170">Patient-level bootstrap for intervals. Declare test-time augmentation (&#167;5.6).</text>
+  <text x="808" y="1253" font-size="10.5" fill="#1c2230">Stratify by density, subtlety, pathology, view &#8212; with n. This is where the marks are.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="140" y1="1282" x2="140" y2="1306"/></g>
+
+  <!-- ============ DELIVERABLE ============ -->
+  <rect x="40" y="1310" width="1280" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1310" width="200" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1344" font-size="15" font-weight="700" fill="#1c2230">DELIVERABLE</text>
+  <text x="60" y="1366" font-size="12.5" fill="#5b6170">the expos&#233;</text>
+  <text x="60" y="1383" font-size="12.5" fill="#5b6170">not the repo</text>
+  <text x="60" y="1408" font-size="10" fill="#8a90a0">Evaluation.pdf,</text>
+  <text x="60" y="1422" font-size="10" fill="#8a90a0">scored out of 10</text>
+  <g filter="url(#soft)">
+    <rect x="256" y="1323" width="520" height="98" rx="8" fill="#e8f3ee" stroke="#2e7d57"/>
+    <rect x="792" y="1323" width="528" height="98" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+  </g>
+  <text x="272" y="1344" font-size="13" font-weight="700" fill="#1c2230">Which grid line each part of the work feeds</text>
+  <text x="272" y="1362" font-size="10.5" fill="#5b6170">Theory + diversity of methods/algorithms &#8594; the A1-A4 ladder</text>
+  <text x="272" y="1377" font-size="10.5" fill="#5b6170">Practice + validation &#8594; the separator row, splits, pipeline gates</text>
+  <text x="272" y="1392" font-size="10.5" fill="#5b6170">Results obtained &#8594; stratified tables, the HD95 effect, the FROC curve</text>
+  <text x="272" y="1407" font-size="10.5" fill="#1c2230">Slide and figure quality is itself a graded line &#8212; hence these schematics.</text>
+  <text x="808" y="1344" font-size="13" font-weight="700" fill="#1c2230">Fatal at the oral (&#167;5)</text>
+  <text x="808" y="1362" font-size="10.5" fill="#5b6170">SAM / MedSAM prompted with the ground-truth box: you handed the model the</text>
+  <text x="808" y="1377" font-size="10.5" fill="#5b6170">answer to the question you claim to ask. Legitimate as contour refinement &#8212;</text>
+  <text x="808" y="1392" font-size="10.5" fill="#5b6170">write that in full on the slide, and never call it detection (&#167;3.7).</text>
+  <text x="808" y="1407" font-size="10.5" fill="#5b6170">Quoting your Dice against a paper's: different protocol, not comparable.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="1489" font-size="12" font-weight="700" fill="#1c2230">Build status</text>
+  <rect x="150" y="1476" width="22" height="16" rx="4" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+  <text x="180" y="1489" font-size="12" fill="#5b6170">planned &#8212; no code written yet</text>
+  <rect x="380" y="1476" width="22" height="16" rx="4" fill="#e7eefc" stroke="#3f6fd1"/>
+  <text x="410" y="1489" font-size="12" fill="#5b6170">constraint, rule or assessment &#8212; decided, not built</text>
+  <rect x="740" y="1476" width="22" height="16" rx="4" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="770" y="1489" font-size="12" fill="#5b6170">settled fact</text>
+  <rect x="880" y="1476" width="22" height="16" rx="4" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+  <text x="910" y="1489" font-size="12" fill="#5b6170">hazard &#8212; costs marks if ignored</text>
+
+  <text x="40" y="1529" font-size="12" font-weight="700" fill="#1c2230">Margin verdict</text>
+  <rect x="150" y="1514" width="112" height="24" rx="12" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="206" y="1531" font-size="10" font-weight="700" fill="#2e7d57" text-anchor="middle">preserved</text>
+  <text x="272" y="1529" font-size="12" fill="#5b6170">full output resolution, skips carry the high frequency</text>
+  <rect x="620" y="1514" width="112" height="24" rx="12" fill="#fbece0" stroke="#b3541e"/>
+  <text x="676" y="1531" font-size="10" font-weight="700" fill="#b3541e" text-anchor="middle">blurred</text>
+  <text x="742" y="1529" font-size="12" fill="#5b6170">low output stride, final upsampling smooths the edge</text>
+  <rect x="1060" y="1514" width="112" height="24" rx="12" fill="#fbe6e2" stroke="#c23a22"/>
+  <text x="1116" y="1531" font-size="10" font-weight="700" fill="#c23a22" text-anchor="middle">lost</text>
+  <text x="1182" y="1529" font-size="12" fill="#5b6170">no mechanism at all</text>
+
+  <text x="40" y="1580" font-size="11" fill="#8a90a0">Every architecture claim here comes from cours/04_les_modeles.md; the margin verdicts are &#167;4.2, which flags them as inference from output resolution, not measured on CBIS-DDSM.</text>
+  <text x="40" y="1598" font-size="11" fill="#8a90a0">Companion to coding_plan.svg, which holds the pipeline and its test gates. That file is the service lane for this one: infrastructure exists so this ladder can be run and defended.</text>
+  <text x="40" y="1616" font-size="11" fill="#8a90a0">Order of build is not order of importance: A2 comes first in code, A4 carries the diversity mark, and the stratified analysis of the separator row is where the grade is decided.</text>
+</svg>

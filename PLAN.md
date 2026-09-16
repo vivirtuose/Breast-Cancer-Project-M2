@@ -1,11 +1,27 @@
 # Plan de travail
 
+## Règle transversale — tests et reproductibilité
+
+Chaque étape majeure ajoute des tests `pytest` ciblés avant de franchir son critère de passage. Les tests vérifient le comportement attendu et la reproductibilité à partir de petites données synthétiques versionnées ; ils ne dépendent pas des données brutes locales. Les tests qui exigent le GPU ou le jeu de données réel sont marqués séparément et complètent, sans remplacer, la suite portable.
+
+Un jalon n'est validé que si un partenaire peut recréer l'environnement depuis le verrou, exécuter la suite complète avec `uv run pytest`, puis obtenir les mêmes résultats déterministes pour les cas synthétiques avec les graines et configurations fixées. Toute modification d'une dépendance met à jour le verrou et relance la suite complète.
+
+| Étape | Preuve `pytest` minimale au passage du jalon |
+|---|---|
+| 0 — Environnement | Cohérence de `pyproject.toml` et `uv.lock`, versions installées conformes au verrou, schéma de `env.yaml`, détection explicite des blocages Python/GPU/CUDA. |
+| 1 — Acquisition | Résolution des chemins, appariement image/masque, détection du cas connu d'inversion ROI/crop, schéma et déterminisme du manifeste. |
+| 2 — Audit et préparation | Absence de fuite entre patientes, exclusions traçables, fusion des lésions, transformations image/masque synchronisées et déterministes sous graine fixée. |
+| 3 — Référence | Formes et types des tenseurs, pertes et métriques sur cas synthétiques, surapprentissage d'un petit lot, sauvegarde/rechargement et inférence reproductibles. |
+| 4 — Comparaisons | Réutilisation stricte des partitions, isolation du facteur comparé, répétition déterministe d'un essai court et compatibilité des sorties entre modèles. |
+| 5 — Évaluation finale | Gel du modèle et des seuils, cas limites des masques vides et lésions multiples, agrégations groupées par patiente et bootstrap reproductible. |
+| 6 — Restitution | Commandes de reproduction exécutables, cohérence entre configurations, métriques et figures retenues, présence des métadonnées de traçabilité. |
+
 ## 0 — Cadrage et préparation
 
 - [x] Rassembler les cours, schémas et ressources.
 - [x] Définir l’arborescence et un protocole initial.
-- [ ] Relever le matériel disponible : GPU, mémoire et espace disque.
-- [ ] Fixer les versions de Python et des dépendances, puis verrouiller l’environnement.
+- [x] Relever le matériel disponible : GPU, mémoire et espace disque.
+- [x] Fixer les versions de Python et des dépendances, puis verrouiller l’environnement.
 
 ## 1 — Acquisition et audit
 
@@ -31,6 +47,7 @@
 ## 3 — Première référence reproductible
 
 - [ ] Implémenter le chargement et une architecture U-Net 2D.
+- [ ] Exécuter les entraînements et les inférences sur Kaggle avec des chemins configurables et une capture de l’environnement du runtime.
 - [ ] Vérifier qu’un petit lot peut être surappris pour détecter les erreurs du pipeline.
 - [ ] Entraîner une première référence avec BCE + Dice, configuration et graine enregistrées.
 - [ ] Produire des superpositions image / référence / prédiction et un rapport de validation.

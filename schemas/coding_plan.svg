@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1740" viewBox="0 0 1240 1740" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3a3f4b"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1240" height="1740" fill="#f7f8fa"/>
+
+  <text x="40" y="44" font-size="26" font-weight="700" fill="#1c2230">Breast cancer segmentation &#8212; coding plan</text>
+  <text x="40" y="68" font-size="14" fill="#5b6170">CBIS-DDSM masses &#183; from empty scaffold to one sealed test evaluation &#183; every step ships its gate before the next begins</text>
+
+  <!-- ============ BANNER: machine snapshot + compute plan ============ -->
+  <rect x="40" y="98" width="1160" height="86" rx="10" fill="#eef0f4" stroke="#c7ccd6"/>
+  <line x1="632" y1="110" x2="632" y2="172" stroke="#c7ccd6" stroke-width="1"/>
+  <text x="60" y="122" font-size="12" font-weight="700" fill="#1c2230">MACHINE &#8212; probed 2026-09-13</text>
+  <text x="60" y="142" font-size="10.5" fill="#5b6170">GPU: NVIDIA GeForce MX350, 2048 MiB VRAM, driver 537.58</text>
+  <text x="60" y="158" font-size="10.5" fill="#5b6170">Python 3.14.3 system-wide &#183; no venv &#183; PyTorch not installed</text>
+  <text x="60" y="174" font-size="10.5" fill="#5b6170">Disk: 26 GB free of 476 GB (95% used) &#183; data/raw/ is empty</text>
+  <text x="652" y="122" font-size="12" font-weight="700" fill="#1c2230">COMPUTE PLAN &#8212; agreed</text>
+  <text x="652" y="142" font-size="10.5" fill="#5b6170">Laptop: audit, manifest, splits, geometry tests, overfit smoke on 8 patches</text>
+  <text x="652" y="158" font-size="10.5" fill="#5b6170">Cloud (Colab / Kaggle T4 or P100): the real training runs, on ROI patches</text>
+  <text x="652" y="174" font-size="10.5" fill="#5b6170">Patch size and batch size live in configs; no absolute paths anywhere</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="186" x2="150" y2="210"/></g>
+
+  <!-- ============ ROW 0: already in place ============ -->
+  <rect x="40" y="214" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="214" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="248" font-size="15" font-weight="700" fill="#1c2230">IN PLACE</text>
+  <text x="60" y="270" font-size="12.5" fill="#5b6170">docs, schemas,</text>
+  <text x="60" y="287" font-size="12.5" fill="#5b6170">course</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="227" width="470" height="84" rx="8" fill="#e8f3ee" stroke="#2e7d57"/>
+    <rect x="768" y="227" width="412" height="84" rx="8" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+  </g>
+  <text x="294" y="248" font-size="13" font-weight="700" fill="#1c2230">docs/ &#183; schemas/ &#183; repo tree</text>
+  <text x="294" y="266" font-size="10.5" fill="#5b6170">PLAN.md, PROTOCOLE.md, ARCHITECTURE.md, README.md, REFERENCES.md</text>
+  <text x="294" y="281" font-size="10.5" fill="#5b6170">4 SVG maps (project + course, EN/FR); full src/ and data/ tree</text>
+  <text x="294" y="296" font-size="10.5" fill="#5b6170">Protocol already fixed: masses first, patient splits, sealed test</text>
+  <text x="784" y="248" font-size="13" font-weight="700" fill="#1c2230">cours/ &#8212; 1 of 4 modules</text>
+  <text x="784" y="266" font-size="10.5" fill="#5b6170">01 disease &amp; mammography &#8212; corrected 2026-09-09</text>
+  <text x="784" y="281" font-size="10.5" fill="#5b6170">02 data &#183; 03 metrics &#183; 04 models &#8212; still to write</text>
+  <text x="784" y="296" font-size="10.5" fill="#8a90a0">Not a blocker for the code; needed for the report.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="326" x2="150" y2="350"/></g>
+
+  <!-- ============ S0 ============ -->
+  <rect x="40" y="354" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="354" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="388" font-size="15" font-weight="700" fill="#1c2230">S0</text>
+  <text x="60" y="410" font-size="12.5" fill="#5b6170">Environment</text>
+  <text x="60" y="427" font-size="12.5" fill="#5b6170">lock</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="367" width="470" height="84" rx="8" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+    <rect x="768" y="367" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="388" font-size="13" font-weight="700" fill="#1c2230">pyproject.toml &#183; .venv &#183; configs/env.yaml</text>
+  <text x="294" y="406" font-size="10.5" fill="#5b6170">BLOCKER: Python 3.14.3 has no PyTorch wheels &#8212; build a 3.12 venv</text>
+  <text x="294" y="421" font-size="10.5" fill="#5b6170">torch (cu121), numpy, pandas, opencv, albumentations, scipy,</text>
+  <text x="294" y="436" font-size="10.5" fill="#5b6170">scikit-image, pyyaml, pytest, tqdm &#8212; all versions pinned</text>
+  <text x="784" y="388" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="406" font-size="10.5" fill="#5b6170">torch.cuda.is_available() returns True</text>
+  <text x="784" y="421" font-size="10.5" fill="#5b6170">env.yaml records GPU, VRAM, driver, free disk and every</text>
+  <text x="784" y="436" font-size="10.5" fill="#5b6170">package version, so a cloud run can mirror it exactly.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="466" x2="150" y2="490"/></g>
+
+  <!-- ============ S1 ============ -->
+  <rect x="40" y="494" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="494" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="528" font-size="15" font-weight="700" fill="#1c2230">S1</text>
+  <text x="60" y="550" font-size="12.5" fill="#5b6170">Acquisition</text>
+  <text x="60" y="567" font-size="12.5" fill="#5b6170">&amp; manifest</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="507" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="507" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="528" font-size="13" font-weight="700" fill="#1c2230">scripts/build_manifest.py &#183; data/manifest.py</text>
+  <text x="294" y="546" font-size="10.5" fill="#5b6170">Parse the four CBIS-DDSM CSVs (mass / calc &#215; train / test)</text>
+  <text x="294" y="561" font-size="10.5" fill="#5b6170">One row per lesion: patient, side, view, abnormality, pathology,</text>
+  <text x="294" y="576" font-size="10.5" fill="#5b6170">density, assessment + resolved image and ROI-mask paths</text>
+  <text x="784" y="528" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="546" font-size="10.5" fill="#5b6170">Both files exist, mask is binary, mask dims == image dims.</text>
+  <text x="784" y="561" font-size="10.5" fill="#5b6170">Known trap: this Kaggle mirror swaps the ROI-mask and</text>
+  <text x="784" y="576" font-size="10.5" fill="#5b6170">cropped-image paths on part of the rows. Detect it, don't assume.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="606" x2="150" y2="630"/></g>
+
+  <!-- ============ S2 ============ -->
+  <rect x="40" y="634" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="634" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="668" font-size="15" font-weight="700" fill="#1c2230">S2</text>
+  <text x="60" y="690" font-size="12.5" fill="#5b6170">Audit</text>
+  <text x="60" y="707" font-size="12.5" fill="#5b6170">&amp; exclusions</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="647" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="647" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="668" font-size="13" font-weight="700" fill="#1c2230">data/audit.py &#183; notebooks/01_audit.ipynb</text>
+  <text x="294" y="686" font-size="10.5" fill="#5b6170">Duplicates, dimension mismatch, mask value range, empty masks</text>
+  <text x="294" y="701" font-size="10.5" fill="#5b6170">Merge multi-lesion rows per (patient, side, view)</text>
+  <text x="294" y="716" font-size="10.5" fill="#5b6170">Stratified visual sample of overlays &#8594; reports/figures/</text>
+  <text x="784" y="668" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="686" font-size="10.5" fill="#5b6170">data/interim/exclusions.csv, one reason per dropped row.</text>
+  <text x="784" y="701" font-size="10.5" fill="#5b6170">Counts reported separately &#8212; files, lesions, views and</text>
+  <text x="784" y="716" font-size="10.5" fill="#5b6170">patients are four different numbers. Never quote one for another.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="746" x2="150" y2="770"/></g>
+
+  <!-- ============ S3 ============ -->
+  <rect x="40" y="774" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="774" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="808" font-size="15" font-weight="700" fill="#1c2230">S3</text>
+  <text x="60" y="830" font-size="12.5" fill="#5b6170">Patient-grouped</text>
+  <text x="60" y="847" font-size="12.5" fill="#5b6170">splits</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="787" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="787" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="808" font-size="13" font-weight="700" fill="#1c2230">data/splits.py &#183; scripts/make_splits.py</text>
+  <text x="294" y="826" font-size="10.5" fill="#5b6170">Audit the official train / test split for patient leakage first</text>
+  <text x="294" y="841" font-size="10.5" fill="#5b6170">GroupShuffleSplit on patient_id carves val out of train,</text>
+  <text x="294" y="856" font-size="10.5" fill="#5b6170">stratified on pathology &#8594; data/splits/split_v1.json</text>
+  <text x="784" y="808" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="826" font-size="10.5" fill="#5b6170">tests/test_splits.py asserts the three patient sets are</text>
+  <text x="784" y="841" font-size="10.5" fill="#5b6170">pairwise disjoint. Test split is sealed from here on &#8212;</text>
+  <text x="784" y="856" font-size="10.5" fill="#5b6170">no tuning, no peeking, exactly one evaluation at S8.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="886" x2="150" y2="910"/></g>
+
+  <!-- ============ S4 ============ -->
+  <rect x="40" y="914" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="914" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="948" font-size="15" font-weight="700" fill="#1c2230">S4</text>
+  <text x="60" y="970" font-size="12.5" fill="#5b6170">ROI patches</text>
+  <text x="60" y="987" font-size="12.5" fill="#5b6170">&amp; Dataset</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="927" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="927" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="948" font-size="13" font-weight="700" fill="#1c2230">data/preprocess.py &#183; data/patches.py &#183; data/dataset.py</text>
+  <text x="294" y="966" font-size="10.5" fill="#5b6170">Breast crop (Otsu + largest component), strip burned-in labels.</text>
+  <text x="294" y="981" font-size="10.5" fill="#1c2230">ROI patches at NATIVE resolution &#8212; never resize the whole mammogram:</text>
+  <text x="294" y="996" font-size="10.5" fill="#5b6170">3000&#8594;512 destroys the spicule (module 4 &#167;5.2). Synced augmentations.</text>
+  <text x="784" y="948" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="966" font-size="10.5" fill="#5b6170">tests/test_geometry.py &#8212; a known transform applied to a</text>
+  <text x="784" y="981" font-size="10.5" fill="#5b6170">synthetic pair must leave the mask aligned, and the result</text>
+  <text x="784" y="996" font-size="10.5" fill="#5b6170">must be invertible back into the source image frame.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="1026" x2="150" y2="1050"/></g>
+
+  <!-- ============ S5 ============ -->
+  <rect x="40" y="1054" width="1160" height="124" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1054" width="220" height="124" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1088" font-size="15" font-weight="700" fill="#1c2230">S5</text>
+  <text x="60" y="1110" font-size="12.5" fill="#5b6170">Baseline</text>
+  <text x="60" y="1127" font-size="12.5" fill="#5b6170">U-Net</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="1067" width="470" height="98" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="1067" width="412" height="98" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="1088" font-size="13" font-weight="700" fill="#1c2230">models/unet.py &#183; training/losses.py &#183; training/trainer.py</text>
+  <text x="294" y="1106" font-size="10.5" fill="#5b6170">U-Net with an ImageNet-pretrained ResNet encoder, via segmentation_</text>
+  <text x="294" y="1121" font-size="10.5" fill="#5b6170">models_pytorch. Dice + BCE, trained on ROI patches. At ~600 training</text>
+  <text x="294" y="1136" font-size="10.5" fill="#5b6170">anomalies a pretrained encoder is mandatory, not an optimisation.</text>
+  <text x="294" y="1151" font-size="10.5" fill="#5b6170">AMP + grad accumulation at 2 GB. configs/unet_roi.yaml, seed fixed.</text>
+  <text x="784" y="1088" font-size="13" font-weight="700" fill="#1c2230">GATE &#8212; run this before any real training</text>
+  <text x="784" y="1106" font-size="10.5" fill="#5b6170">scripts/overfit_batch.py: 8 images, no augmentation,</text>
+  <text x="784" y="1121" font-size="10.5" fill="#5b6170">must reach Dice &gt; 0.95. If it cannot, the masks are</text>
+  <text x="784" y="1136" font-size="10.5" fill="#5b6170">misaligned or the loss is wrong. A full training run</text>
+  <text x="784" y="1151" font-size="10.5" fill="#5b6170">will not tell you that &#8212; it will just look mediocre.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="1180" x2="150" y2="1204"/></g>
+
+  <!-- ============ S6 ============ -->
+  <rect x="40" y="1208" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1208" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1242" font-size="15" font-weight="700" fill="#1c2230">S6</text>
+  <text x="60" y="1264" font-size="12.5" fill="#5b6170">Inference</text>
+  <text x="60" y="1281" font-size="12.5" fill="#5b6170">&amp; metrics</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="1221" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="1221" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="1242" font-size="13" font-weight="700" fill="#1c2230">inference/predict.py &#183; evaluation/metrics.py</text>
+  <text x="294" y="1260" font-size="10.5" fill="#5b6170">Threshold, post-process, project the mask back to the source</text>
+  <text x="294" y="1275" font-size="10.5" fill="#5b6170">frame. Dice, IoU, HD95, ASSD; per-lesion sensitivity by</text>
+  <text x="294" y="1290" font-size="10.5" fill="#5b6170">connected component; FP per image; empty-mask rule stated.</text>
+  <text x="784" y="1242" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="1260" font-size="10.5" fill="#5b6170">tests/test_metrics.py &#8212; synthetic shapes whose Dice and</text>
+  <text x="784" y="1275" font-size="10.5" fill="#5b6170">HD95 are known analytically. Report in pixels unless the</text>
+  <text x="784" y="1290" font-size="10.5" fill="#5b6170">pixel spacing has actually been verified in the source data.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="1320" x2="150" y2="1344"/></g>
+
+  <!-- ============ S7 ============ -->
+  <rect x="40" y="1348" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1348" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1382" font-size="15" font-weight="700" fill="#1c2230">S7</text>
+  <text x="60" y="1404" font-size="12.5" fill="#5b6170">Controlled</text>
+  <text x="60" y="1421" font-size="12.5" fill="#5b6170">comparisons</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="1361" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="1361" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="1382" font-size="13" font-weight="700" fill="#1c2230">configs/*.yaml &#183; experiments/&lt;run_id&gt;/</text>
+  <text x="294" y="1400" font-size="10.5" fill="#5b6170">One factor at a time: resolution, pretrained encoder,</text>
+  <text x="294" y="1415" font-size="10.5" fill="#5b6170">boundary-sensitive loss, tiling. Key runs repeated on 3 seeds.</text>
+  <text x="294" y="1430" font-size="10.5" fill="#5b6170">Log commit, config, seeds, manifest id, split id, metrics.</text>
+  <text x="784" y="1382" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="1400" font-size="10.5" fill="#5b6170">Identical splits and identical rules for every model.</text>
+  <text x="784" y="1415" font-size="10.5" fill="#5b6170">The final choice is made on validation only. Memory cost</text>
+  <text x="784" y="1430" font-size="10.5" fill="#5b6170">and inference time reported alongside segmentation quality.</text>
+
+  <g stroke="#3a3f4b" stroke-width="2.4" marker-end="url(#arrow)"><line x1="150" y1="1460" x2="150" y2="1484"/></g>
+
+  <!-- ============ S8 ============ -->
+  <rect x="40" y="1488" width="1160" height="110" rx="10" fill="#ffffff" stroke="#dfe3ea"/>
+  <rect x="40" y="1488" width="220" height="110" rx="10" fill="#eaf1ff" stroke="#dfe3ea"/>
+  <text x="60" y="1522" font-size="15" font-weight="700" fill="#1c2230">S8</text>
+  <text x="60" y="1544" font-size="12.5" fill="#5b6170">Sealed test</text>
+  <text x="60" y="1561" font-size="12.5" fill="#5b6170">&amp; report</text>
+  <g filter="url(#soft)">
+    <rect x="278" y="1501" width="470" height="84" rx="8" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+    <rect x="768" y="1501" width="412" height="84" rx="8" fill="#e7eefc" stroke="#3f6fd1"/>
+  </g>
+  <text x="294" y="1522" font-size="13" font-weight="700" fill="#1c2230">scripts/evaluate.py &#8594; reports/</text>
+  <text x="294" y="1540" font-size="10.5" fill="#5b6170">Freeze model, threshold and post-processing. Evaluate ONCE.</text>
+  <text x="294" y="1555" font-size="10.5" fill="#5b6170">Break down by density, size, pathology and view, with n shown.</text>
+  <text x="294" y="1570" font-size="10.5" fill="#5b6170">Patient-level bootstrap for uncertainty, not pixel-level.</text>
+  <text x="784" y="1522" font-size="13" font-weight="700" fill="#1c2230">GATE</text>
+  <text x="784" y="1540" font-size="10.5" fill="#5b6170">Every number ships with its n, its uncertainty and real</text>
+  <text x="784" y="1555" font-size="10.5" fill="#5b6170">failure examples. No claim of general clinical performance</text>
+  <text x="784" y="1570" font-size="10.5" fill="#5b6170">is made from this dataset, per docs/PROTOCOLE.md.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="1653" font-size="12" font-weight="700" fill="#1c2230">Legend</text>
+  <rect x="120" y="1640" width="22" height="16" rx="4" fill="#e8f3ee" stroke="#2e7d57"/>
+  <text x="150" y="1653" font-size="12" fill="#5b6170">done &amp; verified</text>
+  <rect x="275" y="1640" width="22" height="16" rx="4" fill="#fbece0" stroke="#b3541e" stroke-dasharray="5 4"/>
+  <text x="305" y="1653" font-size="12" fill="#5b6170">in progress / partial</text>
+  <rect x="455" y="1640" width="22" height="16" rx="4" fill="#f0eef9" stroke="#6a5acd" stroke-dasharray="5 4"/>
+  <text x="485" y="1653" font-size="12" fill="#5b6170">planned &#8212; not written yet</text>
+  <rect x="665" y="1640" width="22" height="16" rx="4" fill="#fbe6e2" stroke="#c23a22" stroke-dasharray="5 4"/>
+  <text x="695" y="1653" font-size="12" fill="#5b6170">blocked</text>
+  <rect x="775" y="1640" width="22" height="16" rx="4" fill="#e7eefc" stroke="#3f6fd1"/>
+  <text x="805" y="1653" font-size="12" fill="#5b6170">gate &#8212; rule that must hold before the next step starts</text>
+
+  <text x="40" y="1700" font-size="11" fill="#8a90a0">Hardware, Python and disk figures probed on this machine on 2026-09-13. Nothing under src/ exists yet: every purple box is a file still to be written.</text>
+  <text x="40" y="1718" font-size="11" fill="#8a90a0">Research protocol and metric definitions come from docs/PROTOCOLE.md; this schematic only orders the implementation and names its checkpoints.</text>
+</svg>

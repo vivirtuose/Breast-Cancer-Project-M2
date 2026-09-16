@@ -1,0 +1,45 @@
+[project]
+name = "cbis-ddsm-breast-cancer"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "torch==2.5.1+cu121",
+  "numpy==1.26.4",
+  "pandas==2.2.3",
+  # The image pipeline is non-interactive, so no GUI-enabled OpenCV distribution is needed.
+  "opencv-python-headless==4.10.0.84",
+  "albumentations==1.4.24",
+  "scipy==1.14.1",
+  "scikit-image==0.24.0",
+  "PyYAML==6.0.2",
+  "pytest==8.3.4",
+  "tqdm==4.67.1",
+]
+
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu121" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra --strict-markers"
+markers = [
+  "gpu: requires the locked CUDA environment and a compatible NVIDIA GPU",
+  "integration: exercises several pipeline components together",
+  "slow: intentionally longer-running reproducibility or training check",
+]

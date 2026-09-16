@@ -6,7 +6,7 @@ Projet de recherche et d’apprentissage visant à segmenter les lésions visibl
 
 Produire un masque de lésion à partir d’une mammographie et évaluer sa qualité géométrique. La segmentation localise une anomalie ; elle ne détermine pas, à elle seule, sa malignité. Le projet pourra ensuite étudier la classification bénin/malin ou une segmentation spécifique des lésions malignes, avec un protocole explicite.
 
-**État actuel :** cours et schémas disponibles, structure et plan préparés. Aucun pipeline ni modèle entraîné n’est encore livré.
+**État actuel :** cours, schémas, structure et plan disponibles. Le jalon S0 fournit le verrou des dépendances, la capture reproductible de l’environnement et ses tests ; aucun pipeline de données ni modèle entraîné n’est encore livré.
 
 ## Organisation
 
@@ -33,14 +33,16 @@ experiments/              Journaux, configurations et poids locaux
 reports/figures/           Rapports et figures sélectionnées
 ```
 
-Les dossiers de code sont des emplacements réservés. L’environnement Python et ses dépendances seront fixés lors de la première implémentation, selon le matériel disponible.
+Les dossiers du pipeline restent des emplacements réservés. L’environnement S0 cible Python 3.12 et ses versions sont fixées dans `pyproject.toml` et `uv.lock`.
 
 ## Démarrage
 
 1. Lire le [plan](PLAN.md) et le [protocole](docs/PROTOCOLE.md).
 2. Consulter le [cours](cours/00_index.md).
-3. Télécharger les données depuis [Kaggle](https://www.kaggle.com/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset), puis les placer dans `data/raw/`.
-4. Auditer les CSV, les chemins, les masques et les identités patient avant tout entraînement.
+3. Recréer l’environnement avec `uv sync --frozen`, puis exécuter `uv run pytest`.
+4. Produire la photographie de la machine avec `uv run python scripts/capture_environment.py` ; un code de sortie non nul signifie que le gate S0 reste bloqué.
+5. Télécharger les données depuis [Kaggle](https://www.kaggle.com/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset), puis les placer dans `data/raw/`.
+6. Auditer les CSV, les chemins, les masques et les identités patient avant tout entraînement.
 
 Les données, secrets, poids et sorties volumineuses restent hors de Git. Les petits résultats retenus pour le rapport peuvent être ajoutés dans `reports/`.
 
