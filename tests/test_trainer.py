@@ -1,6 +1,6 @@
 import json, pytest, torch
 from cbis_ddsm.data.dataset import make_fake_patch_dir
-from cbis_ddsm.training.config import TrainConfig, load_config
+from cbis_ddsm.training.config import TrainConfig, load_config, parse_overrides
 from cbis_ddsm.training.trainer import load_checkpoint, overfit_batch, train
 
 def _cfg(tmp_path, **kw):
@@ -9,6 +9,18 @@ def _cfg(tmp_path, **kw):
                 device="cpu", amp=False, num_workers=0, batch_size=4, epochs=1, augment=False)
     base.update(kw)
     return TrainConfig(**base)
+
+def test_parse_overrides_parses_yaml_values(tmp_path):
+    result = parse_overrides(["epochs=3", "encoder_weights=null", "amp=false"])
+    assert result == {"epochs": 3, "encoder_weights": None, "amp": False}
+
+def test_parse_overrides_raises_on_malformed_pair(tmp_path):
+    with pytest.raises(ValueError, match="got: bad_pair"):
+        parse_overrides(["bad_pair"])
+
+def test_parse_overrides_raises_on_empty_key(tmp_path):
+    with pytest.raises(ValueError, match="got: =value"):
+        parse_overrides(["=value"])
 
 def test_load_config_rejects_unknown_keys(tmp_path):
     path = tmp_path / "c.yaml"; path.write_text("patch_root: x\nbogus: 1\n", encoding="utf-8")

@@ -6,7 +6,7 @@ import dataclasses
 import random
 from dataclasses import dataclass, fields
 from pathlib import Path
-from typing import Mapping
+from typing import Mapping, Sequence
 
 import numpy as np
 import torch
@@ -38,6 +38,29 @@ class TrainConfig:
 
 
 _FIELD_NAMES = frozenset(field.name for field in fields(TrainConfig))
+
+
+def parse_overrides(pairs: Sequence[str]) -> dict[str, object]:
+    """Parse `--set key=value` pairs; each value is decoded with `yaml.safe_load`.
+
+    Args:
+        pairs: Sequence of "key=value" strings.
+
+    Returns:
+        Dictionary mapping keys to parsed values.
+
+    Raises:
+        ValueError: If a pair is malformed (missing '=' or empty key).
+    """
+    overrides: dict[str, object] = {}
+    for pair in pairs:
+        if "=" not in pair:
+            raise ValueError(f"--set expects key=value, got: {pair}")
+        key, _, value = pair.partition("=")
+        if not key:
+            raise ValueError(f"--set expects key=value, got: {pair}")
+        overrides[key] = yaml.safe_load(value)
+    return overrides
 
 
 def config_to_dict(cfg: TrainConfig) -> dict:
