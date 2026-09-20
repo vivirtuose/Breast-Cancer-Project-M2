@@ -59,9 +59,28 @@ Task 7: review approved with 1 Important open: scripts/train.py:109-117 and scri
 Task 7: minor (deferred): train/overfit CLIs don't wrap train()/overfit_batch() errors in parser.error; untested CUDA-OOM fallback in overfit_batch; no test for empty validation set
 Session stop 2026-09-16 (5-hour window 88%): Tasks 1-6 complete, Task 7 implemented+reviewed (fix round 1 pending), Tasks 8-9 not started, final whole-branch review not run.
 
-## Reprise (handoff)
+## Session 2026-09-20 (resumed)
+Ruling: nnU-Net runs on ROI patches, not whole images (user decision 2026-09-20) — same images as the U-Net baseline, so the comparison is like-for-like; whole-image detection stays a perspective — cost if wrong: nnU-Net numbers are patch-level and must never be presented as detection.
+Plan extended with Tasks 10-12 (nnU-Net export / folds+runner / prediction import), committed.
+Pre-flight scan for Tasks 10-12:
+| Pair | Produces vs consumes | Finding |
+| T4->T10 | read_patch_index, PatchRecord, patch PNGs 0/255 | OK (labels rewritten to 0/1 by export) |
+| T5->T10,T12 | make_fake_patch_dir(root, n, size, seed, partitions) | OK: tests need a "test" partition — helper accepts any partitions tuple |
+| T10->T11,T12 | case_index.csv + CASE_INDEX_FIELDS, DATASET_NAME | OK |
+| T3->T11 | split JSON keys folds/n_folds/partitions | OK |
+| T8->T12 | evaluate_patches schema (metrics CSV columns, summary keys), make_overlay | RISK: Task 8 not written yet — T12 must be dispatched after T8 and reuse its exact schema |
+| T11 self | nnunetv2 never imported by tests; commands checked as argv lists | OK |
+Ruling: Task 12 is dispatched only after Task 8 is complete, so it can copy Task 8's real output schema instead of a guessed one — cost if wrong: two divergent metric files.
+Task 7: fix round 1/5 (1 addressed, 0 open — parse_overrides shared; commits d06a592..8abd1d8)
+Task 7: complete (commits cb9596a..8abd1d8, review clean)
+Task 8: minor (deferred): tests/test_predict.py:360 tautological shape assertion (panel.shape[0] compared to itself) — fix in the final wave; no test for a partition with zero lesion patches
+Task 8: complete (commits 8abd1d8..64a95b1, review clean)
+Task 9: implemented, real local dry run OK (exit 0): manifest 3567 rows / 3.0 min, audit masses 78 exclusions + 1618 kept / 17.75 min, splits train 525 / val 132 / test 196 patients, 52 patches, overfit dice 0.9934 (gate passed), 1 epoch val dice 0.1136, predict mean_dice_lesion 0.227 on 28 val patches. Commits 64a95b1..61c3e3b. REVIEW NOT YET RUN (session stopped at the user's 90% credit threshold; review package already written: review-64a95b1..61c3e3b.diff).
+Session stop 2026-09-20 (5-hour window 93%): Tasks 1-8 complete and reviewed; Task 9 implemented + dry-run proven, review pending; Tasks 10-12 (nnU-Net) specified in the plan, not started; final whole-branch review not run.
 
-1. Tâche 7, tour de correction 1 : déplacer `_parse_overrides` (dupliqué dans `scripts/train.py` et `scripts/overfit_batch.py`) vers `cbis_ddsm.training.config.parse_overrides`, puis revue ciblée.
-2. Tâches 8 (inférence + superpositions) et 9 (point d'entrée Kaggle, audit limité aux masses, run à blanc local sur données réelles, `docs/KAGGLE.md`) selon le plan.
-3. Revue finale de toute la branche `s2-s6-kaggle-smoke`, puis décision de fusion / push (non fait : action partagée).
-Contexte partagé des agents : `.superpowers/sdd/2026-09-16-kaggle-smoke-pipeline/` (ignoré par git ; briefs, rapports, instructions de revue) — régénérable avec `scripts/task-brief`.
+## Reprise (handoff) — mis à jour 2026-09-20
+
+1. Revue de la tâche 9 (paquet déjà généré : `review-64a95b1..61c3e3b.diff` dans l'espace de travail SDD).
+2. Tâches 10, 11, 12 (nnU-Net sur imagettes) : export au format nnU-Net, plis par patiente + lanceur, import des prédictions dans le schéma de la tâche 8.
+3. Revue finale de toute la branche `s2-s6-kaggle-smoke`, puis décision de fusion / push (action partagée, à valider par l'utilisateur).
+Mineurs différés à traiter dans la vague finale : assertion tautologique `tests/test_predict.py:360` ; `targets.py` `_identity` qui duplique `ManifestRow.lesion_identity` ; graines globales inertes dans `dataset.py` ; absence de tests pour la validation vide et le repli mémoire de `overfit_batch`.
