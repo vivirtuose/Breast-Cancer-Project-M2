@@ -8,6 +8,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from cbis_ddsm.data.manifest import MANIFEST_FIELDS
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "scripts" / "build_manifest.py"
@@ -87,6 +89,60 @@ def test_build_cli_refuses_identical_output_paths_before_writing(tmp_path: Path)
     assert result.returncode != 0
     assert "must be different files" in result.stderr
     assert not output.exists()
+
+
+def _write_manifest_with_one_mass_and_one_broken_calc_row(tmp_path: Path) -> tuple[Path, Path]:
+    """A valid mass row plus a calc row whose files do not exist on disk."""
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    manifest = tmp_path / "manifest.csv"
+    pixels = np.arange(64, dtype=np.uint8).reshape(8, 8)
+    mask = np.zeros((8, 8), dtype=np.uint8)
+    mask[2:4, 2:4] = 255
+    for name, image in (("mass_full.jpg", pixels), ("mass_crop.jpg", pixels), ("mass_mask.jpg", mask)):
+        assert cv2.imwrite(str(raw / name), image)
+    with manifest.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=MANIFEST_FIELDS)
+        writer.writeheader()
+        writer.writerow({
+            "patient_id": "P_001", "laterality": "LEFT", "view": "CC", "abnormality_id": "1",
+            "lesion_type": "mass", "pathology": "BENIGN", "density": "3", "assessment": "4",
+            "split": "train", "source_csv": "mass_case_description_train_set.csv",
+            "full_image_path": "mass_full.jpg", "crop_image_path": "mass_crop.jpg",
+            "mask_image_path": "mass_mask.jpg", "subtlety": "3", "shape_or_type": "", "margins_or_distribution": "",
+        })
+        writer.writerow({
+            "patient_id": "P_002", "laterality": "RIGHT", "view": "MLO", "abnormality_id": "1",
+            "lesion_type": "calc", "pathology": "BENIGN", "density": "3", "assessment": "4",
+            "split": "train", "source_csv": "calc_case_description_train_set.csv",
+            "full_image_path": "calc_missing_full.jpg", "crop_image_path": "calc_missing_crop.jpg",
+            "mask_image_path": "calc_missing_mask.jpg", "subtlety": "3", "shape_or_type": "", "margins_or_distribution": "",
+        })
+    return raw, manifest
+
+
+def test_audit_cli_lesion_type_mass_skips_calc_rows_before_auditing(tmp_path: Path) -> None:
+    """--lesion-type mass must drop the calc row before auditing, so its missing files never surface."""
+    raw, manifest = _write_manifest_with_one_mass_and_one_broken_calc_row(tmp_path)
+    exclusions = tmp_path / "exclusions.csv"
+
+    result = _run(AUDIT, "--raw-dir", raw, "--manifest", manifest, "--output", exclusions, "--lesion-type", "mass")
+
+    assert result.returncode == 0, result.stderr
+    assert "wrote 0 exclusions; retained 1 rows" in result.stdout
+    with exclusions.open(newline="", encoding="utf-8") as handle:
+        assert list(csv.DictReader(handle)) == []
+
+
+def test_audit_cli_default_lesion_type_reports_the_broken_calc_row(tmp_path: Path) -> None:
+    """Without --lesion-type, the calc row's missing files are audited like any other row."""
+    raw, manifest = _write_manifest_with_one_mass_and_one_broken_calc_row(tmp_path)
+    exclusions = tmp_path / "exclusions.csv"
+
+    result = _run(AUDIT, "--raw-dir", raw, "--manifest", manifest, "--output", exclusions)
+
+    assert result.returncode == 0, result.stderr
+    assert "wrote 1 exclusions; retained 1 rows" in result.stdout
 
 
 def test_audit_cli_refuses_to_overwrite_its_manifest(tmp_path: Path) -> None:
