@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build every missing stage between the existing lesion manifest (S1) and a first end-to-end *smoke run* on Kaggle: mass targets with fused masks, patient-grouped splits, native-resolution patches, a synchronized-augmentation Dataset, a U-Net baseline, a trainer with an overfit gate, patch inference with overlays, and a single Kaggle entry point.
+**Goal:** Build every missing stage between the existing lesion manifest (S1) and a first end-to-end *smoke run* on Kaggle, for two models on identical patches (our U-Net baseline and nnU-Net): mass targets with fused masks, patient-grouped splits, native-resolution patches, a synchronized-augmentation Dataset, a U-Net baseline, a trainer with an overfit gate, patch inference with overlays, and a single Kaggle entry point.
 
 **Architecture:** A linear, file-based pipeline. Each stage is a pure library module in `src/cbis_ddsm/<layer>/` plus a thin CLI in `scripts/`. Stages communicate only through versioned files: `data/interim/manifest.csv` → `data/interim/exclusions.csv` → `data/splits/split_v1.json` → `data/processed/patches_v1/index.csv` + PNGs → `experiments/<run_id>/` (config, metrics, checkpoint, predictions, figures). All paths come from CLI arguments or YAML configs; nothing is machine-specific, so the same commands run on the laptop and on Kaggle.
 
@@ -588,9 +588,236 @@ def test_evaluate_patches_writes_metrics_summary_and_figures(tmp_path):
 
 ---
 
+---
+
+### Task 10: nnU-Net dataset export
+
+**Files:**
+- Create: `src/cbis_ddsm/nnunet/__init__.py`, `src/cbis_ddsm/nnunet/export.py`, `scripts/export_nnunet_dataset.py`, `tests/test_nnunet_export.py`
+- Modify: `pyproject.toml` (optional dependency group only)
+
+**Why:** nnU-Net never reads our `index.csv`. It requires its own folder layout and naming; everything it later does (planning, folds, inference) keys off `case_id`. The unit stays the **ROI patch** (decision of 2026-09-20), so nnU-Net is measured against the U-Net baseline on exactly the same images.
+
+**Interfaces:**
+- Consumes: `read_patch_index`, `PatchRecord`, `PATCH_INDEX_FIELDS` (`src/cbis_ddsm/data/patches.py`).
+- Produces:
+  - `DATASET_NAME = "Dataset001_CbisMass"`, `CASE_INDEX_FIELDS = ("case_id", "patch_id", "partition", "patient_id", "kind")`
+  - `case_id(record: PatchRecord) -> str` — `record.patch_id` with every character outside `[A-Za-z0-9_-]` replaced by `_`; raises `ValueError` if the result ends with `_` followed by exactly four digits (nnU-Net would read that as a channel suffix).
+  - `build_dataset_json(num_training: int) -> dict` — exactly `{"channel_names": {"0": "mammogram"}, "labels": {"background": 0, "lesion": 1}, "numTraining": num_training, "file_ending": ".png"}`.
+  - `@dataclass(frozen=True) class ExportResult: dataset_dir: Path; n_training: int; n_test: int; case_rows: tuple[dict[str, str], ...]`
+  - `export_dataset(patch_root: Path | str, output_root: Path | str, *, train_partitions: Sequence[str] = ("train", "val"), test_partitions: Sequence[str] = ("test",), dataset_name: str = DATASET_NAME) -> ExportResult` — writes `<output_root>/<dataset_name>/imagesTr/<case>_0000.png`, `labelsTr/<case>.png`, `imagesTs/<case>_0000.png` (no labels), `dataset.json`, and `case_index.csv` (`CASE_INDEX_FIELDS`, sorted by `case_id`). Images are copied byte-for-byte from the patch root; **labels are rewritten to 0/1 uint8** (`mask >= 128`). Raises `ValueError` if `output_root` is inside `patch_root`, if a patch file is missing, or if a `case_id` collides.
+  - `read_case_index(path) -> tuple[dict[str, str], ...]` — strict header check against `CASE_INDEX_FIELDS`.
+  - CLI `scripts/export_nnunet_dataset.py --patch-root data/processed/patches_v1 --output-root data/processed/nnunet_raw [--dataset-name …] [--train-partitions train val] [--test-partitions test]`, printing counts per split.
+
+- [ ] **Step 1: Optional dependency.** In `pyproject.toml` add:
+
+```toml
+[project.optional-dependencies]
+nnunet = ["nnunetv2>=2.5,<3"]
+```
+  Do **not** add it to `[project.dependencies]`, do **not** relock, and do not install it locally (a 2 GB laptop GPU cannot train nnU-Net; it is installed in the Kaggle runtime). `tests/test_dependency_lock.py` checks direct pins only — confirm it still passes; if it fails because it inspects optional groups, extend that test so the `nnunet` group is allowed to use a range rather than an exact pin, and say so in your report. No test in this repo may `import nnunetv2`.
+- [ ] **Step 2: Failing tests** (`tests/test_nnunet_export.py`) — build a fake patch directory with `make_fake_patch_dir(root, n=6, size=32, partitions=("train", "val", "test"))`:
+
+```python
+import json
+import numpy as np, cv2, pytest
+from cbis_ddsm.data.dataset import make_fake_patch_dir
+from cbis_ddsm.nnunet.export import DATASET_NAME, build_dataset_json, case_id, export_dataset, read_case_index
+
+def test_dataset_json_is_the_exact_contract():
+    assert build_dataset_json(7) == {"channel_names": {"0": "mammogram"}, "labels": {"background": 0, "lesion": 1},
+                                     "numTraining": 7, "file_ending": ".png"}
+
+def test_case_id_sanitizes_and_rejects_channel_like_suffix():
+    assert case_id_from("P_00001 LEFT/CC") == "P_00001_LEFT_CC"
+    with pytest.raises(ValueError):
+        case_id_from("P_00001_0000")
+
+def test_export_writes_nnunet_layout_with_binary_labels(tmp_path):
+    patch_root = make_fake_patch_dir(tmp_path / "patches", n=6, size=32, partitions=("train", "val", "test"))
+    result = export_dataset(patch_root, tmp_path / "raw")
+    dataset_dir = tmp_path / "raw" / DATASET_NAME
+    assert result.n_training == 4 and result.n_test == 2
+    assert len(list((dataset_dir / "imagesTr").glob("*_0000.png"))) == 4
+    assert len(list((dataset_dir / "labelsTr").glob("*.png"))) == 4
+    assert len(list((dataset_dir / "imagesTs").glob("*_0000.png"))) == 2
+    assert not (dataset_dir / "labelsTs").exists()
+    label = cv2.imread(str(next((dataset_dir / "labelsTr").glob("*.png"))), cv2.IMREAD_GRAYSCALE)
+    assert set(np.unique(label)) <= {0, 1} and label.max() == 1
+    assert json.loads((dataset_dir / "dataset.json").read_text(encoding="utf-8"))["numTraining"] == 4
+
+def test_case_index_maps_every_case_back_to_its_patch(tmp_path):
+    patch_root = make_fake_patch_dir(tmp_path / "patches", n=4, size=32, partitions=("train", "val"))
+    result = export_dataset(patch_root, tmp_path / "raw")
+    rows = read_case_index(tmp_path / "raw" / DATASET_NAME / "case_index.csv")
+    assert len(rows) == 4
+    assert {r["partition"] for r in rows} == {"train", "val"}
+    assert all(r["case_id"] and r["patch_id"] for r in rows)
+
+def test_export_refuses_to_write_inside_the_patch_root(tmp_path):
+    patch_root = make_fake_patch_dir(tmp_path / "patches", n=2, size=32)
+    with pytest.raises(ValueError):
+        export_dataset(patch_root, patch_root / "nnunet")
+```
+  (`case_id_from` above is `case_id` applied to a `PatchRecord` whose `patch_id` is that string — write the test with a small helper that builds such a record, or call `case_id` directly if you give it the record.) Add one CLI test in the style of `tests/test_data_clis.py` asserting exit code 0 and the printed counts.
+- [ ] **Step 3: Implement**, run focused tests, then the full suite.
+- [ ] **Step 4: Commit** `feat(nnunet): export du jeu de données au format nnU-Net (imagettes)`.
+
+---
+
+### Task 11: nnU-Net folds and run wrapper
+
+**Files:**
+- Create: `src/cbis_ddsm/nnunet/folds.py`, `scripts/run_nnunet.py`, `tests/test_nnunet_runner.py`
+- Modify: `docs/KAGGLE.md` (nnU-Net section)
+
+**Why:** left alone, nnU-Net builds its own 5 random folds over the exported cases, which would put two views of one patient on both sides of the validation line. We overwrite `splits_final.json` with our patient folds. The wrapper also keeps the three nnU-Net environment variables and the exact commands in one reviewable place.
+
+**Interfaces:**
+- Consumes: `read_case_index`, `DATASET_NAME` (Task 10); `read_split_json`, `partition_of` (`src/cbis_ddsm/data/splits.py`); the split JSON's `folds` mapping (patient → fold index) and `n_folds`.
+- Produces:
+  - `build_fold_entries(case_rows: Sequence[Mapping[str, str]], split: Mapping[str, object]) -> list[dict[str, list[str]]]` — one entry per fold, each `{"train": [case ids], "val": [case ids]}`, sorted; only cases whose patient is in the split's train ∪ val partitions; a case whose patient is unknown to the split raises `ValueError` naming it.
+  - `write_fold_entries(entries, path)` — JSON, `indent=2`, trailing newline (nnU-Net's `splits_final.json` format).
+  - `nnunet_env(nnunet_root: Path) -> dict[str, str]` — `{"nnUNet_raw": …/"nnUNet_raw", "nnUNet_preprocessed": …/"nnUNet_preprocessed", "nnUNet_results": …/"nnUNet_results"}` as absolute strings; the directories are created.
+  - `plan_commands(dataset_id: int, configuration: str, fold: int, trainer: str, *, input_dir: Path | None = None, output_dir: Path | None = None) -> dict[str, list[str]]` — the exact argv lists for the three stages, keyed `"plan"`, `"train"`, `"predict"`:
+    - plan: `["nnUNetv2_plan_and_preprocess", "-d", str(dataset_id), "--verify_dataset_integrity"]`
+    - train: `["nnUNetv2_train", str(dataset_id), configuration, str(fold), "-tr", trainer]`
+    - predict: `["nnUNetv2_predict", "-i", str(input_dir), "-o", str(output_dir), "-d", str(dataset_id), "-c", configuration, "-f", str(fold), "-tr", trainer]`
+  - CLI `scripts/run_nnunet.py --nnunet-root data/processed/nnunet --dataset-id 1 --configuration 2d --fold 0 --trainer nnUNetTrainer_50epochs --split data/splits/split_v1.json --stage all|plan|folds|train|predict [--predict-input <dir>] [--predict-output <dir>] [--dry-run]`:
+    - `plan` runs the planning command; `folds` writes `splits_final.json` into `<nnUNet_preprocessed>/<dataset name>/` from the exported `case_index.csv` and the split file (it must run **after** planning, which creates that directory); `train` and `predict` run their commands; `all` runs plan → folds → train → predict in that order.
+    - `--dry-run` prints `KEY=value` for the three environment variables and one line per command (`$ nnUNetv2_… …`) and runs nothing.
+    - A missing `nnUNetv2_*` executable (`shutil.which` is None) fails with `parser.error("nnunetv2 is not installed: pip install 'cbis-ddsm-breast-cancer[nnunet]' or pip install nnunetv2")`.
+    - Commands run with `subprocess.run(argv, env={**os.environ, **nnunet_env(root)}, check=False)`; a non-zero exit stops the sequence and propagates that exit code.
+
+- [ ] **Step 1: Failing tests** (`tests/test_nnunet_runner.py`), no nnU-Net installed, nothing executed:
+
+```python
+import json
+from cbis_ddsm.nnunet.folds import build_fold_entries, nnunet_env, plan_commands, write_fold_entries
+
+def _rows():
+    return [{"case_id": f"c{i}", "patch_id": f"p{i}", "partition": "train" if i < 6 else "val",
+             "patient_id": f"P_{i//2:03d}", "kind": "lesion"} for i in range(8)]
+
+def _split():
+    return {"version": 1, "n_folds": 2, "val_fold": 0, "seed": 0, "manifest_sha256": "x",
+            "folds": {"P_000": 0, "P_001": 1, "P_002": 0, "P_003": 1},
+            "partitions": {"train": ["P_001", "P_003"], "val": ["P_000", "P_002"], "test": []}}
+
+def test_fold_entries_are_patient_disjoint_and_cover_every_case():
+    entries = build_fold_entries(_rows(), _split())
+    assert len(entries) == 2
+    for entry in entries:
+        assert not set(entry["train"]) & set(entry["val"])
+        assert sorted(entry["train"] + entry["val"]) == [f"c{i}" for i in range(8)]
+    assert set(entries[0]["val"]) == {"c0", "c1", "c4", "c5"}   # patients P_000 and P_002
+
+def test_unknown_patient_is_rejected():
+    rows = _rows() + [{"case_id": "c9", "patch_id": "p9", "partition": "train", "patient_id": "P_999", "kind": "lesion"}]
+    try:
+        build_fold_entries(rows, _split())
+    except ValueError as error:
+        assert "P_999" in str(error)
+    else:
+        raise AssertionError("an unknown patient must be rejected")
+
+def test_commands_are_the_documented_nnunet_calls(tmp_path):
+    commands = plan_commands(1, "2d", 0, "nnUNetTrainer_50epochs", input_dir=tmp_path / "in", output_dir=tmp_path / "out")
+    assert commands["plan"] == ["nnUNetv2_plan_and_preprocess", "-d", "1", "--verify_dataset_integrity"]
+    assert commands["train"] == ["nnUNetv2_train", "1", "2d", "0", "-tr", "nnUNetTrainer_50epochs"]
+    assert commands["predict"][:3] == ["nnUNetv2_predict", "-i", str(tmp_path / "in")]
+
+def test_env_points_at_three_created_directories(tmp_path):
+    env = nnunet_env(tmp_path / "root")
+    assert set(env) == {"nnUNet_raw", "nnUNet_preprocessed", "nnUNet_results"}
+    for value in env.values():
+        assert (tmp_path / "root") in Path(value).parents and Path(value).is_dir()
+```
+  Plus a CLI test: `--dry-run --stage all` exits 0, prints the three environment variables and three command lines, creates no `splits_final.json`, and runs nothing; and a test that without `--dry-run` and without nnU-Net installed the CLI exits non-zero with `nnunetv2 is not installed` in stderr.
+- [ ] **Step 2: Implement**, run focused tests, full suite.
+- [ ] **Step 3: Document** in `docs/KAGGLE.md` a short "nnU-Net (imagettes)" section: install `pip install nnunetv2`, run `scripts/export_nnunet_dataset.py`, then `scripts/run_nnunet.py --stage all --trainer nnUNetTrainer_50epochs`, and state plainly that a shortened trainer is **not** the published nnU-Net configuration and must be reported as such.
+- [ ] **Step 4: Commit** `feat(nnunet): plis par patiente et lanceur des commandes nnU-Net`.
+
+---
+
+### Task 12: Import nnU-Net predictions and compare on equal terms
+
+**Files:**
+- Create: `src/cbis_ddsm/nnunet/predictions.py`, `scripts/import_nnunet_predictions.py`, `tests/test_nnunet_predictions.py`
+
+**Why:** nnU-Net writes PNG masks named by `case_id` in its own output folder. Scores are only comparable if they are computed by **our** metric code on **our** patches, in the same file format as Task 8's `evaluate_patches`.
+
+**Interfaces:**
+- Consumes: `read_case_index` (Task 10), `read_patch_index` (`patches.py`), `dice_score`, `iou_score` (`evaluation/metrics.py`), `make_overlay` (`evaluation/overlays.py`, Task 8), and Task 8's output schema: `<partition>_metrics.csv` with columns `patch_id, patient_id, kind, lesion_pixels, dice, iou, predicted_pixels` and `<partition>_summary.json` with `n_patches, mean_dice_lesion, mean_iou_lesion, background_false_positive_rate`.
+- Produces:
+  - `load_prediction(path: Path) -> np.ndarray` — grayscale PNG → boolean array; accepts 0/1 and 0/255 encodings (`pixels >= 1` after checking the maximum is 1 or ≥ 128); raises `ValueError` naming the file when unreadable.
+  - `evaluate_nnunet_predictions(prediction_dir: Path, case_index_path: Path, patch_root: Path, *, partition: str = "val", output_dir: Path, n_figures: int = 8) -> Path` — for every case of that partition, loads the prediction and the patch mask, computes `dice_score` / `iou_score`, writes `<output_dir>/<partition>_metrics.csv` and `<partition>_summary.json` in **exactly** Task 8's schema plus `"missing_predictions": <n>`, writes `n_figures` overlays into `<output_dir>/figures/`, and returns the summary path. A case with no prediction file is counted in `missing_predictions` and skipped, never a crash; if **every** case is missing, raise `ValueError`.
+  - CLI `scripts/import_nnunet_predictions.py --prediction-dir … --case-index data/processed/nnunet_raw/Dataset001_CbisMass/case_index.csv --patch-root data/processed/patches_v1 --partition val --output-dir experiments/nnunet_fold0 [--n-figures 8]`.
+
+- [ ] **Step 1: Failing tests** (`tests/test_nnunet_predictions.py`) using `make_fake_patch_dir` + `export_dataset`, writing fake predictions with OpenCV:
+
+```python
+import csv, json
+import cv2, numpy as np, pytest
+from cbis_ddsm.data.dataset import make_fake_patch_dir
+from cbis_ddsm.nnunet.export import DATASET_NAME, export_dataset
+from cbis_ddsm.nnunet.predictions import evaluate_nnunet_predictions, load_prediction
+
+def test_load_prediction_accepts_both_encodings(tmp_path):
+    for name, value in (("a.png", 1), ("b.png", 255)):
+        mask = np.zeros((8, 8), np.uint8); mask[2:4, 2:4] = value
+        assert cv2.imwrite(str(tmp_path / name), mask)
+    assert load_prediction(tmp_path / "a.png").sum() == 4
+    assert load_prediction(tmp_path / "b.png").sum() == 4
+
+def test_perfect_predictions_score_one_and_match_task8_schema(tmp_path):
+    patch_root = make_fake_patch_dir(tmp_path / "patches", n=4, size=32, partitions=("train", "val"))
+    result = export_dataset(patch_root, tmp_path / "raw")
+    dataset_dir = tmp_path / "raw" / DATASET_NAME
+    prediction_dir = tmp_path / "pred"; prediction_dir.mkdir()
+    for row in result.case_rows:
+        if row["partition"] != "val":
+            continue
+        label = cv2.imread(str(dataset_dir / "labelsTr" / f"{row['case_id']}.png"), cv2.IMREAD_GRAYSCALE)
+        assert cv2.imwrite(str(prediction_dir / f"{row['case_id']}.png"), label)
+    summary_path = evaluate_nnunet_predictions(prediction_dir, dataset_dir / "case_index.csv", patch_root,
+                                               partition="val", output_dir=tmp_path / "out", n_figures=1)
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert summary["n_patches"] == 2 and summary["missing_predictions"] == 0
+    assert summary["mean_dice_lesion"] == pytest.approx(1.0)
+    with (tmp_path / "out" / "val_metrics.csv").open(encoding="utf-8") as handle:
+        header = next(csv.reader(handle))
+    assert header == ["patch_id", "patient_id", "kind", "lesion_pixels", "dice", "iou", "predicted_pixels"]
+    assert len(list((tmp_path / "out" / "figures").glob("*.png"))) == 1
+
+def test_missing_prediction_is_counted_not_fatal(tmp_path):
+    patch_root = make_fake_patch_dir(tmp_path / "patches", n=4, size=32, partitions=("train", "val"))
+    result = export_dataset(patch_root, tmp_path / "raw")
+    dataset_dir = tmp_path / "raw" / DATASET_NAME
+    prediction_dir = tmp_path / "pred"; prediction_dir.mkdir()
+    val_rows = [row for row in result.case_rows if row["partition"] == "val"]
+    label = cv2.imread(str(dataset_dir / "labelsTr" / f"{val_rows[0]['case_id']}.png"), cv2.IMREAD_GRAYSCALE)
+    assert cv2.imwrite(str(prediction_dir / f"{val_rows[0]['case_id']}.png"), label)
+    summary = json.loads(evaluate_nnunet_predictions(prediction_dir, dataset_dir / "case_index.csv", patch_root,
+                                                     partition="val", output_dir=tmp_path / "out").read_text(encoding="utf-8"))
+    assert summary["missing_predictions"] == 1 and summary["n_patches"] == 1
+
+def test_no_prediction_at_all_is_an_error(tmp_path):
+    patch_root = make_fake_patch_dir(tmp_path / "patches", n=4, size=32, partitions=("train", "val"))
+    result = export_dataset(patch_root, tmp_path / "raw")
+    empty = tmp_path / "pred"; empty.mkdir()
+    with pytest.raises(ValueError):
+        evaluate_nnunet_predictions(empty, tmp_path / "raw" / DATASET_NAME / "case_index.csv", patch_root,
+                                    partition="val", output_dir=tmp_path / "out")
+```
+- [ ] **Step 2: Implement**, run focused tests, full suite.
+- [ ] **Step 3: Commit** `feat(nnunet): import des prédictions et évaluation avec nos métriques`.
+
 ## Definition of Done (smoke run)
 
-On Kaggle, one command produces: `env.yaml` (record-only), manifest + exclusions, `split_v1.json` with disjoint patients, lesion and background patches for the limited patients, an overfit Dice on 8 real patches (target > 0.95, reported), a trained checkpoint after ≥ 1 epoch with a decreasing train loss, `val_metrics.csv` + `val_summary.json`, and overlay figures in which the green ground-truth contour sits on the visible mass.
+**nnU-Net track (Tasks 10-12):** the exported dataset passes `nnUNetv2_plan_and_preprocess --verify_dataset_integrity`, `splits_final.json` holds our patient folds, a shortened trainer produces predictions for the validation cases, and `import_nnunet_predictions.py` scores them with our own metrics into Task 8's file schema, so the two models are comparable line by line. A shortened trainer is never reported as the published nnU-Net result.
+
+**U-Net track:** on Kaggle, one command produces: `env.yaml` (record-only), manifest + exclusions, `split_v1.json` with disjoint patients, lesion and background patches for the limited patients, an overfit Dice on 8 real patches (target > 0.95, reported), a trained checkpoint after ≥ 1 epoch with a decreasing train loss, `val_metrics.csv` + `val_summary.json`, and overlay figures in which the green ground-truth contour sits on the visible mass.
 
 ## Self-review notes
 
