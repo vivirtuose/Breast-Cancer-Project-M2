@@ -42,7 +42,19 @@ Les dossiers du pipeline restent des emplacements réservés. L’environnement 
 3. Recréer l’environnement avec `uv sync --frozen`, puis exécuter `uv run pytest`.
 4. Produire la photographie de la machine avec `uv run python scripts/capture_environment.py` ; un code de sortie non nul signifie que le gate S0 reste bloqué.
 5. Télécharger les données depuis [Kaggle](https://www.kaggle.com/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset), puis les placer dans `data/raw/`.
-6. Auditer les CSV, les chemins, les masques et les identités patient avant tout entraînement.
+6. Auditer les CSV, les chemins, les masques et les identités patient avant tout entraînement :
+   ```bash
+   uv run python scripts/build_manifest.py --raw-dir data/raw
+   uv run python scripts/audit_data.py --raw-dir data/raw --lesion-type mass
+   uv run python scripts/make_splits.py --raw-dir data/raw
+   uv run python scripts/extract_patches.py --raw-dir data/raw
+   ```
+7. Lancer un run de fumée de bout en bout (petit sous-ensemble, entraînement court) avec
+   `scripts/kaggle_smoke.py`, localement ou sur Kaggle — voir [docs/KAGGLE.md](docs/KAGGLE.md) pour
+   la procédure Kaggle complète :
+   ```bash
+   uv run python scripts/kaggle_smoke.py --raw-dir data/raw --work-dir /tmp/cbis_smoke --limit-patients 30
+   ```
 
 Les données, secrets, poids et sorties volumineuses restent hors de Git. Les petits résultats retenus pour le rapport peuvent être ajoutés dans `reports/`.
 

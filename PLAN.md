@@ -26,9 +26,9 @@ Un jalon n'est validé que si un partenaire peut recréer l'environnement depuis
 ## 1 — Acquisition et audit
 
 - [ ] Consigner la version, la provenance et les conditions d’utilisation des données.
-- [ ] Inventorier les CSV et les images réellement présents.
-- [ ] Construire un manifeste : patiente, côté, vue, anomalie, pathologie, image, masque.
-- [ ] Vérifier chemins, doublons, dimensions, orientation, valeurs et superposition des masques.
+- [x] Inventorier les CSV et les images réellement présents.
+- [x] Construire un manifeste : patiente, côté, vue, anomalie, pathologie, image, masque.
+- [x] Vérifier chemins, doublons, dimensions, orientation, valeurs et superposition des masques.
 - [ ] Examiner visuellement un échantillon stratifié et consigner les exclusions.
 
 **Critère de passage :** chaque paire retenue est traçable ; erreurs et exclusions sont documentées. Ne pas confondre nombre de fichiers, de lésions, de vues et de patientes.
@@ -36,21 +36,21 @@ Un jalon n'est validé que si un partenaire peut recréer l'environnement depuis
 ## 2 — Protocole et préparation
 
 - [ ] Commencer par la segmentation des masses, bénignes et malignes, et analyser les malignes séparément.
-- [ ] Auditer les partitions officielles pour les chevauchements de patientes.
-- [ ] Créer une validation groupée par patiente à partir de l’entraînement.
+- [x] Auditer les partitions officielles pour les chevauchements de patientes.
+- [x] Créer une validation groupée par patiente à partir de l’entraînement.
 - [ ] En cas de chevauchement officiel, décider et documenter une correction avant les expériences.
-- [ ] Fixer résolution, normalisation, stratégie d’imagettes et transformations synchronisées.
-- [ ] Définir les règles d’évaluation, notamment masques vides et lésions multiples.
+- [x] Fixer résolution, normalisation, stratégie d’imagettes et transformations synchronisées.
+- [x] Définir les règles d’évaluation, notamment masques vides et lésions multiples.
 
 **Critère de passage :** aucun chevauchement de patiente ; transformation image/masque vérifiée ; test réservé.
 
 ## 3 — Première référence reproductible
 
-- [ ] Implémenter le chargement et une architecture U-Net 2D.
+- [x] Implémenter le chargement et une architecture U-Net 2D.
 - [ ] Exécuter les entraînements et les inférences sur Kaggle avec des chemins configurables et une capture de l’environnement du runtime.
-- [ ] Vérifier qu’un petit lot peut être surappris pour détecter les erreurs du pipeline.
+- [x] Vérifier qu’un petit lot peut être surappris pour détecter les erreurs du pipeline.
 - [ ] Entraîner une première référence avec BCE + Dice, configuration et graine enregistrées.
-- [ ] Produire des superpositions image / référence / prédiction et un rapport de validation.
+- [x] Produire des superpositions image / référence / prédiction et un rapport de validation.
 
 **Critère de passage :** entraînement et inférence reproductibles, absence d’erreur d’alignement, résultat de référence mesuré.
 
