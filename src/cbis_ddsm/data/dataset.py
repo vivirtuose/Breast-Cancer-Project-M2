@@ -85,12 +85,15 @@ def make_fake_patch_dir(
     size: int = 64,
     seed: int = 0,
     partitions: Sequence[str] = ("train", "val"),
+    kinds: Sequence[str] = ("lesion",),
 ) -> Path:
-    """Write `n` synthetic lesion patches (PNGs + `index.csv`) usable by `PatchDataset`.
+    """Write `n` synthetic patches (PNGs + `index.csv`) usable by `PatchDataset`.
 
-    Each patch is a noisy background (~60 grey levels) with one bright ellipse lesion (grey
-    level 200), sized and positioned from `np.random.default_rng(seed)`. Rows alternate over
-    `partitions` in order (row 0 -> partitions[0], row 1 -> partitions[1], ...).
+    Each patch is a noisy background (~60 grey levels); a "lesion" patch also carries one bright
+    ellipse (grey level 200) and the matching mask, while a "background" patch keeps an empty
+    mask (`lesion_pixels=0`), as `extract_image_patches` writes for a lesion-free window. Rows
+    cycle independently over `partitions` and `kinds` in order (row 0 -> partitions[0]/kinds[0],
+    row 1 -> partitions[1]/kinds[1], ...), so coprime lengths mix both axes.
     """
     root = Path(root)
     images_dir, masks_dir = root / "images", root / "masks"
@@ -113,8 +116,10 @@ def make_fake_patch_dir(
         center_x = int(rng.integers(margin, size - margin)) if size - margin > margin else size // 2
         center_y = int(rng.integers(margin, size - margin)) if size - margin > margin else size // 2
 
-        cv2.ellipse(image, (center_x, center_y), (axis_x, axis_y), 0, 0, 360, 200, -1)
-        cv2.ellipse(mask, (center_x, center_y), (axis_x, axis_y), 0, 0, 360, 255, -1)
+        kind = kinds[index % len(kinds)]
+        if kind == "lesion":
+            cv2.ellipse(image, (center_x, center_y), (axis_x, axis_y), 0, 0, 360, 200, -1)
+            cv2.ellipse(mask, (center_x, center_y), (axis_x, axis_y), 0, 0, 360, 255, -1)
 
         image_file, mask_file = f"images/{patch_id}.png", f"masks/{patch_id}.png"
         cv2.imwrite(str(images_dir / f"{patch_id}.png"), image)
@@ -122,7 +127,7 @@ def make_fake_patch_dir(
 
         records.append(PatchRecord(
             patch_id=patch_id, image_key=patch_id, patient_id=f"FAKE_{index:04d}",
-            partition=partitions[index % len(partitions)], kind="lesion", abnormality_id="1",
+            partition=partitions[index % len(partitions)], kind=kind, abnormality_id="1" if kind == "lesion" else "",
             x0=0, y0=0, side=size, out_size=size, source_height=size, source_width=size,
             image_file=image_file, mask_file=mask_file, lesion_pixels=int((mask == 255).sum()),
         ))

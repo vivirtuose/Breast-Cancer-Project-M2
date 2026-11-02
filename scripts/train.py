@@ -27,11 +27,20 @@ def main() -> int:
     except ValueError as error:
         parser.error(str(error))
 
-    result = train(cfg)
+    try:
+        result = train(cfg)
+    except ValueError as error:
+        parser.error(str(error))
     print(
         f"wrote run to {result.run_dir}: best_epoch={result.best_epoch} "
-        f"best_val_dice={result.best_val_dice:.4f}"
+        f"best_val_dice={result.best_val_dice:.4f} "
+        f"epochs={result.completed_epochs}/{cfg.epochs} stop={result.stop_reason or 'none'}"
     )
+    if result.stopped_early:
+        print(
+            f"training stopped early ({result.stop_reason}); resume with "
+            f"--set resume_from={result.run_dir}"
+        )
     return 0
 
 

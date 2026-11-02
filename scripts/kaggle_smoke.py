@@ -95,16 +95,31 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--raw-dir", type=Path, required=True)
     parser.add_argument("--work-dir", type=Path, required=True)
-    parser.add_argument("--limit-patients", type=int, default=30)
+    patients = parser.add_mutually_exclusive_group()
+    patients.add_argument("--limit-patients", type=int, default=30)
+    patients.add_argument(
+        "--all-patients", action="store_true",
+        help="extract every patient of the requested partitions (a full training run, not a smoke run)",
+    )
     parser.add_argument("--size", type=int, default=512)
-    parser.add_argument("--epochs", type=int, default=2)
+    parser.add_argument(
+        "--train-config", type=Path, default=DEFAULT_TRAIN_CONFIG,
+        help="training config driving the overfit gate and the training stage",
+    )
+    # `--epochs` and `--encoder-weights` default to None so a full-training config keeps its own
+    # values; they are only forwarded as overrides when explicitly asked for on the command line.
+    parser.add_argument("--epochs", type=int, default=None)
     parser.add_argument("--overfit-steps", type=int, default=300)
     parser.add_argument("--overfit-n", type=int, default=8)
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--encoder-weights", choices=("imagenet", "none"), default="imagenet")
+    parser.add_argument("--encoder-weights", choices=("imagenet", "none"), default=None)
     parser.add_argument("--n-folds", type=int, default=5)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--skip-audit-if-present", action="store_true")
+    parser.add_argument(
+        "--resume-run", type=Path, default=None,
+        help="continue training inside this existing run directory instead of starting a new one",
+    )
     return parser
 
 
@@ -161,8 +176,17 @@ def run_smoke(args: argparse.Namespace) -> tuple[int, dict]:
     patches_index_path = patches_dir / "index.csv"
     experiments_dir = work_dir / "experiments"
 
-    encoder_weights_override = "null" if args.encoder_weights == "none" else args.encoder_weights
+    train_config = args.train_config.resolve()
+    if not train_config.is_file():
+        raise ValueError(f"missing training config: {train_config}")
+    limit_patients = None if args.all_patients else args.limit_patients
     py = sys.executable
+
+    shared_train_overrides: list[str] = []
+    if args.encoder_weights is not None:
+        shared_train_overrides += [
+            "--set", f"encoder_weights={'null' if args.encoder_weights == 'none' else args.encoder_weights}"
+        ]
 
     started_at = _utc_now()
     outcomes: list[StageOutcome] = []
@@ -224,14 +248,17 @@ def run_smoke(args: argparse.Namespace) -> tuple[int, dict]:
         pattern=r"^wrote split to.*$",
     )
 
+    extract_command = [
+        py, str(SCRIPTS_DIR / "extract_patches.py"), "--raw-dir", str(raw_dir), "--manifest", str(manifest_path),
+        "--exclusions", str(exclusions_path), "--split", str(split_path), "--output-dir", str(patches_dir),
+        "--size", str(args.size), "--seed", str(args.seed),
+    ]
+    if limit_patients is not None:
+        extract_command += ["--limit-patients", str(limit_patients)]
+    extract_command += ["--partitions", "train", "val"]
     run_or_skip(
         "extract_patches",
-        [
-            py, str(SCRIPTS_DIR / "extract_patches.py"), "--raw-dir", str(raw_dir), "--manifest", str(manifest_path),
-            "--exclusions", str(exclusions_path), "--split", str(split_path), "--output-dir", str(patches_dir),
-            "--size", str(args.size), "--limit-patients", str(args.limit_patients),
-            "--partitions", "train", "val", "--seed", str(args.seed),
-        ],
+        extract_command,
         "extract_patches.log",
         output_for_skip=patches_index_path,
         pattern=r"^wrote \d+ patches.*$",
@@ -244,25 +271,33 @@ def run_smoke(args: argparse.Namespace) -> tuple[int, dict]:
         outcomes.append(_run_stage(
             "overfit",
             [
-                py, str(SCRIPTS_DIR / "overfit_batch.py"), "--config", str(DEFAULT_TRAIN_CONFIG),
+                py, str(SCRIPTS_DIR / "overfit_batch.py"), "--config", str(train_config),
                 "--n", str(args.overfit_n), "--steps", str(args.overfit_steps),
                 "--set", f"patch_root={patches_dir}", "--set", f"device={args.device}",
-                "--set", f"encoder_weights={encoder_weights_override}",
+                *shared_train_overrides,
             ],
             logs_dir / "overfit.log",
             pattern=r"^overfit gate: dice=.*$",
         ))
 
+    train_command = [
+        py, str(SCRIPTS_DIR / "train.py"), "--config", str(train_config),
+        "--set", f"patch_root={patches_dir}", "--set", f"output_root={experiments_dir}",
+        "--set", f"device={args.device}", "--set", f"seed={args.seed}",
+        *shared_train_overrides,
+    ]
+    if args.epochs is not None:
+        train_command += ["--set", f"epochs={args.epochs}"]
+    if args.resume_run is not None:
+        train_command += ["--set", f"resume_from={args.resume_run}"]
+    elif train_config == DEFAULT_TRAIN_CONFIG.resolve():
+        # Only the smoke config gets its run renamed; a full-training config keeps its own run_name.
+        train_command += ["--set", "run_name=smoke"]
     train_outcome = run_or_skip(
         "train",
-        [
-            py, str(SCRIPTS_DIR / "train.py"), "--config", str(DEFAULT_TRAIN_CONFIG),
-            "--set", f"patch_root={patches_dir}", "--set", f"output_root={experiments_dir}",
-            "--set", f"epochs={args.epochs}", "--set", f"encoder_weights={encoder_weights_override}",
-            "--set", f"device={args.device}", "--set", "run_name=smoke", "--set", f"seed={args.seed}",
-        ],
+        train_command,
         "train.log",
-        pattern=r"^wrote run to .*: best_epoch=\d+ best_val_dice=[0-9.]+$",
+        pattern=r"^wrote run to .*: best_epoch=\d+ best_val_dice=[0-9.]+.*$",
     )
     if train_outcome.status == "ok":
         run_dir = _parse_run_dir(train_outcome.stdout)

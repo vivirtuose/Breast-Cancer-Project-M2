@@ -249,3 +249,95 @@ def test_collect_zip_entries_skips_files_over_the_size_limit(tmp_path: Path, mon
     assert f"{run_dir.name}/small.bin" in arcnames
     assert f"{run_dir.name}/big.bin" not in arcnames
     assert f"{run_dir.name}/big.bin" in skipped
+
+
+def _captured_commands(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, argv: list[str]) -> list[list[str]]:
+    """Run the orchestrator with every stage faked, returning the argv of each invoked stage."""
+    raw = tmp_path / "raw"
+    raw.mkdir(exist_ok=True)
+    commands: list[list[str]] = []
+
+    def fake_run(command, *, cwd, text, capture_output):
+        commands.append([str(part) for part in command])
+        script = Path(command[1]).name
+        if script == "train.py":
+            return _FakeCompleted(0, stdout="wrote run to some_run: best_epoch=0 best_val_dice=0.5", stderr="")
+        return _FakeCompleted(0, stdout=f"wrote stage output for {script}", stderr="")
+
+    monkeypatch.setattr(kaggle_smoke.subprocess, "run", fake_run)
+    args = kaggle_smoke.build_arg_parser().parse_args(
+        ["--raw-dir", str(raw), "--work-dir", str(tmp_path / "work"), *argv]
+    )
+    kaggle_smoke.run_smoke(args)
+    return commands
+
+
+def _command_for(commands: list[list[str]], script_name: str) -> list[str]:
+    return next(command for command in commands if Path(command[1]).name == script_name)
+
+
+def test_run_smoke_drives_the_requested_train_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """--train-config must reach both the overfit gate and the training stage."""
+    config = tmp_path / "full.yaml"
+    config.write_text("patch_root: x\n", encoding="utf-8")
+
+    commands = _captured_commands(tmp_path, monkeypatch, ["--train-config", str(config)])
+
+    for script in ("overfit_batch.py", "train.py"):
+        command = _command_for(commands, script)
+        assert command[command.index("--config") + 1] == str(config)
+
+
+def test_run_smoke_defaults_to_the_smoke_train_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    commands = _captured_commands(tmp_path, monkeypatch, [])
+    command = _command_for(commands, "train.py")
+    assert command[command.index("--config") + 1] == str(kaggle_smoke.DEFAULT_TRAIN_CONFIG)
+
+
+def test_run_smoke_leaves_the_config_epochs_alone_unless_asked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A full-training config must keep its own epoch count when --epochs is not given."""
+    commands = _captured_commands(tmp_path, monkeypatch, [])
+    assert not any(part.startswith("epochs=") for part in _command_for(commands, "train.py"))
+
+    commands = _captured_commands(tmp_path, monkeypatch, ["--epochs", "7"])
+    assert "epochs=7" in _command_for(commands, "train.py")
+
+
+def test_run_smoke_leaves_the_config_encoder_weights_alone_unless_asked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    commands = _captured_commands(tmp_path, monkeypatch, [])
+    assert not any(part.startswith("encoder_weights=") for part in _command_for(commands, "train.py"))
+
+    commands = _captured_commands(tmp_path, monkeypatch, ["--encoder-weights", "none"])
+    assert "encoder_weights=null" in _command_for(commands, "train.py")
+
+
+def test_all_patients_removes_the_extraction_limit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    commands = _captured_commands(tmp_path, monkeypatch, ["--all-patients"])
+    assert "--limit-patients" not in _command_for(commands, "extract_patches.py")
+
+    commands = _captured_commands(tmp_path, monkeypatch, [])
+    assert "--limit-patients" in _command_for(commands, "extract_patches.py")
+
+
+def test_resume_run_passes_resume_from_to_the_training_stage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    run_dir = tmp_path / "experiments" / "run_x"
+    commands = _captured_commands(tmp_path, monkeypatch, ["--resume-run", str(run_dir)])
+    assert f"resume_from={run_dir}" in _command_for(commands, "train.py")
+    assert not any(part.startswith("run_name=") for part in _command_for(commands, "train.py"))
+
+    commands = _captured_commands(tmp_path, monkeypatch, [])
+    assert not any(part.startswith("resume_from=") for part in _command_for(commands, "train.py"))
+
+
+def test_limit_patients_and_all_patients_are_mutually_exclusive(tmp_path: Path) -> None:
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    result = subprocess.run(
+        [
+            sys.executable, str(KAGGLE_SMOKE), "--raw-dir", str(raw),
+            "--work-dir", str(tmp_path / "work"), "--all-patients", "--limit-patients", "5",
+        ],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode != 0
+    assert "not allowed with argument" in result.stderr

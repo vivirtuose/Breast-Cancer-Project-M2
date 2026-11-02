@@ -13,6 +13,21 @@ import torch
 import yaml
 
 
+SCHEDULERS = ("none", "cosine", "plateau")
+# Both selection metrics are maximized; `val_dice_lesion` ignores background patches, whose Dice
+# is 1.0 whenever the model correctly predicts nothing, and so matches `mean_dice_lesion` as
+# reported by `cbis_ddsm.inference.predict.evaluate_patches`.
+SELECTION_METRICS = ("val_dice", "val_dice_lesion")
+# Checked for their type at construction: YAML 1.1 reads `3e-4` as a *string* (a float literal
+# needs a dot, as in `3.0e-4`), and such a value would otherwise only fail deep inside the
+# optimizer, after data preparation has already run.
+_REQUIRED_NUMERIC_FIELDS = (
+    "epochs", "batch_size", "accumulation_steps", "learning_rate", "weight_decay", "bce_weight",
+    "num_workers", "seed", "threshold", "min_learning_rate", "plateau_factor", "plateau_patience",
+)
+_OPTIONAL_NUMERIC_FIELDS = ("early_stopping_patience", "max_hours", "limit_train", "limit_val")
+
+
 @dataclass(frozen=True)
 class TrainConfig:
     patch_root: str
@@ -35,6 +50,44 @@ class TrainConfig:
     limit_train: int | None = None
     limit_val: int | None = None
     threshold: float = 0.5
+    scheduler: str = "none"
+    min_learning_rate: float = 1e-6
+    plateau_factor: float = 0.5
+    plateau_patience: int = 5
+    early_stopping_patience: int | None = None
+    max_hours: float | None = None
+    selection_metric: str = "val_dice"
+    resume_from: str | None = None
+
+    def __post_init__(self) -> None:
+        for name in _REQUIRED_NUMERIC_FIELDS:
+            self._require_number(name, getattr(self, name))
+        for name in _OPTIONAL_NUMERIC_FIELDS:
+            value = getattr(self, name)
+            if value is not None:
+                self._require_number(name, value)
+        if self.scheduler not in SCHEDULERS:
+            raise ValueError(f"unknown scheduler {self.scheduler!r}; expected one of {SCHEDULERS}")
+        if self.selection_metric not in SELECTION_METRICS:
+            raise ValueError(
+                f"unknown selection_metric {self.selection_metric!r}; expected one of {SELECTION_METRICS}"
+            )
+        if self.accumulation_steps < 1:
+            raise ValueError(f"accumulation_steps must be >= 1, got {self.accumulation_steps}")
+        if self.epochs < 0:
+            raise ValueError(f"epochs must be >= 0, got {self.epochs}")
+        if self.early_stopping_patience is not None and self.early_stopping_patience < 1:
+            raise ValueError(f"early_stopping_patience must be >= 1 when set, got {self.early_stopping_patience}")
+        if self.max_hours is not None and self.max_hours < 0:
+            raise ValueError(f"max_hours must be >= 0 when set, got {self.max_hours}")
+
+    @staticmethod
+    def _require_number(name: str, value: object) -> None:
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError(
+                f"{name} must be a number, got {value!r}; YAML reads 3e-4 as a string, "
+                "so write 3.0e-4 (with a dot) or 0.0003"
+            )
 
 
 _FIELD_NAMES = frozenset(field.name for field in fields(TrainConfig))

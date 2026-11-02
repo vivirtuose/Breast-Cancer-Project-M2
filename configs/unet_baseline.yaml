@@ -1,0 +1,29 @@
+# First reproducible U-Net baseline (PLAN.md step 3), sized for one Kaggle T4 session.
+#
+# The time budget stops the run before Kaggle's own session limit cuts it, so the last epoch is
+# always checkpointed; resume the same run directory with
+#   --set resume_from=<experiments/unet_baseline_...>
+# in a new session. Model selection uses the lesion-only validation Dice, so background patches
+# (whose Dice is 1.0 whenever the model correctly predicts nothing) cannot inflate the choice of
+# the best epoch; it is the same quantity that predict.py reports as mean_dice_lesion.
+patch_root: data/processed/patches_v1
+run_name: unet_baseline
+architecture: unet
+encoder: resnet34
+encoder_weights: imagenet
+epochs: 60
+batch_size: 8
+accumulation_steps: 2
+learning_rate: 3.0e-4
+weight_decay: 1.0e-4
+bce_weight: 0.5
+scheduler: cosine
+min_learning_rate: 1.0e-6
+early_stopping_patience: 12
+max_hours: 8.0
+selection_metric: val_dice_lesion
+amp: true
+augment: true
+num_workers: 2
+seed: 0
+threshold: 0.5
