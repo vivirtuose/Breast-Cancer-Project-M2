@@ -84,3 +84,37 @@ Session stop 2026-09-20 (5-hour window 93%): Tasks 1-8 complete and reviewed; Ta
 2. Tâches 10, 11, 12 (nnU-Net sur imagettes) : export au format nnU-Net, plis par patiente + lanceur, import des prédictions dans le schéma de la tâche 8.
 3. Revue finale de toute la branche `s2-s6-kaggle-smoke`, puis décision de fusion / push (action partagée, à valider par l'utilisateur).
 Mineurs différés à traiter dans la vague finale : assertion tautologique `tests/test_predict.py:360` ; `targets.py` `_identity` qui duplique `ManifestRow.lesion_identity` ; graines globales inertes dans `dataset.py` ; absence de tests pour la validation vide et le repli mémoire de `overfit_batch`.
+
+## Session 2026-11-02 — survivabilité d'un entraînement long sur Kaggle
+
+Branche : `kaggle-long-run` (depuis `main` @ 25cd979). Rien commité par l'agent ; commandes rendues à l'utilisateur.
+
+Scan complet du code demandé par l'utilisateur, puis correction des trois manques bloquants qu'il a relevés : aucune sauvegarde intermédiaire, aucune configuration d'entraînement réel, aucun ordonnancement du learning rate.
+
+Implémenté :
+- `checkpoint_last.pt` (poids + optimiseur + scaler + scheduler) réécrit à chaque époque par écriture atomique (`_save_atomic` : fichier temporaire + `os.replace`), et `run.json` réécrit à chaque époque ; `checkpoint_best.pt` reste poids seuls, donc rechargeable par `load_checkpoint` / `predict.py` et sous la limite de 200 Mo du zip de `kaggle_smoke`.
+- `resume_from` : reprise dans le même répertoire de run, à l'époque suivante, en réécrivant `config_resume_<n>.yaml` et en réouvrant `metrics.jsonl`. Refus si l'un de `RESUME_INVARIANT_FIELDS` (`patch_root`, `architecture`, `encoder`, `batch_size`, `accumulation_steps`) change.
+- Scheduler (`none` | `cosine` | `plateau`), `early_stopping_patience`, `max_hours` ; `stop_reason()` fait primer le budget de temps sur l'arrêt anticipé.
+- `val_dice_lesion` journalisé à côté de `val_dice`, et `selection_metric` (`val_dice` par défaut, `val_dice_lesion` dans la config de référence) : le `val_dice` toutes imagettes vaut 1,0 sur une imagette de fond non prédite et n'est pas comparable au `mean_dice_lesion` de `predict.py`.
+- `configs/unet_baseline.yaml` : 60 époques, cosinus, patience 12, `max_hours: 8.0`, sélection lésion seule.
+- `kaggle_smoke.py` : `--train-config`, `--all-patients`, `--resume-run` ; `--epochs` et `--encoder-weights` ne sont plus injectés sauf demande explicite, pour ne pas écraser la config.
+- `make_fake_patch_dir(kinds=...)` produit des imagettes de fond à masque vide (traite aussi le mineur différé « absence de test pour la validation vide ») ; `scripts/train.py` enveloppe les `ValueError` dans `parser.error`.
+
+Trois défauts trouvés et corrigés pendant la vérification, qui auraient tous frappé sur Kaggle après l'heure d'extraction :
+1. YAML 1.1 lit `3e-4` comme une **chaîne** (un flottant exige un point) : `learning_rate` arrivait en `str` jusqu'à l'optimiseur. Config corrigée en `3.0e-4` et validation de type ajoutée dans `TrainConfig.__post_init__`, avec message explicite.
+2. L'état du scheduler était sauvegardé avant son `step()` : chaque reprise rejouait un pas et étirait le calendrier d'une époque. Ordre corrigé.
+3. `CosineAnnealingLR.state_dict()` porte `T_max` : une reprise avec plus d'époques gardait l'ancien horizon et renvoyait le LR à sa valeur de départ. `T_max` est réaligné sur la config après `load_state_dict`.
+4. Le générateur du DataLoader était semé une seule fois : l'ordre des lots d'une reprise différait d'un run continu. Il est désormais resemé depuis `(graine, époque)` à chaque époque, donc l'ordre de l'époque N ne dépend que de N. (Change l'ordre des lots par rapport aux runs antérieurs ; aucune référence n'était figée.)
+
+Preuves :
+- `uv run pytest` : **143 passed** en 6 min 45 (106 avant, +37 tests). Exécuté avec `.venv/Scripts/python.exe -m pytest`.
+- Preuve CLI sur imagettes synthétiques (CPU, resnet18, 4 époques, `scratchpad`) : run coupé par `max_hours=0.0` après l'époque 0 puis repris, comparé à un run continu de même graine → `lr`, `train_loss` et `val_dice_lesion` **identiques sur les 4 époques**, `best_epoch` et `best_val_dice` identiques.
+
+Limites — ce qui n'est pas prouvé :
+- **Toujours jamais exécuté sur Kaggle** : l'item correspondant de `PLAN.md` étape 3 reste décoché. Tout ci-dessus est vérifié en local, sur CPU et sur données synthétiques.
+- Aucun entraînement de référence mesuré : `configs/unet_baseline.yaml` n'a jamais tourné sur données réelles. Les valeurs d'`epochs`, `batch_size`, `max_hours` et de patience sont des points de départ, pas des réglages mesurés.
+- Coût de `extract_patches` sur les 657 patientes train+val non mesuré (mesuré sur 30 seulement).
+- Équivalence d'une reprise entre GPU différents, ou CPU↔GPU, non vérifiée.
+- Non traité, et hors du périmètre demandé : la partition reste gravée dans `index.csv` à l'extraction (changer `val_fold` impose de réextraire) ; pas de pilote de validation croisée ; HD95, distance moyenne symétrique, sensibilité par lésion, faux positifs par image et bootstrap groupé par patiente toujours absents (exigés par `docs/PROTOCOLE.md` pour l'étape 5) ; pas d'inférence image entière ; pas de code nnU-Net (tâches 10-12).
+
+Prochaine action : lancer la première session réelle sur Kaggle avec `--train-config configs/unet_baseline.yaml --all-patients`, puis consigner ici la durée par époque, la VRAM observée et la raison d'arrêt, avant de régler `max_hours` et `batch_size` sur des mesures.

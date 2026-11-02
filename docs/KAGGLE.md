@@ -71,9 +71,16 @@ python scripts/kaggle_smoke.py \
 Options utiles :
 
 - `--size 512` (défaut) : taille des imagettes ; réduire si la mémoire GPU est limitée.
-- `--epochs 2`, `--overfit-steps 300` (défauts) : ajuster pour raccourcir ou allonger le run.
-- `--encoder-weights imagenet|none` : `imagenet` télécharge les poids préentraînés (Internet On
-  requis) ; `none` entraîne l'encodeur from scratch, utile pour un run plus rapide ou hors ligne.
+- `--epochs`, `--overfit-steps 300` : `--epochs` non fourni laisse la configuration
+  d'entraînement décider de son nombre d'époques ; le fournir l'écrase.
+- `--encoder-weights imagenet|none` : non fourni, la configuration décide ; `imagenet` télécharge
+  les poids préentraînés (Internet On requis) ; `none` entraîne l'encodeur from scratch, utile
+  pour un run plus rapide ou hors ligne.
+- `--train-config` (défaut `configs/unet_smoke.yaml`) : configuration pilotant la gate de
+  surapprentissage et l'entraînement — voir la section 8 pour l'entraînement complet.
+- `--all-patients` : extrait toutes les patientes des partitions demandées, au lieu de
+  `--limit-patients` (les deux options sont mutuellement exclusives).
+- `--resume-run <répertoire>` : reprend l'entraînement dans un répertoire de run existant.
 - `--device auto|cuda|cpu` : `auto` (défaut) utilise le GPU T4 si disponible.
 - `--n-folds` (défaut 5) : nombre de plis pour la validation croisée groupée par patiente.
 - `--skip-audit-if-present` : relancer sans refaire le manifeste, l'audit, les partitions ou les
@@ -117,3 +124,51 @@ Le run de fumée est un succès si :
 Ce run de fumée ne constitue pas une première référence : les nombres qu'il produit sont mesurés
 sur un sous-ensemble restreint et un entraînement volontairement court, uniquement pour vérifier
 que la chaîne fonctionne de bout en bout avant de lancer un entraînement complet sur Kaggle.
+
+## 8. Entraînement complet et reprise après coupure de session
+
+Une session Kaggle s'arrête au bout de quelques heures, et l'entraînement de référence est plus
+long que cela. `configs/unet_baseline.yaml` est donc dimensionné pour être **interrompu puis
+repris** : `max_hours` arrête le run avant que Kaggle ne le coupe, et chaque époque réécrit
+`checkpoint_last.pt` (poids + optimiseur + scaler + scheduler) par écriture atomique.
+
+Première session, sur toutes les patientes :
+
+```bash
+python scripts/kaggle_smoke.py --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml
+```
+
+L'étape `train` affiche à la fin le répertoire du run et, si elle s'est arrêtée tôt, la commande
+de reprise. Sessions suivantes, en réutilisant le manifeste, l'audit, les partitions et les
+imagettes déjà produits dans `--work-dir` :
+
+```bash
+python scripts/kaggle_smoke.py --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml --skip-audit-if-present --resume-run /kaggle/working/baseline/experiments/unet_baseline_<horodatage>
+```
+
+Pour conserver `--work-dir` d'une session à l'autre, le publier comme *Kaggle Dataset* en fin de
+session et le remonter en input à la suivante ; `/kaggle/working/` n'est pas persistant.
+
+Ce qu'une reprise garantit, et ce qu'elle ne garantit pas :
+
+- **Garanti** : à graine et `epochs` identiques, un run coupé puis repris produit les mêmes
+  enregistrements d'époque qu'un run continu — même calendrier de learning rate, mêmes pertes,
+  mêmes Dice (vérifié par `tests/test_trainer.py::test_a_resumed_run_reproduces_an_uninterrupted_one`).
+  L'ordre des lots dépend de `(graine, époque)` seulement, et le scheduler reprend au pas suivant.
+- **Refusé** : une reprise qui change `patch_root`, `architecture`, `encoder`, `batch_size` ou
+  `accumulation_steps` échoue avec un message nommant le champ ; ce ne serait plus la même
+  expérience. Changer `epochs` est permis et étire l'horizon du cosinus.
+- **Non garanti** : l'équivalence entre GPU différents, ou entre CPU et GPU.
+
+### Choix de la meilleure époque
+
+`configs/unet_baseline.yaml` sélectionne sur `selection_metric: val_dice_lesion`, le Dice calculé
+**sur les seules imagettes de lésion**. Le `val_dice` toutes imagettes confondues vaut 1,0 sur une
+imagette de fond dès que le modèle ne prédit rien : comme la moitié des imagettes sont du fond, il
+récompense l'abstention et n'est pas comparable au `mean_dice_lesion` rapporté par `predict.py`.
+Les deux restent journalisés par époque dans `metrics.jsonl`, et `run.json` indique lequel a
+piloté la sélection ainsi que `completed_epochs` et `stop_reason`.
+
+L'arrêt anticipé (`early_stopping_patience`) se déclenche sur cette même métrique. Un budget de
+temps épuisé l'emporte sur l'arrêt anticipé : sur un runtime à session limitée, c'est lui qui
+impose la fin du run.
