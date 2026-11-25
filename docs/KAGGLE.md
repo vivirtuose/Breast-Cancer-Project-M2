@@ -17,7 +17,7 @@ en bout avant un entraînement complet. Le code reste en anglais ; ce document e
 
 Dans le panneau *Add Input* du notebook, ajouter le jeu de données Kaggle
 `awsaf49/cbis-ddsm-breast-cancer-image-dataset`. Il apparaît alors monté en lecture seule sous
-`/kaggle/input/cbis-ddsm-breast-cancer-image-dataset/`, avec les sous-dossiers `csv/` et `jpeg/`
+`/kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset/`, avec les sous-dossiers `csv/` et `jpeg/`
 attendus par `build_manifest.py`.
 
 ## 3. Récupérer le code du dépôt
@@ -63,7 +63,7 @@ Depuis la racine du dépôt cloné (ou copié) :
 
 ```bash
 python scripts/kaggle_smoke.py \
-  --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset \
+  --raw-dir /kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset \
   --work-dir /kaggle/working/smoke \
   --limit-patients 30
 ```
@@ -135,7 +135,7 @@ repris** : `max_hours` arrête le run avant que Kaggle ne le coupe, et chaque é
 Première session, sur toutes les patientes :
 
 ```bash
-python scripts/kaggle_smoke.py --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml
+python scripts/kaggle_smoke.py --raw-dir /kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml
 ```
 
 L'étape `train` affiche à la fin le répertoire du run et, si elle s'est arrêtée tôt, la commande
@@ -143,7 +143,7 @@ de reprise. Sessions suivantes, en réutilisant le manifeste, l'audit, les parti
 imagettes déjà produits dans `--work-dir` :
 
 ```bash
-python scripts/kaggle_smoke.py --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml --skip-audit-if-present --resume-run /kaggle/working/baseline/experiments/unet_baseline_<horodatage>
+python scripts/kaggle_smoke.py --raw-dir /kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml --skip-audit-if-present --resume-run /kaggle/working/baseline/experiments/unet_baseline_<horodatage>
 ```
 
 Pour conserver `--work-dir` d'une session à l'autre, le publier comme *Kaggle Dataset* en fin de

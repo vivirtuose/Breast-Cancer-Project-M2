@@ -6,7 +6,7 @@ Projet de recherche et d’apprentissage visant à segmenter les lésions visibl
 
 Produire un masque de lésion à partir d’une mammographie et évaluer sa qualité géométrique. La segmentation localise une anomalie ; elle ne détermine pas, à elle seule, sa malignité. Le projet pourra ensuite étudier la classification bénin/malin ou une segmentation spécifique des lésions malignes, avec un protocole explicite.
 
-**État documenté :** le socle reproductible et plusieurs composants du pipeline (manifeste, partitions, chargement, U-Net et évaluation) sont livrés dans le plan et son journal. Voir [PLAN.md](PLAN.md) et [le journal de livraison](docs/superpowers/plans/2026-09-16-kaggle-smoke-pipeline.progress.md) pour les preuves, commits et tâches restantes. Un composant livré ou un smoke test ne prouve pas un entraînement de référence ni une validation finale ; vérifier les artefacts du run concerné.
+**État documenté :** le pipeline complet (manifeste, audit, partitions, imagettes, U-Net, entraînement avec reprise, évaluation) est livré et a tourné de bout en bout sur Kaggle lors d'un run de fumée (2026-11-24). Aucun entraînement de référence n'est encore mesuré. Prochaines étapes, dans l'ordre : vérifier la sortie du run lancé, entraîner trois réglages différents sur les mêmes partitions, les comparer statistiquement, conclure sur le modèle (détail dans [PLAN.md](PLAN.md), étape 4). Voir [le journal de livraison](docs/superpowers/plans/2026-09-16-kaggle-smoke-pipeline.progress.md) pour les preuves, commits et limites, et [docs/CONTEXTE.md](docs/CONTEXTE.md) pour le contexte complet en un fichier. Un composant livré ou un smoke test ne prouve pas un entraînement de référence ni une validation finale ; vérifier les artefacts du run concerné.
 
 ## Organisation
 
@@ -78,8 +78,9 @@ les poids `imagenet`).
 ### Étape 2 — Monter les données
 
 Dans *Add Input*, ajouter `awsaf49/cbis-ddsm-breast-cancer-image-dataset`. Il apparaît en lecture
-seule sous `/kaggle/input/cbis-ddsm-breast-cancer-image-dataset/`, avec les `csv/` et `jpeg/`
-attendus.
+seule sous `/kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset/`, avec les `csv/` et `jpeg/`
+attendus (chemin constaté le 2026-11-24 ; Kaggle l'a déjà changé une fois). En cas de doute,
+`find /kaggle/input -maxdepth 4 -name csv` donne le bon `--raw-dir`.
 
 ### Étape 3 — Récupérer le code
 
@@ -102,7 +103,7 @@ pip install segmentation-models-pytorch==0.5.0
 ### Étape 5 — Lancer la première session
 
 ```bash
-python scripts/kaggle_smoke.py --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml
+python scripts/kaggle_smoke.py --raw-dir /kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml
 ```
 
 L'orchestrateur enchaîne les huit étapes (environnement → manifeste → audit → partitions →
@@ -116,7 +117,7 @@ ne le coupe, et l'étape `train` affiche alors la commande de reprise. Chaque é
 `checkpoint_last.pt` par écriture atomique, donc même un arrêt brutal reste reprenable.
 
 ```bash
-python scripts/kaggle_smoke.py --raw-dir /kaggle/input/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml --skip-audit-if-present --resume-run /kaggle/working/baseline/experiments/unet_baseline_<horodatage>
+python scripts/kaggle_smoke.py --raw-dir /kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset --work-dir /kaggle/working/baseline --all-patients --train-config configs/unet_baseline.yaml --skip-audit-if-present --resume-run /kaggle/working/baseline/experiments/unet_baseline_<horodatage>
 ```
 
 `/kaggle/working/` n'est pas persistant : publier `--work-dir` comme *Kaggle Dataset* en fin de
@@ -128,6 +129,16 @@ Depuis le panneau *Output* : `smoke_run.zip` (répertoire de run avec `checkpoin
 `metrics.jsonl`, `config.yaml`, figures de superposition, plus `env.yaml`, la partition et l'index
 d'imagettes) et `smoke_report.json`. Les PNG d'imagettes ne sont pas dans l'archive, et
 `checkpoint_last.pt` non plus car il dépasse la limite de 200 Mo — il est signalé dans le rapport.
+
+### Comparer plusieurs réglages
+
+`kaggle_smoke.py` n'accepte pas `--set` : chaque réglage comparé a donc **son propre YAML**, copie de
+`configs/unet_baseline.yaml` où ne change que le facteur étudié et le `run_name`. Pour garder les
+mêmes partitions et les mêmes imagettes, réutiliser le même `--work-dir` avec
+`--skip-audit-if-present` et la même `--seed` : seules la gate et l'entraînement sont relancés, dans
+un nouveau répertoire de run. Récupérer `smoke_run.zip` et `smoke_report.json` après chaque run,
+car le suivant les réécrit. Les règles de comparaison sont dans [docs/PROTOCOLE.md](docs/PROTOCOLE.md),
+section « Comparaison de réglages ».
 
 ### Paramètres modifiables à chaque run
 
@@ -212,7 +223,8 @@ Dice et IoU pour le recouvrement ; HD95 et distance moyenne symétrique pour les
 
 ## Documents et sources
 
-- [Architecture](docs/ARCHITECTURE.md) et [références](docs/REFERENCES.md).
+- [Contexte complet du projet](docs/CONTEXTE.md), à lire en premier par une nouvelle personne ou session.
+- [Architecture](docs/ARCHITECTURE.md), [procédure Kaggle](docs/KAGGLE.md) et [références](docs/REFERENCES.md).
 - [Carte française du projet](schemas/cbis_ddsm_project_map_fr.svg).
 - [Carte française du cours](schemas/course_map_4_modules_fr.svg).
 - `Evaluation.pdf` : consignes locales de l’enseignement.

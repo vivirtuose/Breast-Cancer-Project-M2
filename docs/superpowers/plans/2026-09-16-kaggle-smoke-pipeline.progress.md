@@ -118,3 +118,59 @@ Limites — ce qui n'est pas prouvé :
 - Non traité, et hors du périmètre demandé : la partition reste gravée dans `index.csv` à l'extraction (changer `val_fold` impose de réextraire) ; pas de pilote de validation croisée ; HD95, distance moyenne symétrique, sensibilité par lésion, faux positifs par image et bootstrap groupé par patiente toujours absents (exigés par `docs/PROTOCOLE.md` pour l'étape 5) ; pas d'inférence image entière ; pas de code nnU-Net (tâches 10-12).
 
 Prochaine action : lancer la première session réelle sur Kaggle avec `--train-config configs/unet_baseline.yaml --all-patients`, puis consigner ici la durée par époque, la VRAM observée et la raison d'arrêt, avant de régler `max_hours` et `batch_size` sur des mesures.
+
+## Session 2026-11-24 — premier run réel sur Kaggle (fumée, 30 patientes)
+
+Branche `kaggle-long-run` @ c625b2e, poussée sur `origin` puis clonée dans un notebook Kaggle (GPU T4, Internet On). Seul `segmentation-models-pytorch==0.5.0` installé en plus de l'image. Runtime : Python 3.13.16, torch 2.11.0+cu130, CUDA disponible — écart au verrou (Python 3.12, cu121) enregistré par `capture_environment --record-only`, non bloquant.
+Données montées sous `/kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset` (nouveau chemin de montage Kaggle, différent de celui de `docs/KAGGLE.md`).
+
+Commande : `kaggle_smoke.py --raw-dir <ci-dessus> --work-dir /kaggle/working/smoke --limit-patients 30` (config `unet_smoke.yaml`). Les 8 étapes à `ok` :
+| Étape | Durée | Résultat |
+|---|---|---|
+| build_manifest | 348.7 s | 3567 lignes (identique au local), 1 exclusion d'acquisition |
+| audit | 912.1 s | 78 exclusions, 1618 retenues (identique au local) |
+| make_splits | 1.6 s | train 525 / val 132 / test 196 patientes (identique au local) ; part maligne train 0.512, val 0.515 |
+| extract_patches | 25.7 s | 251 imagettes (30 patientes par partition) : train 55 fond + 69 lésion, val 61 fond + 66 lésion |
+| overfit | 185.1 s | Dice 0.9975 ≥ 0.95, gate passée |
+| train | 27.9 s | 2 époques, best_epoch 1, best_val_dice 0.3495 |
+| predict | 11.4 s | `val_summary.json` écrit |
+
+Preuves : manifeste, audit et partitions reproduisent exactement les chiffres du run local sur un autre runtime ; la gate de surapprentissage passe sur GPU.
+
+Limites :
+- `best_val_dice` 0.3495 est le Dice **toutes imagettes** (la config de fumée garde `selection_metric: val_dice`), pas le Dice lésion.
+- `val_summary.json` (127 imagettes de validation, 30 patientes) : `mean_dice_lesion` 0.673, `mean_iou_lesion` 0.527, `background_false_positive_rate` 1.0. Ce Dice **n'est pas une mesure de segmentation** : les imagettes de lésion sont centrées sur la boîte englobante du masque réel (marge 15 %), la lésion couvre en médiane 15 % de l'imagette, et les superpositions montrent une ellipse centrale plus un cadre parasite le long des bords de l'imagette. Le modèle a appris « une tache au centre », pas la lésion. Prédire toute l'imagette donnerait déjà 0.30 ; une référence « disque centré » reste à calculer pour savoir ce que le modèle ajoute à ce biais de position. Sur les imagettes de fond, il prédit toujours quelque chose (médiane 4.6 % des pixels).
+- Superpositions (8 figures, récupérées dans `smoke_run/`) : le contour de référence tombe bien sur la lésion visible, donc pas de décalage image/masque.
+- L'exclusion d'acquisition est un cas de calcification (`P_01563 RIGHT MLO`, référence DICOM non résolue) : sans effet sur la cible masses.
+- Toujours aucun entraînement de référence ; durée par époque et VRAM sur toutes les patientes non mesurées.
+- `docs/KAGGLE.md` et le README citent encore l'ancien chemin `/kaggle/input/cbis-ddsm-breast-cancer-image-dataset`.
+
+Prochaine action : lancer `--all-patients --train-config configs/unet_baseline.yaml` en *Save & Run All* et consigner durée par époque, VRAM et raison d'arrêt.
+
+## Session 2026-11-25 — documentation et feuille de route de la comparaison
+
+Branche `kaggle-long-run` @ c625b2e, aucun code modifié. Rien commité par l'agent.
+
+Fait :
+- `docs/CONTEXTE.md` : contexte complet du projet en un fichier, pour une nouvelle personne ou session. Il renvoie à ce journal, à `PLAN.md` et à `docs/PROTOCOLE.md`, qui font autorité.
+- Supports de l'oral, hors code : `reports/hyperparametres_modele.{pdf,html}` (21 diapositives sur les réglages) et `reports/fichiers_cles_pipeline.pptx` (28 diapositives sur `audit.py`, `patches.py`, `transforms.py`, `losses.py`, `unet_baseline.yaml`, `trainer.py`).
+- Chemin de montage Kaggle corrigé dans le README et `docs/KAGGLE.md` (`/kaggle/input/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset`) : la limite relevée le 2026-11-24 est levée.
+- `PLAN.md` étape 3 : l'exécution sur Kaggle est cochée sur la preuve du run de fumée. L'entraînement de référence reste décoché. Ajout de la vérification du run du 2026-11-25 et de la référence « disque centré ».
+- Feuille de route décidée par l'utilisateur, inscrite à l'étape 4 de `PLAN.md` : vérifier la sortie du run lancé, lancer 3 runs avec des hyperparamètres différents, faire les statistiques de comparaison, conclure sur le modèle.
+- `docs/PROTOCOLE.md`, nouvelle section « Comparaison de réglages », écrite avant tout résultat de comparaison :
+  - un facteur à la fois, mêmes partitions, imagettes, graine et seuil ;
+  - comparaison sur la validation seulement ;
+  - métrique principale `mean_dice_lesion` ;
+  - bootstrap des patientes avec différences appariées ;
+  - disque centré dans le même tableau ;
+  - portée limitée par l'unique graine par réglage.
+  Ces règles sont à faire relire par l'équipe, car elles touchent aux métriques.
+- README : marche à suivre pour comparer plusieurs réglages, à savoir un YAML par réglage (`kaggle_smoke.py` n'a pas de `--set`), le même `--work-dir` avec `--skip-audit-if-present`, et la récupération de `smoke_run.zip` après chaque run (le run suivant le réécrit).
+
+État des preuves :
+- Run lancé sur Kaggle par l'utilisateur le 2026-11-25 : **sortie non encore vérifiée**, rien n'en est consigné ici.
+- Toujours aucun entraînement de référence mesuré ni aucune comparaison.
+- Non implémentés, et nécessaires à l'étape « statistiques » : le bootstrap des patientes et la référence disque centré. `predict.py` écrit déjà `val_metrics.csv` par imagette, avec `patient_id` : c'est assez pour le bootstrap. Le disque centré demande en plus les masques des imagettes de validation, donc le `--work-dir` du run.
+- Budget : trois runs de 8 h (`max_hours`) consomment environ 24 h des 30 h hebdomadaires de GPU Kaggle. Chaque nouvelle session refait aussi manifeste, audit et extraction, sauf si le `--work-dir` précédent est remonté en input.
+
+Prochaine action : vérifier `smoke_report.json`, `val_summary.json` et les superpositions du run du 2026-11-25, puis les consigner ici. Ensuite, choisir les trois réglages et écrire leurs YAML avant de lancer.

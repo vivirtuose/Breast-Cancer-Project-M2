@@ -30,6 +30,17 @@ Les métriques de frontière ne garantissent pas de mesurer chaque spicule ; HD9
 
 Une classification future utilisera ses propres métriques et unités d’analyse. La valeur prédictive positive dépend de la prévalence : les performances d’un ensemble enrichi en lésions ne se transposent pas directement au dépistage.
 
+## Comparaison de réglages
+
+Règles fixées le 2026-11-25, avant les premiers runs de comparaison, pour que le choix du modèle ne dépende pas des résultats observés.
+
+- **Même expérience sauf un facteur.** Tous les runs comparés utilisent la même partition (`split_v1.json`, même empreinte SHA-256 du manifeste), le même index d’imagettes, la même graine et le même seuil τ = 0,5. Chaque run diffère de la référence par un seul facteur, consigné dans son YAML. Les trois réglages et la métrique principale sont choisis et consignés avant de voir les résultats.
+- **Validation seulement.** Comparaison, choix de l’époque et choix du réglage se font sur la validation. Le test reste scellé jusqu’au gel du modèle (étape 5).
+- **Métrique principale :** Dice lésion moyen sur les imagettes de lésion de validation (`mean_dice_lesion` de `predict.py`, égal au `val_dice_lesion` de la meilleure époque). Secondaires : IoU lésion, taux de faux positifs sur les imagettes de fond, temps par époque et mémoire GPU.
+- **Incertitude.** Intervalle à 95 % par bootstrap des patientes : tirer les patientes de validation avec remise, recalculer la moyenne sur toutes leurs imagettes, au moins 1 000 tirages, graine fixée. Pour comparer deux runs, calculer la **différence appariée** sur le même tirage de patientes, puisque les deux runs voient les mêmes imagettes.
+- **Référence obligatoire.** La référence « disque centré » figure dans le même tableau. Le chiffre défendu est l’écart d’un run à cette référence, pas son Dice brut.
+- **Portée de la conclusion.** Avec une seule graine par réglage, une différence appariée dont l’intervalle contient 0 n’est pas une différence. Même un intervalle qui exclut 0 ne sépare pas l’effet du réglage de la variabilité due à la graine : la répéter avec deux autres graines si le budget Kaggle le permet, sinon l’énoncer comme limite. Les résultats restent des mesures sur imagettes centrées sur la lésion, pas une détection sur mammographie entière.
+
 ## Reproductibilité logicielle
 
 À chaque étape majeure, les décisions reproductibles — environnement, données, partitions, géométrie, entraînement, inférence et métriques — sont accompagnées de tests `pytest` ciblés. Avant de considérer un jalon terminé, un autre collaborateur doit pouvoir reconstruire un environnement propre à partir du verrou, exécuter les tests documentés et retrouver les mêmes invariants sans dépendre d’un état local implicite.

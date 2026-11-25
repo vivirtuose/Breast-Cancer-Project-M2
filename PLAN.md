@@ -47,15 +47,23 @@ Un jalon n'est validé que si un partenaire peut recréer l'environnement depuis
 ## 3 — Première référence reproductible
 
 - [x] Implémenter le chargement et une architecture U-Net 2D.
-- [ ] Exécuter les entraînements et les inférences sur Kaggle avec des chemins configurables et une capture de l’environnement du runtime.
+- [x] Exécuter les entraînements et les inférences sur Kaggle avec des chemins configurables et une capture de l’environnement du runtime. *(Run de fumée du 2026-11-24, 30 patientes par partition : 8/8 étapes, gate 0,9975 ; voir le journal.)*
 - [x] Vérifier qu’un petit lot peut être surappris pour détecter les erreurs du pipeline.
-- [ ] Entraîner une première référence avec BCE + Dice, configuration et graine enregistrées.
+- [ ] Vérifier la sortie du run lancé le 2026-11-25 (`smoke_report.json`, `val_summary.json`, superpositions) et la consigner dans le journal.
+- [ ] Entraîner une première référence avec BCE + Dice, configuration et graine enregistrées (`configs/unet_baseline.yaml`, toutes les patientes).
+- [ ] Calculer la référence « disque centré » sur les mêmes imagettes de validation, pour mesurer la part du Dice due au centrage des imagettes.
 - [x] Produire des superpositions image / référence / prédiction et un rapport de validation.
 
 **Critère de passage :** entraînement et inférence reproductibles, absence d’erreur d’alignement, résultat de référence mesuré.
 
 ## 4 — Comparaisons contrôlées
 
+Feuille de route retenue le 2026-11-25, dans l’ordre :
+
+- [ ] Choisir et consigner les trois réglages comparés : un facteur changé à la fois par rapport à la référence, un YAML par réglage avec son propre `run_name`.
+- [ ] Lancer les trois runs sur les mêmes partitions, les mêmes imagettes et la même graine (`--skip-audit-if-present` sur le même `--work-dir`).
+- [ ] Produire les statistiques de comparaison sur la validation, selon `docs/PROTOCOLE.md`, « Comparaison de réglages » : Dice et IoU lésion, taux de faux positifs sur le fond, intervalles et différences appariées par rééchantillonnage des patientes, écart à la référence « disque centré ».
+- [ ] Conclure sur le modèle retenu, sur la validation uniquement, avec les limites (une graine par réglage, imagettes centrées).
 - [ ] Comparer un encodeur préentraîné et, si les ressources le permettent, nnU-Net.
 - [ ] Étudier résolution, imagettes et pertes sensibles aux frontières, un facteur à la fois.
 - [ ] Répéter les expériences importantes avec plusieurs graines.
