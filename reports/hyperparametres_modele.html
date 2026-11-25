@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Les réglages du modèle : hyperparamètres du U-Net</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+@page { size: 1920px 1080px; margin: 0; }
+:root {
+  --navy: #151F2B; --navy-card: #1E2B3B; --cream: #F4F2EC; --sand: #E9E4DA; --paper: #FBFAF7;
+  --line: #DDD7CC; --ink: #18222F; --muted: #4A5563; --soft: #C5CED8; --faint: #7F8B98;
+  --terra: #C4533A; --terra-light: #E58A6E; --rust: #A33F2B; --teal: #2C6B79; --teal-pale: #E0E9EB; --mint: #8FD3BE;
+}
+* { margin: 0; box-sizing: border-box; }
+html, body { background: #555; }
+body { font-family: 'IBM Plex Sans', Arial, sans-serif; color: var(--muted); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+section { width: 1920px; height: 1080px; padding: 112px 128px 150px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--cream); break-after: page; page-break-after: always; }
+section:last-child { break-after: auto; page-break-after: auto; }
+section.sand { background: var(--sand); }
+section.dark { background: var(--navy); color: var(--soft); }
+section.accent { background: var(--terra); color: #FBF3EF; }
+
+.eyebrow { font-size: 24px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--teal); margin-bottom: 20px; }
+.dark .eyebrow { color: var(--terra-light); }
+.accent .eyebrow { color: #F6D9CF; }
+h1 { font-family: 'IBM Plex Serif', Georgia, serif; font-weight: 400; font-size: 120px; line-height: 1.05; color: #F2EEE6; }
+h2 { font-family: 'IBM Plex Serif', Georgia, serif; font-weight: 400; font-size: 60px; line-height: 1.12; color: var(--ink); margin-bottom: 32px; }
+.dark h2 { color: #F2EEE6; } .accent h2 { color: #FFF8F4; }
+h3 { font-size: 28px; font-weight: 600; line-height: 1.25; color: var(--rust); margin-bottom: 10px; }
+p { font-size: 25px; line-height: 1.45; }
+b { font-weight: 600; }
+.lede { font-size: 30px; line-height: 1.5; margin-bottom: 36px; max-width: 1560px; }
+.dark .lede { color: var(--soft); } .accent .lede { color: #FBEDE7; }
+.rule { width: 280px; height: 8px; background: var(--terra); margin: 44px 0; }
+.footnote { position: absolute; left: 128px; bottom: 60px; width: 1664px; font-size: 24px; color: var(--faint); }
+.dark .footnote { color: #8A96A3; } .accent .footnote { color: #F6D9CF; }
+.num { position: absolute; right: 128px; bottom: 60px; font-size: 24px; color: var(--faint); }
+
+.quad { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; flex: 1; min-height: 0; }
+.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 26px; }
+.cards.two { grid-template-columns: 1fr 1fr; }
+.cards.four { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 22px; }
+.card { background: var(--paper); border: 2px solid var(--line); border-radius: 18px; padding: 28px 34px; }
+.card p { color: var(--muted); }
+.card p + p { margin-top: 10px; }
+.card h3.teal { color: var(--teal); }
+.card.ink { background: var(--navy); border-color: var(--navy); }
+.card.ink h3 { color: var(--terra-light); }
+.card.ink p { color: var(--soft); }
+.card.warm { background: #F6E3DC; border-color: #EBC7BA; }
+.card.warm h3 { color: var(--rust); }
+.card.warm p { color: #4A3530; }
+.card.pale { background: var(--teal-pale); border-color: #C9DADE; }
+.card.pale h3 { color: var(--teal); }
+.card.pale p { color: #2B4A52; }
+.dark .card { background: var(--navy-card); border-color: #26354A; }
+.dark .card h3 { color: var(--terra-light); }
+.dark .card h3.ok { color: var(--mint); }
+.dark .card p { color: var(--soft); }
+.accent .card { background: #A9442F; border-color: #A9442F; }
+.accent .card h3 { color: #FFF6F1; } .accent .card p { color: #FBE6DE; }
+
+.math { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 28px; line-height: 1.55; color: #F2EEE6 !important; }
+.math i { font-style: italic; }
+.math sub, .math sup { font-size: 19px; }
+.card:not(.ink) .math { color: var(--ink) !important; }
+code, .code { font-family: 'IBM Plex Sans', Arial, sans-serif; font-weight: 600; }
+
+table { width: 100%; border-collapse: collapse; font-size: 25px; color: var(--ink); }
+th { text-align: left; font-weight: 600; background: #E2DCD0; padding: 14px 18px; border: 1px solid #CFC7B8; }
+td { padding: 12px 18px; border: 1px solid #D8D1C3; vertical-align: top; line-height: 1.4; }
+tr:nth-child(even) td { background: #EEEAE2; }
+tr:nth-child(odd) td { background: var(--cream); }
+.sand th { background: #D8D1C3; } .sand tr:nth-child(odd) td { background: #F1EDE5; } .sand tr:nth-child(even) td { background: #E2DCD0; }
+td.hl { color: var(--rust); font-weight: 600; }
+
+.list-item { display: grid; grid-template-columns: 70px 1fr; align-items: center; background: var(--paper); border: 2px solid var(--line); border-radius: 16px; padding: 22px 34px; margin-bottom: 18px; }
+.list-item .n { font-size: 36px; font-weight: 600; color: var(--terra); }
+.list-item p { font-size: 27px; color: var(--ink); }
+.list-item.ink { background: var(--navy); border-color: var(--navy); }
+.list-item.ink p { color: #F2EEE6; }
+.list-item.ink .n { color: var(--terra-light); }
+
+.bignum { font-size: 150px; font-weight: 600; line-height: 1; color: var(--terra-light); margin-bottom: 24px; }
+.split { display: grid; grid-template-columns: 600px 1fr; gap: 96px; align-items: center; flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section class="dark" style="justify-content:space-between">
+<p class="eyebrow">Projet M2 · MLB · Rennes 2026–2027</p>
+<div>
+<h1>Les réglages du modèle</h1>
+<div class="rule"></div>
+<p style="font-size:36px;line-height:1.5;color:#C5CED8;max-width:1320px">Les hyperparamètres de notre U-Net : à quoi chacun sert, sa définition mathématique, sa valeur dans le projet, et ce qu’on attend si on le modifie.</p>
+</div>
+<p style="font-size:24px;color:#8A96A3">Segmentation des masses CBIS-DDSM · U-Net à encodeur ResNet-34 · configuration <span class="code">configs/unet_baseline.yaml</span></p>
+</section>
+
+<!-- 2 PARAMETRE VS HYPERPARAMETRE -->
+<section>
+<p class="eyebrow">Le vocabulaire</p>
+<h2>Les poids s’apprennent, les hyperparamètres se choisissent</h2>
+<div class="cards">
+<div class="card"><h3 class="teal">Paramètres θ</h3><p>Les <b>24 430 097</b> poids de notre U-Net. L’entraînement les ajuste seul, par descente de gradient, pour faire baisser la perte.</p></div>
+<div class="card"><h3>Hyperparamètres h</h3><p>Tout ce qu’on fixe <b>avant</b> l’entraînement : taille du pas, nombre d’époques, perte, taille des imagettes. Aucun gradient ne les règle.</p></div>
+<div class="card ink"><h3>Deux niveaux d’optimisation</h3><p class="math">θ*(<i>h</i>) = argmin<sub>θ</sub> <i>L</i><sub>train</sub>(θ ; <i>h</i>)</p><p class="math"><i>h</i>* = argmax<sub><i>h</i></sub> Dice<sub>val</sub>(θ*(<i>h</i>))</p></div>
+</div>
+<div class="card warm" style="margin-top:28px"><p><b>La règle qui protège le résultat :</b> on choisit <i>h</i> sur la validation (132 patientes), jamais sur le test (196 patientes, scellé). Un hyperparamètre réglé sur le test donnerait un score optimiste, donc faux.</p></div>
+<p class="footnote">Nombre de poids compté sur notre modèle (U-Net, ResNet-34, une entrée en niveaux de gris).</p>
+</section>
+
+<!-- 3 CARTE -->
+<section class="sand">
+<p class="eyebrow">Vue d’ensemble</p>
+<h2>Six familles de réglages, et où les modifier</h2>
+<table>
+<tr><th style="width:20%">Famille</th><th style="width:44%">Hyperparamètres (valeur de référence)</th><th style="width:36%">Où</th></tr>
+<tr><td>Optimisation</td><td>η = 3·10<sup>−4</sup>, AdamW, λ = 10<sup>−4</sup>, lot 8 × 2, 60 époques, patience 12, cosinus</td><td>YAML ou <span class="code">--set</span></td></tr>
+<tr><td>Perte et décision</td><td>poids BCE <i>w</i> = 0,5, lissage <i>s</i> = 1, seuil τ = 0,5, métrique de sélection</td><td>YAML ; <i>s</i> dans <span class="code">losses.py</span></td></tr>
+<tr><td>Régularisation</td><td>augmentations (miroirs, rotations, affine, contraste)</td><td>YAML ; intensités dans <span class="code">transforms.py</span></td></tr>
+<tr><td>Modèle</td><td>architecture U-Net, encodeur ResNet-34, poids ImageNet</td><td>YAML ou <span class="code">--set</span></td></tr>
+<tr><td>Données</td><td>imagettes de 512 px, marge de 15 %, 1 imagette de fond par image, 5 plis</td><td><span class="code">extract_patches.py</span>, <span class="code">make_splits.py</span></td></tr>
+<tr><td>Exécution</td><td>graine 0, demi-précision, budget de 8 h</td><td>YAML ou <span class="code">--set</span></td></tr>
+</table>
+<p class="footnote">Valeurs de configs/unet_baseline.yaml et des options par défaut des scripts. Aucune n’a encore été réglée sur des mesures.</p>
+</section>
+
+<!-- 4 LEARNING RATE -->
+<section>
+<p class="eyebrow">Optimisation · learning_rate</p>
+<h2>Le taux d’apprentissage η : la taille du pas</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi il sert</h3><p>Il fixe de combien on déplace les poids à chaque correction. Trop grand, on saute par-dessus le creux de la perte ; trop petit, on n’y arrive jamais.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math">θ<sub><i>t</i>+1</sub> = θ<sub><i>t</i></sub> − η · <i>u</i><sub><i>t</i></sub></p><p><i>u<sub>t</sub></i> est la direction donnée par l’optimiseur à partir du gradient ∇<sub>θ</sub><i>L</i>. Sur une perte localement quadratique de courbure <i>a</i>, la descente diverge dès que η &gt; 2/<i>a</i>.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b>3·10<sup>−4</sup></b>, valeur courante pour Adam. Constant dans le run de fumée ; dans la référence, il décroît en cosinus jusqu’à 10<sup>−6</sup>.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>10<sup>−3</sup> :</b> progrès rapide, mais pertes instables et risque d’effacer ce que l’encodeur sait déjà.</p><p><b>10<sup>−4</sup> :</b> plus sûr, mais plus lent : le budget de 8 h peut couper avant la convergence.</p></div>
+</div>
+<p class="footnote">Effet attendu le plus fort de la liste. À explorer en échelle logarithmique : 10<sup>−4</sup>, 3·10<sup>−4</sup>, 10<sup>−3</sup>.</p>
+</section>
+
+<!-- 5 ADAMW + WEIGHT DECAY -->
+<section class="sand">
+<p class="eyebrow">Optimisation · weight_decay</p>
+<h2>AdamW et la décroissance des poids λ</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi ils servent</h3><p>AdamW adapte le pas de chaque poids selon l’historique de ses gradients : un poids aux gradients bruités avance prudemment. La décroissance λ tire chaque poids vers zéro, ce qui freine la mémorisation.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math"><i>m<sub>t</sub></i> = β<sub>1</sub><i>m</i><sub><i>t</i>−1</sub> + (1 − β<sub>1</sub>) <i>g<sub>t</sub></i></p><p class="math"><i>v<sub>t</sub></i> = β<sub>2</sub><i>v</i><sub><i>t</i>−1</sub> + (1 − β<sub>2</sub>) <i>g<sub>t</sub></i><sup>2</sup></p><p class="math">θ ← θ − η ( <i>m<sub>t</sub></i>′ / (√<i>v<sub>t</sub></i>′ + ε) + λθ )</p><p>′ : moyennes corrigées du biais initial. Le terme λθ est découplé du gradient (Loshchilov et Hutter, 2019). β<sub>1</sub> = 0,9, β<sub>2</sub> = 0,999.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p>AdamW est codé en dur (<span class="code">trainer.py:271</span>) ; <b>λ = 10<sup>−4</sup></b> est réglable. 24 millions de poids pour environ 1 600 lésions : le risque de surapprentissage est réel.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>λ plus grand (10<sup>−3</sup>, 10<sup>−2</sup>) :</b> écart entraînement / validation réduit, mais sous-apprentissage possible : le modèle n’ose plus marquer les bords.</p><p><b>λ = 0 :</b> l’entraînement progresse plus vite, la validation plafonne plus tôt.</p></div>
+</div>
+<p class="footnote">Effet attendu modeste à côté de η et des augmentations : à régler après eux.</p>
+</section>
+
+<!-- 6 BATCH -->
+<section>
+<p class="eyebrow">Optimisation · batch_size, accumulation_steps</p>
+<h2>Le lot B et l’accumulation k</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi ils servent</h3><p>B est le nombre d’imagettes traitées ensemble. L’accumulation additionne les gradients de <i>k</i> lots avant de corriger : on simule un lot plus grand sans demander plus de mémoire au GPU.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math"><i>ĝ</i> = (1 / <i>Bk</i>) Σ<sub><i>i</i>=1…<i>Bk</i></sub> ∇<sub>θ</sub> ℓ<sub><i>i</i></sub>(θ),   Var(<i>ĝ</i>) ∝ 1 / (<i>Bk</i>)</p><p>Une correction toutes les <i>Bk</i> imagettes. Mais la normalisation par lot (46 couches BatchNorm chez nous) calcule ses moyennes sur <b>B</b> seulement, pas sur <i>Bk</i>.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p>Référence : <b>8 × 2 = 16</b>. Fumée : 4 × 2, hérité des 2 Go de la carte locale. Le T4 de Kaggle a 16 Go. B et <i>k</i> sont verrouillés pendant une reprise.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>B plus grand :</b> gradient plus stable et BatchNorm plus fiable, mais moins de corrections par époque ; il faut souvent augmenter η en proportion (règle linéaire, Goyal et al., 2017).</p><p><b>B ≤ 4 :</b> BatchNorm bruitée, validation plus erratique.</p></div>
+</div>
+<p class="footnote">Effet attendu modéré, surtout sur la stabilité. À tester avec η, jamais seul.</p>
+</section>
+
+<!-- 7 EPOCHS + EARLY STOPPING -->
+<section class="sand">
+<p class="eyebrow">Optimisation · epochs, early_stopping_patience</p>
+<h2>Combien de temps apprendre, et quand s’arrêter</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi ils servent</h3><p>Une époque est un passage complet sur les imagettes d’entraînement. La validation monte, puis redescend quand le modèle commence à mémoriser : l’arrêt anticipé coupe avant cette descente.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math"><i>t</i>* = argmax<sub><i>t</i> ≤ <i>T</i></sub> <i>D</i><sub>val</sub>(<i>t</i>)</p><p>Arrêt dès que le meilleur <i>D</i><sub>val</sub> n’a pas progressé depuis <i>p</i> époques. On conserve les poids θ(<i>t</i>*), pas les derniers.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b>60 époques au plus, patience 12</b>, mesurées sur le Dice lésion de validation. Le nombre d’époques fixe aussi l’horizon du cosinus (<i>T</i> = epochs). Fumée : 2 époques, aucune patience.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>Plus d’époques :</b> l’arrêt anticipé décide de toute façon, mais la décroissance de η s’étire.</p><p><b>Patience plus courte :</b> économise du GPU, mais avec 132 patientes le Dice fluctue d’une époque à l’autre : une patience courte réagit au bruit et coupe trop tôt.</p></div>
+</div>
+<p class="footnote">Ces deux réglages coûtent du temps de calcul, pas de la qualité : ils décident surtout quand le run s’arrête.</p>
+</section>
+
+<!-- 8 SCHEDULER -->
+<section>
+<p class="eyebrow">Optimisation · scheduler, min_learning_rate</p>
+<h2>L’ordonnanceur : faire varier η pendant l’entraînement</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi il sert</h3><p>Grands pas au début pour avancer vite, petits pas à la fin pour s’installer au fond du creux. Sans lui, les dernières époques oscillent autour du minimum.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math">Cosinus : η<sub><i>t</i></sub> = η<sub>min</sub> + ½ (η<sub>max</sub> − η<sub>min</sub>)(1 + cos(π<i>t</i> / <i>T</i>))</p><p class="math">Plateau : η ← 0,5 · η si <i>D</i><sub>val</sub> stagne 5 époques</p><p>Un pas d’ordonnanceur par époque (Loshchilov et Hutter, 2017 pour le cosinus).</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p>Référence : <b>cosinus</b> de 3·10<sup>−4</sup> à <b>10<sup>−6</sup></b> sur 60 époques. Fumée : aucun, η constant. Le plateau est disponible (<span class="code">scheduler=plateau</span>).</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>Aucun :</b> fin d’entraînement plus bruitée, meilleure époque plus aléatoire.</p><p><b>Plateau :</b> s’adapte à la courbe, mais réagit au bruit d’une petite validation.</p><p><b>Attention :</b> si le budget de 8 h coupe avant <i>T</i>, η n’atteint jamais son minimum ; la reprise termine la courbe.</p></div>
+</div>
+<p class="footnote">Le cosinus a peu de réglages et ne dépend pas de la validation : c’est le choix le plus robuste pour nous.</p>
+</section>
+
+<!-- 9 LOSS -->
+<section class="sand">
+<p class="eyebrow">Perte · bce_weight</p>
+<h2>La perte : mélanger pixels et surfaces</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi elle sert</h3><p>Elle dit au modèle à quel point il s’est trompé. La BCE juge chaque pixel séparément ; le Dice juge le recouvrement des surfaces. Le poids <i>w</i> règle le mélange.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math"><i>L</i> = <i>w</i> · BCE + (1 − <i>w</i>) · (1 − Dice<sub>soft</sub>)</p><p class="math">BCE = −(1/<i>N</i>) Σ [ <i>y</i> log <i>p</i> + (1 − <i>y</i>) log(1 − <i>p</i>) ]</p><p class="math">Dice<sub>soft</sub> = (2Σ<i>py</i> + <i>s</i>) / (Σ<i>p</i> + Σ<i>y</i> + <i>s</i>)</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b><i>w</i> = 0,5</b>, réglable ; <b><i>s</i> = 1</b>, codé en dur. Le Dice est calculé par imagette. Sur une imagette de fond (Σ<i>y</i> = 0), il vaut 1/(Σ<i>p</i> + 1) : la perte pousse alors à ne rien prédire.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b><i>w</i> → 1 (BCE seule) :</b> apprentissage stable, mais dominé par les pixels de fond : masques plus petits.</p><p><b><i>w</i> → 0 (Dice seul) :</b> vise directement la métrique, mais gradients instables au début et très sensibles aux petites lésions.</p></div>
+</div>
+<p class="footnote">Les deux termes comptent des surfaces : aucun ne protège les spicules, fines et presque sans poids en surface.</p>
+</section>
+
+<!-- 10 THRESHOLD -->
+<section>
+<p class="eyebrow">Décision · threshold</p>
+<h2>Le seuil τ : des probabilités au masque</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi il sert</h3><p>Le réseau rend une probabilité par pixel. Le seuil décide à partir de quand un pixel est déclaré « lésion ». Il n’agit pas sur l’apprentissage, seulement sur la mesure et la prédiction.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math"><i>ŷ</i>(<i>x</i>) = 1 si <i>p</i>(<i>x</i>) ≥ τ, sinon 0</p><p>Monter τ échange des faux positifs contre des faux négatifs : le masque rétrécit. Le Dice dépend de τ, la perte non.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b>τ = 0,5</b> (<span class="code">threshold</span>, et <span class="code">--threshold</span> de <span class="code">predict.py</span>). Run de fumée : des pixels prédits sur <b>61 imagettes de fond sur 61</b>.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>τ plus haut :</b> moins de faux positifs sur le fond, mais contours de lésion rognés.</p><p><b>τ plus bas :</b> l’inverse.</p><p>C’est le réglage le moins cher : aucun réentraînement, il suffit de relancer la prédiction.</p></div>
+</div>
+<p class="footnote">À choisir sur la validation, puis à figer avant l’unique évaluation sur le test.</p>
+</section>
+
+<!-- 11 AUGMENT -->
+<section class="sand">
+<p class="eyebrow">Régularisation · augment</p>
+<h2>Les augmentations : voir chaque lésion autrement</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi elles servent</h3><p>À chaque passage, l’imagette est légèrement transformée. Le modèle ne peut plus apprendre une image par cœur, et devient insensible à ce qui ne devrait pas compter : orientation, petit décalage, contraste.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math"><i>x</i>′ = <i>T</i>(<i>x</i>),  <i>y</i>′ = <i>T</i>(<i>y</i>),  <i>T</i> tiré au hasard</p><p>La <b>même</b> transformation s’applique à l’image et au masque, sinon on apprend un décalage. Elle agrandit l’ensemble d’entraînement sans nouvelles annotations.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p>Miroirs horizontal et vertical, rotation de 90°, puis affine : translation ±5 %, zoom 0,9–1,1, rotation ±15°, et contraste ±15 %. Chacun avec p = 0,5. Activable par <span class="code">augment</span> ; intensités dans <span class="code">transforms.py</span>.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>Désactivées :</b> le Dice d’entraînement monte vite et l’écart avec la validation se creuse.</p><p><b>Translation plus forte :</b> la lésion n’est plus toujours au centre ; c’est un levier direct contre le biais « tache au centre » vu au run de fumée.</p></div>
+</div>
+<p class="footnote">Avec environ 1 600 lésions, effet attendu fort sur la généralisation.</p>
+</section>
+
+<!-- 12 ENCODER -->
+<section>
+<p class="eyebrow">Modèle · encoder, encoder_weights</p>
+<h2>L’encodeur et son pré-entraînement</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi ils servent</h3><p>L’encodeur est la moitié descendante du U-Net : il extrait bords, textures puis formes. Partir de poids appris sur ImageNet fournit des détecteurs de motifs déjà prêts.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math">θ<sub>0</sub> = θ<sub>ImageNet</sub> au lieu d’un tirage aléatoire</p><p class="math"><i>h</i><sub><i>l</i>+1</sub> = <i>h<sub>l</sub></i> + <i>F</i>(<i>h<sub>l</sub></i>)</p><p>Les blocs résiduels de ResNet ajoutent une correction à l’entrée, ce qui rend les réseaux profonds entraînables (He et al., 2016).</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b>ResNet-34, poids ImageNet</b>, verrouillés pendant une reprise. Une seule entrée en niveaux de gris : la bibliothèque adapte la première couche. Pixels divisés par 255, sans la normalisation ImageNet.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b>Sans pré-entraînement :</b> convergence bien plus lente ; avec si peu de lésions, résultat attendu nettement inférieur.</p><p><b>Encodeur plus gros (ResNet-50…) :</b> plus de mémoire et de temps par époque, gain incertain sur un petit jeu.</p></div>
+</div>
+<p class="footnote">ImageNet contient des photos en couleur, pas des radiographies : les premiers niveaux (bords, textures) se transfèrent mieux que les derniers.</p>
+</section>
+
+<!-- 13 ARCHITECTURE -->
+<section class="sand">
+<p class="eyebrow">Modèle · architecture</p>
+<h2>L’architecture : trois façons de reconstruire le masque</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi elle sert</h3><p>Elle fixe comment le réseau redescend de la carte grossière à 1/32 vers un masque à pleine résolution, et quelle information fine il récupère en chemin.</p></div>
+<div class="card ink"><h3>Définition</h3><p><b>U-Net</b> : connexions latérales qui recopient les cartes fines dans la remontée (Ronneberger et al., 2015).</p><p><b>U-Net++</b> : connexions latérales imbriquées (Zhou et al., 2018).</p><p><b>DeepLabV3+</b> : convolutions dilatées à plusieurs taux, décodeur léger (Chen et al., 2018).</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b>U-Net</b>, 24,4 M de poids. Disponibles sans code : U-Net++ (26,1 M) et DeepLabV3+ (22,4 M), via <span class="code">architecture=</span>. Verrouillée pendant une reprise.</p></div>
+<div class="card warm"><h3>Si on la change</h3><p><b>U-Net++ :</b> plus de mémoire, contours parfois plus fins.</p><p><b>DeepLabV3+ :</b> contexte plus large, mais sortie reconstruite depuis 1/4 de la résolution : bords plus lisses, défavorable aux spicules.</p></div>
+</div>
+<p class="footnote">Écarts attendus faibles à côté de ceux de η, des données et des augmentations : à comparer en dernier.</p>
+</section>
+
+<!-- 14 PATCH SIZE + MARGIN -->
+<section>
+<p class="eyebrow">Données · --size, margin</p>
+<h2>La taille d’imagette et la marge</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi elles servent</h3><p>Elles décident ce que le modèle voit : combien de tissu autour de la lésion, et à quelle résolution. Aucun réglage du réseau ne récupère une information coupée ici.</p></div>
+<div class="card ink"><h3>Définition</h3><p class="math">côté = max(512, ⌈<i>c</i> (1 + 2<i>m</i>)⌉),  <i>m</i> = 0,15</p><p><i>c</i> est le côté de la boîte de la lésion. La fenêtre est centrée sur la boîte, puis ramenée à 512 px : une petite lésion garde sa résolution d’origine, une grande est réduite.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><span class="code">--size 512</span> dans <span class="code">extract_patches.py</span> et <span class="code">kaggle_smoke.py</span> ; <b><i>m</i> = 0,15</b> codé en dur (<span class="code">patches.py:54</span>). Toute modification impose de réextraire les imagettes.</p></div>
+<div class="card warm"><h3>Si on les change</h3><p><b>256 px :</b> plus rapide, mais moins de contexte, et les grandes lésions encore plus réduites.</p><p><b>Marge plus grande :</b> la lésion occupe moins l’imagette, le biais de centrage s’atténue, la tâche devient plus dure et plus honnête.</p></div>
+</div>
+<p class="footnote">C’est ici qu’est né le Dice trompeur de 0,67 : la fenêtre sait déjà où est la lésion.</p>
+</section>
+
+<!-- 15 BACKGROUND -->
+<section class="sand">
+<p class="eyebrow">Données · --background-per-image</p>
+<h2>Les imagettes de fond : apprendre à dire « rien »</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi elles servent</h3><p>Un modèle qui ne voit que des lésions centrées apprend qu’il y en a toujours une. Les imagettes sans lésion lui montrent du tissu normal, qu’il doit laisser vide.</p></div>
+<div class="card ink"><h3>Définition</h3><p>Pour chaque image, <i>n</i> fenêtres de 512 px tirées au hasard dans le tissu, sans aucun pixel de lésion.</p><p class="math">part de fond ≈ <i>n</i> / (<i>n</i> + nombre de lésions)</p><p>Run de fumée : 116 imagettes de fond pour 135 de lésion.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p><b><i>n</i> = 1</b> (<span class="code">--background-per-image</span> de <span class="code">extract_patches.py</span>). L’orchestrateur ne le transmet pas : il faut lancer l’extraction à part, puis réentraîner.</p></div>
+<div class="card warm"><h3>Si on le change</h3><p><b><i>n</i> = 2 ou 3 :</b> moins de faux positifs sur le fond ; le modèle devient plus prudent et le Dice lésion peut baisser un peu.</p><p><b><i>n</i> = 0 :</b> le modèle voit une lésion partout, et le taux de faux positifs sur fond reste à 1,0.</p></div>
+</div>
+<p class="footnote">La proportion de fond est un réglage à part entière, à comparer comme les autres sur la validation.</p>
+</section>
+
+<!-- 16 SELECTION METRIC -->
+<section>
+<p class="eyebrow">Décision · selection_metric</p>
+<h2>La métrique qui choisit la meilleure époque</h2>
+<div class="quad">
+<div class="card"><h3 class="teal">À quoi elle sert</h3><p>Elle désigne l’époque dont on garde les poids. Elle pilote aussi l’arrêt anticipé et l’ordonnanceur plateau. Une mauvaise métrique fait garder un mauvais modèle, même bien entraîné.</p></div>
+<div class="card ink"><h3>Définition</h3><p><b>val_dice</b> : moyenne sur toutes les imagettes ; une imagette de fond sans prédiction compte pour 1.</p><p><b>val_dice_lesion</b> : moyenne sur les seules imagettes de lésion ; c’est le <span class="code">mean_dice_lesion</span> de <span class="code">predict.py</span>.</p></div>
+<div class="card"><h3 class="teal">Dans notre projet</h3><p>Référence : <b>val_dice_lesion</b>. Fumée : val_dice, faute d’avoir été réglée. Les deux sont enregistrées à chaque époque dans <span class="code">metrics.jsonl</span>.</p></div>
+<div class="card warm"><h3>Si on la change</h3><p><b>val_dice :</b> récompense l’abstention ; peut retenir une époque où le modèle prédit peu, mauvaise sur les lésions.</p><p>Aucune des deux ne compte les faux positifs sur le fond : il faut les suivre à côté.</p></div>
+</div>
+<p class="footnote">Elle change l’époque retenue, pas ce que le modèle apprend.</p>
+</section>
+
+<!-- 17 EXECUTION -->
+<section class="dark">
+<p class="eyebrow">Exécution · seed, amp, max_hours, plis</p>
+<h2>Quatre réglages qui ne changent pas le modèle, mais la mesure</h2>
+<div class="cards two">
+<div class="card"><h3>Graine · seed = 0</h3><p>Fixe les tirages : ordre des lots, augmentations, initialisation du décodeur. Deux graines donnent deux scores : leur écart mesure le bruit. Un gain plus petit que cet écart ne prouve rien.</p></div>
+<div class="card"><h3>Demi-précision · amp = true</h3><p>Calcul en float16 avec mise à l’échelle de la perte, pour que les petits gradients ne s’annulent pas. Moins de mémoire, plus rapide sur T4. Aucun effet attendu sur la qualité.</p></div>
+<div class="card"><h3>Budget · max_hours = 8</h3><p>Arrête le run proprement avant la coupure de Kaggle, avec un point de reprise. Ce n’est pas un réglage du modèle, mais il peut couper le cosinus avant sa fin.</p></div>
+<div class="card"><h3>Plis · n_folds = 5, val_fold = 0</h3><p>Désignent les patientes de validation. Changer de pli et réentraîner donne une estimation de la variance du score selon les patientes. Impose de réextraire les imagettes.</p></div>
+</div>
+</section>
+
+<!-- 18 INTERACTIONS -->
+<section class="sand">
+<p class="eyebrow">Ce qui bouge ensemble</p>
+<h2>Les hyperparamètres ne sont pas indépendants</h2>
+<table>
+<tr><th style="width:28%">Couple</th><th style="width:72%">Ce qui se passe</th></tr>
+<tr><td>η et lot effectif <i>Bk</i></td><td>Doubler le lot divise par deux le nombre de corrections : on double souvent η en même temps (heuristique).</td></tr>
+<tr><td>Époques et cosinus</td><td><i>T</i> = epochs : changer le nombre d’époques change toute la courbe de η, pas seulement la durée.</td></tr>
+<tr><td>Budget et cosinus</td><td>Une coupure à 8 h avant <i>T</i> laisse η loin de son minimum ; seule la reprise termine la courbe.</td></tr>
+<tr><td>Lot B et BatchNorm</td><td>L’accumulation stabilise le gradient, mais pas les moyennes de la BatchNorm, calculées sur B.</td></tr>
+<tr><td>Seuil τ et imagettes de fond</td><td>Plus de fond à l’entraînement réduit les faux positifs ; il faut alors moins monter τ.</td></tr>
+<tr><td>Marge et translation</td><td>Les deux attaquent le même biais de centrage : les changer ensemble empêche de savoir lequel a joué.</td></tr>
+</table>
+<p class="footnote">D’où la règle du protocole : un facteur à la fois, sauf couple explicitement lié comme η et lot.</p>
+</section>
+
+<!-- 19 PRIORITIES -->
+<section>
+<p class="eyebrow">Par où commencer</p>
+<h2>Un ordre de réglage adapté à notre budget</h2>
+<table>
+<tr><th style="width:7%">#</th><th style="width:27%">Réglage</th><th style="width:26%">Coût</th><th style="width:40%">Ce qu’on en attend</th></tr>
+<tr><td class="hl">1</td><td>Seuil τ</td><td>Aucun entraînement</td><td>Moins de faux positifs sur le fond</td></tr>
+<tr><td class="hl">2</td><td>Taux d’apprentissage η</td><td>3 runs : 10<sup>−4</sup>, 3·10<sup>−4</sup>, 10<sup>−3</sup></td><td>L’effet le plus fort sur le Dice lésion</td></tr>
+<tr><td class="hl">3</td><td>Fond, marge, translation</td><td>Réextraction et runs</td><td>Réduire le biais « tache au centre »</td></tr>
+<tr><td class="hl">4</td><td>Poids de la perte <i>w</i>, λ</td><td>1 run par valeur</td><td>Ajustements fins, gain modeste</td></tr>
+<tr><td class="hl">5</td><td>Architecture</td><td>1 run par variante</td><td>Écarts faibles attendus</td></tr>
+</table>
+<div class="card warm" style="margin-top:28px"><p><b>Avant tout réglage :</b> calculer la référence « disque centré ». Si le U-Net ne la dépasse pas, régler η ou l’architecture ne corrige pas le vrai problème, qui est dans les données.</p></div>
+<p class="footnote">Kaggle donne environ 30 h de GPU par semaine ; une référence complète peut en prendre jusqu’à 8.</p>
+</section>
+
+<!-- 20 PROTOCOL -->
+<section class="accent">
+<p class="eyebrow">Le protocole</p>
+<h2>Régler sans tricher</h2>
+<div class="cards two">
+<div class="card"><h3>Un facteur à la fois</h3><p>Mêmes partitions, même graine, un seul réglage modifié par expérience. Sinon on ne sait pas lequel a produit l’écart.</p></div>
+<div class="card"><h3>Choisir sur la validation</h3><p>Le test des 196 patientes reste scellé jusqu’à la fin : une seule évaluation, avec les réglages figés.</p></div>
+<div class="card"><h3>Répéter ce qui compte</h3><p>Un gain important se confirme avec plusieurs graines. Un écart de l’ordre du bruit n’est pas un résultat.</p></div>
+<div class="card"><h3>Tout tracer</h3><p>Chaque run garde sa configuration, ses métriques par époque et sa raison d’arrêt : la comparaison se refait sans mémoire.</p></div>
+</div>
+</section>
+
+<!-- 21 TAKEAWAYS -->
+<section>
+<h2>Cinq choses à retenir</h2>
+<div class="list-item"><p class="n">1</p><p>Les poids s’apprennent ; les hyperparamètres se <b>choisissent sur la validation</b>, jamais sur le test.</p></div>
+<div class="list-item"><p class="n">2</p><p>Le <b>taux d’apprentissage</b> est le réglage du modèle au plus fort effet attendu ; il se règle avec le lot.</p></div>
+<div class="list-item"><p class="n">3</p><p>Les réglages des <b>données</b> (marge, fond, translation) pèsent plus que l’architecture sur notre biais de centrage.</p></div>
+<div class="list-item"><p class="n">4</p><p>Le <b>seuil</b> et la <b>métrique de sélection</b> ne changent pas l’apprentissage, mais changent le chiffre qu’on rapporte.</p></div>
+<div class="list-item ink"><p class="n">5</p><p>Tout ce qui est dit « attendu » ici reste à mesurer : un facteur à la fois, plusieurs graines.</p></div>
+</section>
+
+</body>
+</html>

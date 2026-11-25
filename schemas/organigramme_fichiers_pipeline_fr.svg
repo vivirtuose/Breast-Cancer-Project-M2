@@ -1,0 +1,376 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="2010" viewBox="0 0 1640 2010" font-family="Helvetica, Arial, sans-serif">
+<defs>
+<filter id="soft" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#000" flood-opacity="0.12"/></filter>
+<marker id="a_sub" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#7a8294"/></marker>
+<marker id="a_imp" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#7a52c7"/></marker>
+<marker id="a_out" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#2f8a4e"/></marker>
+<marker id="a_read" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#8a92a3"/></marker>
+<marker id="a_plan" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#c2700f"/></marker>
+</defs>
+<rect x="0" y="0" width="1640" height="2010" fill="#f7f8fa"/>
+<text x="30" y="42" font-size="25" font-weight="700" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Organigramme des fichiers — pipeline de segmentation CBIS-DDSM (masses)</text>
+<text x="30" y="66" font-size="12.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Branche kaggle-long-run · commit c625b2e · état du dépôt au 2026-11-25 · flux : données brutes → manifeste → audit → partitions par patiente → imagettes → entraînement → inférence/évaluation</text>
+<rect x="30" y="80" width="1010" height="62" rx="8" fill="#fff6ea" stroke="#c2700f"/>
+<text x="44" y="100" font-size="12" font-weight="700" fill="#7a4300" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Le réseau réellement entraîné aujourd’hui est un U-Net (segmentation_models_pytorch, encodeur resnet34 ImageNet)</text>
+<text x="44" y="117" font-size="12" font-weight="400" fill="#7a4300" font-family="Helvetica, Arial, sans-serif" text-anchor="start">sur imagettes 512 px, pas nnU-Net. nnU-Net est prévu (tâches 10-12 du plan, encadré en pointillés plus bas) : aucun fichier</text>
+<text x="44" y="134" font-size="12" font-weight="400" fill="#7a4300" font-family="Helvetica, Arial, sans-serif" text-anchor="start">nnU-Net dans src/ ni scripts/, et nnunetv2 n’est pas dans pyproject.toml.</text>
+<rect x="1065" y="80" width="555" height="62" rx="8" fill="#ffffff" stroke="#dde1e8"/>
+<rect x="1077" y="88" width="16" height="12" rx="3" fill="#e8effc" stroke="#3b6fd8"/>
+<text x="1099" y="98" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">scripts/ (CLI)</text>
+<rect x="1213" y="88" width="16" height="12" rx="3" fill="#f1ebfb" stroke="#7a52c7"/>
+<text x="1235" y="98" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">src/cbis_ddsm (logique)</text>
+<rect x="1349" y="88" width="16" height="12" rx="3" fill="#e6f4ea" stroke="#2f8a4e"/>
+<text x="1371" y="98" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">fichier produit</text>
+<rect x="1485" y="88" width="16" height="12" rx="3" fill="#eef0f4" stroke="#8a92a3"/>
+<text x="1507" y="98" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">entrée / config</text>
+<path d="M1077,122 L1103,122" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<text x="1109" y="126" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">lance (sous-processus)</text>
+<path d="M1213,122 L1239,122" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<text x="1245" y="126" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">importe</text>
+<path d="M1349,122 L1375,122" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<text x="1381" y="126" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">écrit</text>
+<path d="M1485,122 L1511,122" stroke="#8a92a3" stroke-width="1.5" stroke-dasharray="2 3" marker-end="url(#a_read)"/>
+<text x="1517" y="126" font-size="10.5" font-weight="400" fill="#1c2230" font-family="Helvetica, Arial, sans-serif" text-anchor="start">lit</text>
+<text x="30" y="172" font-size="11" font-weight="700" fill="#8a92a3" font-family="Helvetica, Arial, sans-serif" text-anchor="start">ORCHESTRATEUR</text>
+<line x1="30" y1="178" x2="200" y2="178" stroke="#c7ccd6"/>
+<text x="240" y="172" font-size="11" font-weight="700" fill="#8a92a3" font-family="Helvetica, Arial, sans-serif" text-anchor="start">SCRIPTS (point d’entrée CLI)</text>
+<line x1="240" y1="178" x2="500" y2="178" stroke="#c7ccd6"/>
+<text x="550" y="172" font-size="11" font-weight="700" fill="#8a92a3" font-family="Helvetica, Arial, sans-serif" text-anchor="start">MODULES src/cbis_ddsm/ (rôle dans le pipeline)</text>
+<line x1="550" y1="178" x2="1110" y2="178" stroke="#c7ccd6"/>
+<text x="1160" y="172" font-size="11" font-weight="700" fill="#8a92a3" font-family="Helvetica, Arial, sans-serif" text-anchor="start">FICHIERS PRODUITS / LUS</text>
+<line x1="1160" y1="178" x2="1610" y2="178" stroke="#c7ccd6"/>
+<rect x="225" y="192" width="1395" height="115" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="209" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">0 · ENVIRONNEMENT VERROUILLÉ</text>
+<rect x="240" y="218" width="260" height="78" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="236" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">capture_environment.py</text>
+<text x="250" y="252" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Instantané : Python, GPU, disque, paquets</text>
+<text x="250" y="266.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">installés comparés à uv.lock.</text>
+<rect x="550" y="218" width="270" height="78" rx="7" fill="#eef0f4" stroke="#8a92a3" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="236" font-size="12.5" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">pyproject.toml + uv.lock</text>
+<text x="560" y="252" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Dépendances figées : torch 2.5.1 cu121, smp</text>
+<text x="560" y="266.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">0.5.0, albumentations, OpenCV…</text>
+<rect x="840" y="218" width="270" height="78" rx="7" fill="#eef0f4" stroke="#8a92a3" stroke-width="1.4" filter="url(#soft)"/>
+<text x="850" y="236" font-size="12.5" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/raw/</text>
+<text x="850" y="252" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">CBIS-DDSM : CSV de cas, images, ROI et</text>
+<text x="850" y="266.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">masques. Jamais modifié.</text>
+<rect x="1160" y="218" width="450" height="78" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="236" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">configs/env.yaml · env.json (Kaggle)</text>
+<text x="1170" y="252" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Preuve de l’environnement réellement utilisé par un run (versions,</text>
+<text x="1170" y="266.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">accélérateur, verdict du verrou).</text>
+<path d="M500,245 L550,245" fill="none" stroke="#8a92a3" stroke-width="1.5" stroke-dasharray="2 3" marker-end="url(#a_read)"/>
+<path d="M500,280 L530,280 L530,300 L1135,300 L1135,257 L1160,257" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<rect x="225" y="317" width="1395" height="115" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="334" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">1 · MANIFESTE (appariement image / masque)</text>
+<rect x="240" y="343" width="260" height="80" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="361" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">build_manifest.py</text>
+<text x="250" y="377" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Lit data/raw, appelle build_manifest(),</text>
+<text x="250" y="391.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">écrit le manifeste et ses exclusions.</text>
+<rect x="550" y="343" width="270" height="80" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="361" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/manifest.py</text>
+<text x="560" y="377" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Trouve les CSV, indexe les images, apparie</text>
+<text x="560" y="391.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">image/ROI/masque, repère l’inversion</text>
+<text x="560" y="406.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">ROI/crop → ManifestRow.</text>
+<rect x="1160" y="343" width="450" height="80" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="361" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/interim/manifest.csv</text>
+<text x="1170" y="377" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Une ligne par anomalie : chemins image/masque résolus, patiente, sein, vue,</text>
+<text x="1170" y="391.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">pathologie.</text>
+<text x="1170" y="406.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">+ acquisition_exclusions.csv (références introuvables).</text>
+<path d="M500,383 L550,383" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M975,296 L975,330 L790,330 L790,343" fill="none" stroke="#8a92a3" stroke-width="1.5" stroke-dasharray="2 3" marker-end="url(#a_read)"/>
+<path d="M820,383 L1160,383" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<rect x="225" y="442" width="1395" height="105" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="459" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">2 · AUDIT QUALITÉ</text>
+<rect x="240" y="468" width="260" height="70" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="486" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">audit_data.py</text>
+<text x="250" y="502" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Lit manifest.csv ; --lesion-type mass ;</text>
+<text x="250" y="516.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">écrit les exclusions.</text>
+<rect x="840" y="468" width="270" height="70" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="850" y="486" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/audit.py</text>
+<text x="850" y="502" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Chemins absents, taille image ≠ masque,</text>
+<text x="850" y="516.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">masque vide ou non binaire → AuditIssue.</text>
+<rect x="1160" y="468" width="450" height="70" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="486" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/interim/exclusions.csv</text>
+<text x="1170" y="502" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Images écartées et motif, relues par make_splits et extract_patches.</text>
+<path d="M500,503 L840,503" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M975,468 L975,410 L820,410" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<text x="982" y="452" font-size="9.5" font-weight="400" fill="#7a52c7" font-family="Helvetica, Arial, sans-serif" text-anchor="start">ManifestRow</text>
+<path d="M1110,503 L1160,503" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<rect x="225" y="557" width="1395" height="125" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="574" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">3 · PARTITIONS PAR PATIENTE</text>
+<rect x="240" y="583" width="260" height="90" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="601" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">make_splits.py</text>
+<text x="250" y="617" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Lit manifest + exclusions ; importe</text>
+<text x="250" y="631.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">manifest, targets, splits ; 5 plis, val =</text>
+<text x="250" y="646.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">pli 0, graine 0.</text>
+<rect x="550" y="583" width="270" height="90" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="601" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/targets.py</text>
+<text x="560" y="617" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Ne garde que les masses, groupe les</text>
+<text x="560" y="631.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">anomalies par image, fusionne leurs masques</text>
+<text x="560" y="646.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">(fuse_masks) → ImageRecord.</text>
+<rect x="840" y="583" width="270" height="90" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="850" y="601" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/splits.py</text>
+<text x="850" y="617" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Étiquette par patiente, StratifiedKFold</text>
+<text x="850" y="631.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">groupé patiente ; train/val issus du train</text>
+<text x="850" y="646.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">officiel, test officiel réservé ; sha256 du</text>
+<text x="850" y="660.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">manifeste.</text>
+<rect x="1160" y="583" width="450" height="90" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="601" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/splits/split_v1.json</text>
+<text x="1170" y="617" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">folds, partitions {train, val, test}, n_folds, val_fold, graine, empreinte du</text>
+<text x="1170" y="631.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">manifeste. Aucune patiente dans deux partitions.</text>
+<path d="M500,600 L535,600 L535,576 L900,576 L900,583" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M840,640 L820,640" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M685,583 L685,423" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M1110,628 L1160,628" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<rect x="225" y="692" width="1395" height="115" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="709" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">4 · IMAGETTES (patches 512 px)</text>
+<rect x="240" y="718" width="260" height="80" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="736" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">extract_patches.py</text>
+<text x="250" y="752" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Lit manifest, exclusions, split ;</text>
+<text x="250" y="766.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">partitions train+val par défaut (test sur</text>
+<text x="250" y="781.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">demande) ; 1 fond par image.</text>
+<rect x="550" y="718" width="270" height="80" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="736" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/patches.py</text>
+<text x="560" y="752" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Fenêtre lésion (+15 %), fenêtres de fond sur</text>
+<text x="560" y="766.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">tissu, recadrage 512 px ; reproject() vers</text>
+<text x="560" y="781.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">le repère d’origine.</text>
+<rect x="1160" y="718" width="450" height="80" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="736" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/processed/patches_v1/</text>
+<text x="1170" y="752" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Imagettes et masques PNG (0/255) + index.csv (patch_id, patiente, partition,</text>
+<text x="1170" y="766.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">kind lesion/background, fenêtre).</text>
+<path d="M500,758 L550,758" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M750,718 L750,673" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<text x="756" y="708" font-size="9.5" font-weight="400" fill="#7a52c7" font-family="Helvetica, Arial, sans-serif" text-anchor="start">fuse_masks</text>
+<path d="M820,758 L1160,758" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<rect x="225" y="817" width="1395" height="345" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="834" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">5 · ENTRAÎNEMENT (U-Net)</text>
+<rect x="240" y="843" width="260" height="76" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="861" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">overfit_batch.py</text>
+<text x="250" y="877" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Contrôle de santé : sur-apprendre 8</text>
+<text x="250" y="891.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">imagettes en 300 pas, Dice cible 0.95.</text>
+<rect x="240" y="933" width="260" height="96" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="951" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">train.py</text>
+<text x="250" y="967" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Charge la config, applique --set</text>
+<text x="250" y="981.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">clé=valeur, lance train(cfg) ; reprise via</text>
+<text x="250" y="996.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">--set resume_from=&lt;run&gt;.</text>
+<rect x="240" y="1043" width="260" height="110" rx="7" fill="#eef0f4" stroke="#8a92a3" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="1061" font-size="12.5" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">configs/*.yaml</text>
+<text x="250" y="1077" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">unet_smoke.yaml : run court de fumée.</text>
+<text x="250" y="1091.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">unet_baseline.yaml : 60 époques, lr 3e-4,</text>
+<text x="250" y="1106.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">cosine, AMP, early stopping 12, budget 8 h,</text>
+<text x="250" y="1120.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">sélection val_dice_lesion.</text>
+<rect x="550" y="843" width="270" height="76" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="861" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/dataset.py</text>
+<text x="560" y="877" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">PatchDataset : lit index.csv + PNG d’une</text>
+<text x="560" y="891.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">partition → tenseurs image/masque.</text>
+<rect x="840" y="843" width="270" height="76" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="850" y="861" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">data/transforms.py</text>
+<text x="850" y="877" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Augmentations albumentations, train</text>
+<text x="850" y="891.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">seulement (flips, rotations, affine,</text>
+<text x="850" y="906.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">contraste).</text>
+<rect x="550" y="933" width="560" height="96" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="951" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">training/trainer.py   — le cœur de l’entraînement</text>
+<text x="560" y="967" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Boucle AdamW + scheduler cosine, AMP, accumulation de gradients, early stopping et budget horaire</text>
+<text x="560" y="981.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">; validation à chaque époque (Dice lésions seules) ; checkpoints atomiques best/last, reprise</text>
+<text x="560" y="996.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">après coupure de session ; load_checkpoint() et overfit_batch().</text>
+<rect x="550" y="1043" width="180" height="110" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="1061" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">training/config.py</text>
+<text x="560" y="1077" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">TrainConfig typé (YAML +</text>
+<text x="560" y="1091" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">surcharges), seed_everything,</text>
+<text x="560" y="1105" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">resolve_device.</text>
+<rect x="740" y="1043" width="180" height="110" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="750" y="1061" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">training/losses.py</text>
+<text x="750" y="1077" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">BCEDiceLoss : 0.5·BCE + 0.5·(1</text>
+<text x="750" y="1091" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">− Dice).</text>
+<rect x="930" y="1043" width="180" height="110" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="940" y="1061" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">models/factory.py</text>
+<text x="940" y="1077" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">build_model : smp.Unet (aussi</text>
+<text x="940" y="1091" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Unet++, DeepLabV3+), 1 canal</text>
+<text x="940" y="1105" font-size="10" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">entrée, 1 sortie logits.</text>
+<rect x="1160" y="933" width="450" height="130" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="951" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">experiments/&lt;run_name&gt;_&lt;horodatage&gt;/</text>
+<text x="1170" y="967" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">config.yaml (+ config_resume_N.yaml à chaque reprise)</text>
+<text x="1170" y="981.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">metrics.jsonl : une ligne par époque (pertes, Dice val)</text>
+<text x="1170" y="996.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">checkpoint_best.pt : meilleure époque sur val_dice_lesion</text>
+<text x="1170" y="1010.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">checkpoint_last.pt : dernière époque, sert à la reprise</text>
+<text x="1170" y="1025.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">run.json : commit git, graine, durée, motif d’arrêt</text>
+<path d="M500,881 L532,881 L532,955 L550,955" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M500,981 L550,981" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M500,1098 L550,1098" fill="none" stroke="#8a92a3" stroke-width="1.5" stroke-dasharray="2 3" marker-end="url(#a_read)"/>
+<path d="M685,933 L685,919" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M975,933 L975,919" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M640,1029 L640,1043" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M830,1029 L830,1043" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M1020,1029 L1020,1043" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M640,843 L640,798" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<text x="646" y="832" font-size="9.5" font-weight="400" fill="#7a52c7" font-family="Helvetica, Arial, sans-serif" text-anchor="start">PatchRecord</text>
+<path d="M1110,981 L1160,981" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<path d="M1220,798 L1220,812 L1125,812 L1125,862 L1110,862" fill="none" stroke="#8a92a3" stroke-width="1.5" stroke-dasharray="2 3" marker-end="url(#a_read)"/>
+<text x="1058" y="828" font-size="9.5" font-weight="400" fill="#8a92a3" font-family="Helvetica, Arial, sans-serif" text-anchor="start">lit les PNG</text>
+<rect x="225" y="1172" width="1395" height="235" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="240" y="1189" font-size="11.5" font-weight="700" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">6 · INFÉRENCE ET ÉVALUATION (imagettes de validation)</text>
+<rect x="240" y="1198" width="260" height="84" rx="7" fill="#e8effc" stroke="#3b6fd8" stroke-width="1.4" filter="url(#soft)"/>
+<text x="250" y="1216" font-size="12.5" font-weight="700" fill="#1d3f8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">predict.py</text>
+<text x="250" y="1232" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">--run-dir, --patch-root, --partition val,</text>
+<text x="250" y="1246.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">seuil 0.5 ; évalue checkpoint_best.pt.</text>
+<rect x="550" y="1198" width="560" height="84" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="1216" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">inference/predict.py</text>
+<text x="560" y="1232" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">evaluate_patches : recharge le meilleur checkpoint (trainer.load_checkpoint,</text>
+<text x="560" y="1246.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">config.resolve_device), prédit par lots via PatchDataset, seuille, calcule Dice/IoU par imagette,</text>
+<text x="560" y="1261.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">agrège et dessine les superpositions.</text>
+<rect x="550" y="1296" width="270" height="100" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="560" y="1314" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">evaluation/metrics.py</text>
+<text x="560" y="1330" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">threshold_probabilities, dice_score,</text>
+<text x="560" y="1344.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">iou_score ; règle des masques vides (deux</text>
+<text x="560" y="1359.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">vides = 1, un seul = 0).</text>
+<rect x="840" y="1296" width="270" height="100" rx="7" fill="#f1ebfb" stroke="#7a52c7" stroke-width="1.4" filter="url(#soft)"/>
+<text x="850" y="1314" font-size="12.5" font-weight="700" fill="#4a2a8a" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">evaluation/overlays.py</text>
+<text x="850" y="1330" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">make_overlay : image + contour vérité (vert)</text>
+<text x="850" y="1344.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">+ contour prédit (rouge).</text>
+<rect x="1160" y="1198" width="450" height="120" rx="7" fill="#e6f4ea" stroke="#2f8a4e" stroke-width="1.4" filter="url(#soft)"/>
+<text x="1170" y="1216" font-size="12.5" font-weight="700" fill="#1d5a33" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">experiments/&lt;run&gt;/predictions/ et figures/</text>
+<text x="1170" y="1232" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">&lt;partition&gt;_metrics.csv : une ligne par imagette (patch_id, patiente, kind,</text>
+<text x="1170" y="1246.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Dice, IoU)</text>
+<text x="1170" y="1261.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">&lt;partition&gt;_summary.json : n_patches, mean_dice_lesion, mean_iou_lesion,</text>
+<text x="1170" y="1275.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">background_false_positive_rate</text>
+<text x="1170" y="1290.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">figures/&lt;patch_id&gt;.png : jusqu’à 8 superpositions de lésions (--n-figures)</text>
+<path d="M500,1240 L550,1240" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M685,1282 L685,1296" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M975,1282 L975,1296" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<path d="M570,1198 L570,1170 L540,1170 L540,1015 L550,1015" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<text x="452" y="1166" font-size="9.5" font-weight="400" fill="#7a52c7" font-family="Helvetica, Arial, sans-serif" text-anchor="start">load_checkpoint</text>
+<path d="M1110,1250 L1160,1250" fill="none" stroke="#2f8a4e" stroke-width="1.5" marker-end="url(#a_out)"/>
+<path d="M1460,1063 L1460,1140 L1132,1140 L1132,1215 L1110,1215" fill="none" stroke="#8a92a3" stroke-width="1.5" stroke-dasharray="2 3" marker-end="url(#a_read)"/>
+<text x="1180" y="1136" font-size="9.5" font-weight="400" fill="#8a92a3" font-family="Helvetica, Arial, sans-serif" text-anchor="start">checkpoint_best.pt</text>
+<path d="M1110,1015 L1140,1015 L1140,1130 L1145,1130 L1145,1346 L1110,1346" fill="none" stroke="#7a52c7" stroke-width="1.5" marker-end="url(#a_imp)"/>
+<text x="1150" y="1342" font-size="9.5" font-weight="400" fill="#7a52c7" font-family="Helvetica, Arial, sans-serif" text-anchor="start">metrics (val)</text>
+<rect x="30" y="192" width="170" height="1215" rx="7" fill="#2c3445" stroke="#2c3445" stroke-width="1.4" filter="url(#soft)"/>
+<text x="40" y="210" font-size="12" font-weight="700" fill="#ffffff" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">kaggle_smoke.py</text>
+<text x="40" y="226" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Orchestrateur du run de</text>
+<text x="40" y="240.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">fumée Kaggle.</text>
+<text x="40" y="255.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start"></text>
+<text x="40" y="269.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Lance chaque étape 0 → 6</text>
+<text x="40" y="284.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">dans un sous-processus</text>
+<text x="40" y="298.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">(même Python), dans</text>
+<text x="40" y="313.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">l’ordre.</text>
+<text x="40" y="327.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start"></text>
+<text x="40" y="342.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Saute une étape si sa</text>
+<text x="40" y="356.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">sortie existe déjà ;</text>
+<text x="40" y="371.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">s’arrête à la première</text>
+<text x="40" y="385.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">erreur.</text>
+<text x="40" y="400.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start"></text>
+<text x="40" y="414.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Récupère le dossier du run</text>
+<text x="40" y="429.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">dans la sortie de train.py</text>
+<text x="40" y="443.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">pour lancer predict.py.</text>
+<text x="40" y="458.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start"></text>
+<text x="40" y="472.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Écrit dans --work-dir :</text>
+<text x="40" y="487.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">• smoke_report.json</text>
+<text x="40" y="501.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">(statut et durée par</text>
+<text x="40" y="516.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">étape)</text>
+<text x="40" y="530.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">• smoke_run.zip (env,</text>
+<text x="40" y="545.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">split, index, run,</text>
+<text x="40" y="559.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">prédictions)</text>
+<text x="40" y="574.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start"></text>
+<text x="40" y="588.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Procédure :</text>
+<text x="40" y="603.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">docs/KAGGLE.md, README.</text>
+<text x="40" y="617.5" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Preuve d’un run réel ≠</text>
+<text x="40" y="632.0" font-size="10.5" font-weight="400" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" text-anchor="start">tests synthétiques.</text>
+<path d="M200,257 L240,257" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,383 L240,383" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,503 L240,503" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,628 L240,628" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,758 L240,758" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,881 L240,881" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,981 L240,981" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<path d="M200,1240 L240,1240" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a_sub)"/>
+<rect x="30" y="1430" width="1590" height="168" rx="9" fill="#fffaf2" stroke="#c2700f" stroke-width="1.4" stroke-dasharray="7 5"/>
+<text x="46" y="1452" font-size="13" font-weight="700" fill="#7a4300" font-family="Helvetica, Arial, sans-serif" text-anchor="start">nnU-Net — PRÉVU, NON IMPLÉMENTÉ (tâches 10-12 de docs/superpowers/plans/2026-09-16-kaggle-smoke-pipeline.md)</text>
+<text x="46" y="1470" font-size="11" font-weight="400" fill="#7a4300" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Décision du 2026-09-20 : nnU-Net sur les mêmes imagettes ROI que le U-Net, pour une comparaison à armes égales. Ses chiffres seront au niveau imagette, jamais présentés comme une détection sur image entière.</text>
+<rect x="46" y="1484" width="460" height="100" rx="7" fill="#fff6ea" stroke="#c2700f" stroke-width="1.4" stroke-dasharray="6 4" filter="url(#soft)"/>
+<text x="56" y="1502" font-size="12.5" font-weight="700" fill="#7a4300" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">T10 · export nnU-Net (à écrire)</text>
+<text x="56" y="1518" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Lit patches_v1/index.csv + PNG ; réécrit les masques 0/255 → 0/1 ; produit</text>
+<text x="56" y="1532.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">imagesTr/labelsTr, dataset.json et case_index.csv (DATASET_NAME).</text>
+<rect x="560" y="1484" width="460" height="100" rx="7" fill="#fff6ea" stroke="#c2700f" stroke-width="1.4" stroke-dasharray="6 4" filter="url(#soft)"/>
+<text x="570" y="1502" font-size="12.5" font-weight="700" fill="#7a4300" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">T11 · plis par patiente + lanceur (à écrire)</text>
+<text x="570" y="1518" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Reprend folds/partitions de split_v1.json pour les plis nnU-Net ; construit les</text>
+<text x="570" y="1532.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">commandes nnUNetv2 (plan, train, predict) en listes argv ; nnunetv2 jamais</text>
+<text x="570" y="1547.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">importé par les tests.</text>
+<rect x="1074" y="1484" width="530" height="100" rx="7" fill="#fff6ea" stroke="#c2700f" stroke-width="1.4" stroke-dasharray="6 4" filter="url(#soft)"/>
+<text x="1084" y="1502" font-size="12.5" font-weight="700" fill="#7a4300" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">T12 · import des prédictions (à écrire)</text>
+<text x="1084" y="1518" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Ramène les masques prédits par nnU-Net dans le schéma exact de predict.py</text>
+<text x="1084" y="1532.5" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">(&lt;partition&gt;_metrics.csv, _summary.json) et réutilise make_overlay → comparaison directe</text>
+<text x="1084" y="1547.0" font-size="10.5" font-weight="400" fill="#3a3f4b" font-family="Helvetica, Arial, sans-serif" text-anchor="start">avec le U-Net.</text>
+<path d="M506,1534 L560,1534" fill="none" stroke="#c2700f" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#a_plan)"/>
+<path d="M1020,1534 L1074,1534" fill="none" stroke="#c2700f" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#a_plan)"/>
+<rect x="30" y="1618" width="1590" height="176" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="46" y="1640" font-size="13" font-weight="700" fill="#2c3445" font-family="Helvetica, Arial, sans-serif" text-anchor="start">tests/ — uv run pytest : cas synthétiques (make_fake_patch_dir, faux DICOM/CSV) ; ne prouve pas un résultat sur données réelles</text>
+<rect x="46" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="55" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_manifest.py</text>
+<text x="55" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ data/manifest.py</text>
+<rect x="269" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="278" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_audit.py</text>
+<text x="278" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ data/audit.py</text>
+<rect x="492" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="501" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_targets.py</text>
+<text x="501" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ data/targets.py</text>
+<rect x="715" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="724" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_splits.py</text>
+<text x="724" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ data/splits.py</text>
+<rect x="938" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="947" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_patches.py</text>
+<text x="947" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ data/patches.py</text>
+<rect x="1161" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="1170" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_dataset.py</text>
+<text x="1170" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ data/dataset.py</text>
+<rect x="1384" y="1656" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="1393" y="1677" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_models.py</text>
+<text x="1393" y="1697" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ models/factory.py</text>
+<rect x="46" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="55" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_losses_metrics.py</text>
+<text x="55" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ losses.py + metrics.py</text>
+<rect x="269" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="278" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_trainer.py</text>
+<text x="278" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ trainer.py (reprise, arrêt)</text>
+<rect x="492" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="501" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_predict.py</text>
+<text x="501" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ inference/predict.py</text>
+<rect x="715" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="724" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_data_clis.py</text>
+<text x="724" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ 4 scripts de données</text>
+<rect x="938" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="947" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_kaggle_smoke.py</text>
+<text x="947" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ kaggle_smoke.py</text>
+<rect x="1161" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="1170" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_capture_environment.py</text>
+<text x="1170" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ capture_environment.py</text>
+<rect x="1384" y="1722" width="216" height="56" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="1393" y="1743" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">test_dependency_lock.py</text>
+<text x="1393" y="1763" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">→ pyproject ↔ uv.lock</text>
+<rect x="30" y="1812" width="1590" height="182" rx="9" fill="#ffffff" stroke="#dde1e8"/>
+<text x="46" y="1834" font-size="13" font-weight="700" fill="#2c3445" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Documents — ils encadrent le code sans l’exécuter (le dépôt et ses artefacts font foi)</text>
+<rect x="46" y="1848" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="55" y="1868" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">PLAN.md</text>
+<text x="55" y="1886" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Jalons du projet (acquisition → test réservé).</text>
+<rect x="438" y="1848" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="447" y="1868" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">docs/PROTOCOLE.md</text>
+<text x="447" y="1886" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Règles d’évaluation et frontières scientifiques ; test réservé</text>
+<text x="447" y="1900" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">jamais utilisé pour régler.</text>
+<rect x="830" y="1848" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="839" y="1868" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">docs/ARCHITECTURE.md</text>
+<text x="839" y="1886" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Responsabilités de chaque dossier, traçabilité d’une expérience.</text>
+<rect x="1222" y="1848" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="1231" y="1868" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">docs/KAGGLE.md</text>
+<text x="1231" y="1886" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Procédure d’entraînement long et de reprise sur Kaggle, preuves et</text>
+<text x="1231" y="1900" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">limites.</text>
+<rect x="46" y="1922" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="55" y="1942" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">…/kaggle-smoke-pipeline.progress.md</text>
+<text x="55" y="1960" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Journal : livraisons, commits, limites, prochaine action.</text>
+<rect x="438" y="1922" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="447" y="1942" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">README.md</text>
+<text x="447" y="1960" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Point d’entrée : installation, mode opératoire pas à pas d’un run.</text>
+<rect x="830" y="1922" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="839" y="1942" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">docs/CONTEXTE.md · docs/REFERENCES.md</text>
+<text x="839" y="1960" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Contexte du projet ; bibliographie.</text>
+<rect x="1222" y="1922" width="386" height="64" rx="6" fill="#f4f5f8" stroke="#c7ccd6"/>
+<text x="1231" y="1942" font-size="11" font-weight="700" fill="#2c3445" font-family="Consolas, Menlo, 'DejaVu Sans Mono', monospace" text-anchor="start">cours/ · schemas/ · reports/</text>
+<text x="1231" y="1960" font-size="10.5" font-weight="400" fill="#5b6170" font-family="Helvetica, Arial, sans-serif" text-anchor="start">Modules de cours, schémas SVG, supports de restitution (oral).</text>
+</svg>
